@@ -5,6 +5,7 @@ Player::Player()
 {
 	model = new M_3DS;
 	numModels = 0;
+	//Entity_base();
 }
 
 Player::~Player()

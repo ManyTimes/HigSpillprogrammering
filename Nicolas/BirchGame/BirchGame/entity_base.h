@@ -16,11 +16,12 @@ class Entity_base {
 	void UpdateMatrix();
 
 public:
+	Entity_base();
 	// Position
 	Entity3f GetPosition() { return position; }
 	void SetPosition(float x, float y, float z) { position.x = x; position.y = y; position.z = z; UpdateMatrix();}
-	void SetPosition(float p[3]) { position.x = p[0]; position.y = p[1]; position.z = p[2]; }
-	void SetPosition(Entity3f p) { position.x = p.x; position.y = p.y; position.z = p.z; }
+	void SetPosition(float p[3]) { position.x = p[0]; position.y = p[1]; position.z = p[2]; UpdateMatrix();}
+	void SetPosition(Entity3f p) { position.x = p.x; position.y = p.y; position.z = p.z; UpdateMatrix();}
 	Entity3f& GetPositionRef(){ return position; }
 	// Angles
 	Entity3f GetAngles() { return angles; }

@@ -281,8 +281,11 @@ void M_3DS::Draw()
 
 void M_3DS::Draw(float m[16])
 {
-	std::cout << "M_3DS::Draw(float m[16]) not implemented";
-	Draw();
+//	std::cout << "M_3DS::Draw(float m[16]) not implemented";
+	glPushMatrix();
+		glMultMatrixf(m);
+		Draw();
+	glPopMatrix();
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glEnableClientState(GL_NORMAL_ARRAY);
 //

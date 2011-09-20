@@ -155,9 +155,19 @@ void Fps()
 void MovementHandle()
 {
 	if(keys[KEY_FORWARD])
+	{
 		camera.slide(0,0,-MOVEMENT_SPEED/FPS, 1);
+		Entity3f ref = player.GetPosition();
+		ref.y += (MOVEMENT_SPEED/FPS);
+		player.SetPosition(ref);
+	}
 	if(keys[KEY_BACK])
+	{
 		camera.slide(0,0,MOVEMENT_SPEED/FPS, 1);
+		Entity3f ref = player.GetPosition();
+		ref.y -= (MOVEMENT_SPEED/FPS);
+		player.SetPosition(ref);
+	}
 	if(keys[KEY_LEFT])
 		camera.slide(-MOVEMENT_SPEED/FPS,0,0, 1);
 	if(keys[KEY_RIGHT])

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomGameLibrary", "CustomGameLibrary.vcproj", "{E0C11DE2-9F0A-4104-B7E8-E07664DCE412}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0C11DE2-9F0A-4104-B7E8-E07664DCE412}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0C11DE2-9F0A-4104-B7E8-E07664DCE412}.Debug|Win32.Build.0 = Debug|Win32
+		{E0C11DE2-9F0A-4104-B7E8-E07664DCE412}.Release|Win32.ActiveCfg = Release|Win32
+		{E0C11DE2-9F0A-4104-B7E8-E07664DCE412}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -169,7 +169,13 @@ void MovementHandle()
 		player.SetPosition(ref);
 	}
 	if(keys[KEY_LEFT])
+	{
 		camera.slide(-MOVEMENT_SPEED/FPS,0,0, 1);
+		/*Entity3f angle = player.GetAngles();
+		angle[YAW] += (MOVEMENT_SPEED/FPS);
+		player.SetAngles(angle);*/
+		player.GetAnglesRef()[YAW] -= (MOVEMENT_SPEED/FPS);
+	}
 	if(keys[KEY_RIGHT])
 		camera.slide(MOVEMENT_SPEED/FPS,0,0, 1);
 	if(keys[KEY_UP])
@@ -179,7 +185,7 @@ void MovementHandle()
 }
 
 void TestRenderPlane();
-void TestRenderPlayer();
+void TestRenderBillBoard();
 
 void TestRenderScene()
 {
@@ -200,11 +206,13 @@ void TestRenderScene()
 
 
 	TestRenderPlane();
-	TestRenderPlayer();
+	TestRenderBillBoard();
 
 
 	angle += (100/FPS);
 	
+	player.Update();
+
 	glPushMatrix();
 		glRotatef(angle,0,1,0);
 //		glRotatef((frame/FPS)/10.0f,0,1,0);
@@ -239,7 +247,7 @@ void TestRenderPlane()
 void setMatrix(Vector3 *Look, Vector3 *Right, Vector3 *Up, Vector3 *Pos, float m[16]);
 void TransposeRotation(float matrix[16]);
 void MatrixMultiply(float matrix[16], float v[4]);
-void TestRenderPlayer()
+void TestRenderBillBoard()
 {
 	Vector3 Pos(5,5,5);
 		float modelview[16];

@@ -14,5 +14,6 @@ public:
 	void Draw();
 	void Draw(float m[16]);
 	bool SetModel(const char* filename);
+	void Update();							// Update each frame, (also referred to as the "think" cycle for this class.
 };
 #endif

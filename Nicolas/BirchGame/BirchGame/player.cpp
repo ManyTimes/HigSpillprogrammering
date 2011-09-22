@@ -29,7 +29,6 @@ void Player::Draw(float m[16])
 	float m2[16];
 
 	std::cout << "Player::Draw(float m[16]) not implemented";
-
 //	m2 = matrix*m; // Combine the matrices
 //	model->Draw(m2);
 	model->Draw(GetMatrix());
@@ -39,4 +38,9 @@ bool Player::SetModel(const char *filename)
 {
 	model->Load(filename);
 	return true;
+}
+
+void Player::Update()
+{
+	CheckUpdate();
 }

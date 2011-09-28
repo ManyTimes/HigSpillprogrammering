@@ -12,6 +12,8 @@ M_3DS::M_3DS()
 	numMeshes = 0;
 	numVertices = 0;
 	totalFaces = 0;
+	drawProgram = -1;
+	drawShader = NULL;
 }
 
 void M_3DS::Load(const char *filename)
@@ -271,10 +273,14 @@ void M_3DS::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER,normalVBO);
 	glNormalPointer(GL_FLOAT, 0, 0);//(char*)(NULL + offsetof(VertexData, normal)));
 
-	glColor3f ( 0.2f, 0.2f, 0.2f ) ;
+	if(drawProgram != -1)
+		glUseProgram(drawProgram);
+
+	//glColor3f ( 0.2f, 0.2f, 0.2f ) ;
 	//glDrawElements(GL_TRIANGLES, meshes[0].numFace*3, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 	glDrawArrays(GL_TRIANGLES,0,totalFaces*3);
 
+	glUseProgram(0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 }
@@ -282,10 +288,12 @@ void M_3DS::Draw()
 void M_3DS::Draw(float m[16])
 {
 //	std::cout << "M_3DS::Draw(float m[16]) not implemented";
+
 	glPushMatrix();
 		glMultMatrixf(m);
 		Draw();
 	glPopMatrix();
+
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glEnableClientState(GL_NORMAL_ARRAY);
 //
@@ -301,4 +309,45 @@ void M_3DS::Draw(float m[16])
 //
 //	glDisableClientState(GL_VERTEX_ARRAY);
 //	glDisableClientState(GL_NORMAL_ARRAY);
+}
+
+void M_3DS::SetShader(char *shadername, void (*InitShaderConfig)() )
+{
+	drawShader = new Shader();
+	drawProgram = drawShader->setShader(shadername);
+	if(!drawProgram)
+	{
+		std::cout << "Couldn't find shader " << shadername << std::endl;
+		return;
+	}
+//	InitShaderConfig();
+
+	locModelMatrix =		glGetUniformLocation(drawProgram, "ModelMatrix");
+	locViewMatrix =			glGetUniformLocation(drawProgram, "ViewMatrix");
+	loct_ModelMatrix =		glGetUniformLocation(drawProgram, "t_ModelMatrix");
+	loct_ViewMatrix =		glGetUniformLocation(drawProgram, "t_ViewMatrix");
+	locLightPosition =		glGetUniformLocation(drawProgram, "LightPosition");
+	locCameraPosition =		glGetUniformLocation(drawProgram, "CameraPosition");
+}
+
+void M_3DS::UpdateShaderVariables( float *lightPosition, float *cameraPosition, float *modelMatrix, float *viewMatrix )
+{
+	glUseProgram(drawProgram);
+	if(lightPosition)
+		glUniform4fv(locLightPosition, 1, lightPosition);
+	if(cameraPosition)
+		glUniform4fv(locCameraPosition, 1, cameraPosition);
+	if(modelMatrix)
+	{
+		glUniformMatrix4fv(locModelMatrix, 1, 0, modelMatrix);
+		glUniformMatrix4fv(loct_ModelMatrix, 1, 1, modelMatrix);
+	}
+	if(viewMatrix)
+	{
+		glUniformMatrix4fv(locViewMatrix, 1, 0, viewMatrix);
+		glUniformMatrix4fv(loct_ViewMatrix, 1, 1, viewMatrix);
+	}
+	glUseProgram(0);
+
+	int error = glGetError();
 }

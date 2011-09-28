@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="BirchGame"
 	ProjectGUID="{F5034E88-12D0-48E1-AFC6-B141F4EACD6F}"
 	RootNamespace="BirchGame"
@@ -201,6 +201,10 @@
 				RelativePath=".\shader.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\world.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -228,6 +232,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\light.h"
+				>
+			</File>
+			<File
 				RelativePath=".\m_3ds.h"
 				>
 			</File>
@@ -243,12 +251,28 @@
 				RelativePath=".\shader.h"
 				>
 			</File>
+			<File
+				RelativePath=".\world.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="Shader Files"
+			>
+			<File
+				RelativePath=".\Shaders\Player.frag"
+				>
+			</File>
+			<File
+				RelativePath=".\Shaders\Player.vert"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ClassDiagram1.cd"

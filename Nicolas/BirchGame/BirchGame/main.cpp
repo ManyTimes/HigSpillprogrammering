@@ -7,6 +7,8 @@
 #include "common.h"
 #include "m_3ds.h"
 #include "player.h"
+#include "world.h"
+#include "GL/glut.h"
 /*
 
 #include "md3.h"
@@ -23,7 +25,7 @@ void TestRenderScene();
 bool Running;							// Game running true/false
 unsigned int frame;
 float w = 800.0f, h = 600.0f;			// width and height of the screen.
-Point3 SpawnPoint(500,500,500);			// Where camera spawns
+Point3 SpawnPoint(-50,50,-50);			// Where camera spawns
 Point3 LookAt(0,0,0);					// Where camera points at
 Point3 Up(0,1,0);						// Cameras up direction.
 float FPS = 60.0f;						// Game current FPS
@@ -83,6 +85,15 @@ int main()
 	model2.Load("TestModel2.3ds");
 	model3.Load("TestModel3.3ds");*/
 	player.SetModel("TestModel3.3ds");
+	player.GetModel()->SetShader("Shaders/Player", NULL);
+
+	// Initialize world:
+	World *world = World::GetInstance();
+
+	// Set lights:
+	float light[] = {50, 0, 50, 0};
+	Light *tempLight = new Light(light);
+	world->AddLight(tempLight);
 
 	// Game loop
 	Running = true;
@@ -208,17 +219,27 @@ void TestRenderScene()
 	TestRenderPlane();
 	TestRenderBillBoard();
 
+	glPushMatrix();
+	{
+		glDisable(GL_LIGHTING);
+		glDisable(GL_TEXTURE_2D);
+		glColor3f(0.9, 0.9, 0.0);
+		glTranslatef(light[0], light[1], light[2]);
+		glutSolidSphere(5, 20, 20);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
+	}glPopMatrix();
 
 	angle += (100/FPS);
 	
-	player.Update();
+	player.Update(&camera);
 
 	glPushMatrix();
-		glRotatef(angle,0,1,0);
+//		glRotatef(angle,0,1,0);
 //		glRotatef((frame/FPS)/10.0f,0,1,0);
 //		std::cout << frame*(1/FPS)/10.0f << std::endl;
-		glScalef(5,5,5);
-		glScalef(1,1,1);
+//		glScalef(5,5,5);
+//		glScalef(1,1,1);
 		player.Draw();
 		//model.Draw();
 		//model2.Draw();

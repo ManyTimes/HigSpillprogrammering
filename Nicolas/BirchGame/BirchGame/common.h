@@ -1,5 +1,6 @@
 #ifndef _COMMON_H
 #define _COMMON_H
+#include "camera.h"
 
 // Enums
 enum KEYS{
@@ -21,5 +22,8 @@ extern Camera camera;
 
 // glfw_callbacks.cpp
 extern bool keys[KEY_MAX];				// Keys
+
+// world.cpp
+#define MAX_LIGHTS 1
 
 #endif

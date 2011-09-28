@@ -10,6 +10,7 @@ private :
 	Vector3 u, v, n;
 	double viewAngle, aspect, nearDist, farDist;
 	void setModelViewMatrix();
+	float matrix[16];
 public :
 	Camera();
 	void set(Point3 Eye, Point3 Look, Vector3 Up);
@@ -22,6 +23,7 @@ public :
 	void setEye(const Point3 & Eye);
 	//Point3 getEye(Camera & e) {return e.eye;}
 	Point3 getEye() { return eye; }
+	float *getEyef() { return &eye[0]; }
 	void roll(float angle);
 	void pitch(float angle);
 	void yaw(float angle);
@@ -30,6 +32,7 @@ public :
 	void setShape(float vAng, float asp, float nearD, float farD);
 	void rotate(const Vector3 & axis, float angle);
 	void rotate(int axis, float angle);
+	float *GetMatrix() { return matrix; }
 };
 
 

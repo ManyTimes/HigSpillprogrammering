@@ -1,5 +1,7 @@
 #include "player.h"
 #include "m_3ds.h"
+#include "camera.h"
+#include "world.h"
 
 Player::Player()
 {
@@ -40,7 +42,12 @@ bool Player::SetModel(const char *filename)
 	return true;
 }
 
-void Player::Update()
+void Player::Update(Camera *camera)
 {
 	CheckUpdate();
+	if(camera)
+	{
+		World *world = World::GetInstance();
+		model->UpdateShaderVariables(world->GetLight()->GetPosition(), camera->getEyef(), matrix, camera->GetMatrix() );
+	}
 }

@@ -1,5 +1,4 @@
 #include "glfw_callbacks.h"
-#include "camera.h"
 #include "common.h"
 #include <iostream>
 

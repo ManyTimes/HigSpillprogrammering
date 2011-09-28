@@ -13,11 +13,11 @@ class Entity_base {
 	Entity3f position;		// world x y z coordinates
 	Entity3f angles;		// Euler angles
 	Entity3f scale;			// scale
-	float matrix[16];		// Matrix used to combine all above values
 	bool queueUpdateMatrix;	// Used to update the matrix when values are potentially changed by being referenced.
 
 protected:
 	void UpdateMatrix(bool pos = true, bool angle = true, bool scale = true);
+	float matrix[16];		// Matrix used to combine position angles and scale
 
 public:
 	Entity_base();

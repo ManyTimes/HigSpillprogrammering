@@ -1,6 +1,8 @@
 #ifndef M_3DS_H
 #define M_3DS_H
 #include "draw_base.h"
+#include "GL/glew.h"
+#include "shader.h"
 
 #define VectorCopy(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
 
@@ -52,6 +54,19 @@ class M_3DS : public Draw_base
 	unsigned int	normalVBO;
 	unsigned int	indexVBO;
 
+	// Shader details
+	GLuint			drawProgram;
+	Shader			*drawShader;
+//	ShaderConfig	*shaderConfig;
+
+	GLint			locModelMatrix;
+	GLint			locViewMatrix;
+	GLint			loct_ModelMatrix;	// Transposed
+	GLint			loct_ViewMatrix;	// Transposed
+	GLint			locLightPosition;
+	GLint			locCameraPosition;
+
+
 	void CountComponents();
 	void ProcessData();
 	void ConvertData();
@@ -60,6 +75,8 @@ public:
 	void Load(const char *filename);
 	void Draw();
 	void Draw(float m[16]);
+	void SetShader(char *shadername, void (*InitShaderConfig)() );
+	void UpdateShaderVariables( float *lightPosition, float *cameraPosition, float *modelMatrix, float *viewMatrix );
 };
 
 

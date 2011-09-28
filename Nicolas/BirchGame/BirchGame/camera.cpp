@@ -9,26 +9,26 @@ Camera::Camera()
 
 void Camera::setModelViewMatrix()
 {
-	float m[16];
+	//float m[16];
 	Vector3 eVec(eye.x, eye.y, eye.z);//Vektorversjon av eye
-	m[0] = u.x; 
-	m[4] = u.y;
-	m[8] = u.z;
-	m[12] = -eVec.dot(u);
-	m[1] = v.x;
-	m[5] = v.y;
-	m[9] = v.z;
-	m[13] = -eVec.dot(v);
-	m[2] = n.x; 
-	m[6] = n.y;
-	m[10] = n.z;
-	m[14] = -eVec.dot(n);
-	m[3] = 0; 
-	m[7] = 0;
-	m[11] = 0;
-	m[15] = 1.0;
+	matrix[0] = u.x; 
+	matrix[4] = u.y;
+	matrix[8] = u.z;
+	matrix[12] = -eVec.dot(u);
+	matrix[1] = v.x;
+	matrix[5] = v.y;
+	matrix[9] = v.z;
+	matrix[13] = -eVec.dot(v);
+	matrix[2] = n.x; 
+	matrix[6] = n.y;
+	matrix[10] = n.z;
+	matrix[14] = -eVec.dot(n);
+	matrix[3] = 0; 
+	matrix[7] = 0;
+	matrix[11] = 0;
+	matrix[15] = 1.0;
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(m);//Load OpenGLs modelview-matrise	
+	glLoadMatrixf(matrix);//Load OpenGLs modelview-matrise
 }
 
 void Camera::set(Point3 Eye, Point3 Look, Vector3 Up)

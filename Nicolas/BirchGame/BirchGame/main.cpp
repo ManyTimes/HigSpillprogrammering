@@ -9,11 +9,28 @@
 #include "player.h"
 #include "world.h"
 #include "GL/glut.h"
+#include <ft2build.h>
+#include "screen.h"
+#include FT_FREETYPE_H
 /*
 
 #include "md3.h"
 #include "camera.h"
 */
+
+// Render targets / FBO
+#define SAMPLE 1
+int numRenderTargets = 2;
+GLuint depthbuffer;
+GLuint r_fbo1, mfbo;
+GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT }; //, GL_COLOR_ATTACHMENT1_EXT };
+void CreateRenderTargets();
+
+
+// Font Library =======================
+FT_Library library;
+FT_Face face;
+bool initFont();
 
 // Declerations =======================
 void initOpenGL();
@@ -31,6 +48,8 @@ Point3 Up(0,1,0);						// Cameras up direction.
 float FPS = 60.0f;						// Game current FPS
 #define MOVEMENT_SPEED 100.0f			// Camera movement speed.
 
+float w2 = w*SAMPLE, h2 = h*SAMPLE;
+
 // Objects ============================
 // Cameras
 Camera camera;
@@ -45,6 +64,7 @@ Camera camera;
 //M_3DS model2;
 //M_3DS model3;
 Player player;
+Screen *screen;
 
 int main()
 {
@@ -95,6 +115,12 @@ int main()
 	Light *tempLight = new Light(light);
 	world->AddLight(tempLight);
 
+	if(initFont())
+		return 1;
+
+	CreateRenderTargets();
+	screen = new Screen();
+
 	// Game loop
 	Running = true;
 	while(Running)
@@ -107,6 +133,68 @@ int main()
 
 
 	return 0;
+}
+
+bool initFont()
+{
+	int error = FT_Init_FreeType( &library ); 
+	if ( error ) 
+	{ 
+		std::cout << "Error\n";
+		return true;
+	}
+
+	error = FT_New_Face( library, "c:/windows/fonts/arial.ttf", 0, &face );
+	if ( error == FT_Err_Unknown_File_Format )
+	{
+		std::cout << "Unsupported file format.\n";
+	}
+	if( error )
+	{
+		std::cout << "Unspecified error.\n";
+	}
+
+	error = FT_Set_Pixel_Sizes( 
+		face, /* handle to face object */ 
+		0, /* pixel_width */ 
+		16 ); /* pixel_height */
+	if( error )
+	{
+		std::cout << "Unspecified error.\n";
+	}
+
+	int glyph_index = FT_Get_Char_Index( face, 'A' );
+
+	error = FT_Load_Glyph( 
+		face, /* handle to face object */ 
+		glyph_index, /* glyph index */ 
+		FT_LOAD_DEFAULT);//load_flags ); 
+	if( error )
+	{
+		std::cout << "Unspecified error 2.\n";
+	}
+
+	if( face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
+	{
+		std::cout << "Wagh\n";
+		error = FT_Render_Glyph( 
+			face->glyph, /* glyph slot */ 
+			FT_RENDER_MODE_NORMAL ); /* render mode */
+
+		if( error )
+		{
+			std::cout << "Unspecified error3.\n";
+		}
+	}
+
+
+	return false;
+}
+
+void freeFont()
+{
+	FT_Done_Face( face );
+	FT_Done_FreeType( library );
 }
 
 /*
@@ -198,8 +286,35 @@ void MovementHandle()
 void TestRenderPlane();
 void TestRenderBillBoard();
 
+void HudStart()
+{
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_SMOOTH);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, w, 0, h, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+}
+
+void HudEnd()
+{
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glEnable(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_MODELVIEW);
+}
+
 void TestRenderScene()
 {
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mfbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	static float angle = 0;
 
@@ -215,6 +330,8 @@ void TestRenderScene()
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 1.0);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.5);
 
+
+	glDrawBuffers(1, buffers);
 
 	TestRenderPlane();
 	TestRenderBillBoard();
@@ -245,6 +362,25 @@ void TestRenderScene()
 		//model2.Draw();
 		//model3.Draw();
 	glPopMatrix();
+
+
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, mfbo);
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, r_fbo1);
+	glBlitFramebufferEXT(0, 0, (int)w, (int)h, 0, 0, (int)w, (int)h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, 0);
+	glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, 0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(screen->GetProgram());
+	glBindBuffer(GL_ARRAY_BUFFER, player.GetModel()->GetVertexVBO());
+	glDrawArrays(GL_QUADS,0,4);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);//*/
+	/*HudStart();
+	HudEnd();*/
+	glUseProgram(0);
+
 	glfwSwapBuffers();
 }
 
@@ -383,4 +519,62 @@ void MatrixMultiply(float matrix[16], float v[4])
 	r[2] = matrix[2] * v[0] + matrix[6] * v[1] + matrix[10] * v[2] + matrix[14] * v[3];
 	r[3] = matrix[3] * v[0] + matrix[7] * v[1] + matrix[11] * v[2] + matrix[15] * v[3];
 	memcpy(v, r, sizeof(float) * 4);
+}
+
+void CreateRenderTargets()
+{
+	GLint maxbuffers;
+	glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxbuffers);
+	if(maxbuffers < numRenderTargets)
+	{
+		std::cout << "Error: Not enough render targets available\n";
+	}
+
+	glActiveTexture(GL_TEXTURE0);
+	GLuint img;
+	glGenTextures(1, &img);
+	glBindTexture(GL_TEXTURE_2D, img);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w2, h2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glActiveTexture(GL_TEXTURE1);
+
+	glGenFramebuffersEXT(1, &r_fbo1);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, r_fbo1);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
+                                GL_COLOR_ATTACHMENT0_EXT,
+                                GL_TEXTURE_2D, img, 0);
+	
+	// depth buffer:
+	glGenRenderbuffersEXT(1, &depthbuffer);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, depthbuffer);
+	glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER_EXT, 8, GL_DEPTH_COMPONENT24, w2, h2);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+
+	GLuint multisample;
+	glGenRenderbuffersEXT(1, &multisample);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, multisample);//GL_RENDERBUFFER_SAMPLES_EXT
+	glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER_EXT, 8, GL_RGBA8, w2, h2);
+
+	glGenFramebuffersEXT(1, &mfbo);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mfbo);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, multisample);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_RENDERBUFFER_EXT, multisample);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, depthbuffer);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+	int status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+		printf("Error1 !\n");
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,r_fbo1);
+	status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+		printf("Error2 !\n");
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
 }

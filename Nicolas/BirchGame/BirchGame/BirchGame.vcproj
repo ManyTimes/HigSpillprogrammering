@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\Libraries\glfw-2.7.2.bin.WIN32\include&quot;"
+				AdditionalIncludeDirectories="&quot;..\Libraries\glfw-2.7.2.bin.WIN32\include&quot;;&quot;..\Libraries\freetype-2.4.6\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,8 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\Libraries\glfw-2.7.2.bin.WIN32\lib-msvc90\$(ConfigurationName)\GLFW.lib opengl32.lib glew32.lib"
+				AdditionalDependencies="..\Libraries\glfw-2.7.2.bin.WIN32\lib-msvc90\$(ConfigurationName)\GLFW.lib opengl32.lib glew32.lib freetype246MT_D.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\Libraries\freetype-2.4.6\objs\win32\vc2008&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -198,7 +199,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\screen.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\shader_base.cpp"
 				>
 			</File>
 			<File
@@ -248,7 +257,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\screen.h"
+				>
+			</File>
+			<File
 				RelativePath=".\shader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\shader_base.h"
 				>
 			</File>
 			<File
@@ -271,6 +288,14 @@
 			</File>
 			<File
 				RelativePath=".\Shaders\Player.vert"
+				>
+			</File>
+			<File
+				RelativePath=".\Shaders\Screen.frag"
+				>
+			</File>
+			<File
+				RelativePath=".\Shaders\Screen.vert"
 				>
 			</File>
 		</Filter>

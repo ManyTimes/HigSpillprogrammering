@@ -7,6 +7,7 @@ uniform vec4 CameraPosition;
 
 varying float diffuse;
 
+in int gl_VertexID;
 void main(void)
 {
 	vec4 ecPosition = ModelMatrix * gl_Vertex;

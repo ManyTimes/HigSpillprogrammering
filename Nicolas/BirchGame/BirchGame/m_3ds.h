@@ -76,6 +76,7 @@ public:
 	void Draw();
 	void Draw(float m[16]);
 	void SetShader(char *shadername, void (*InitShaderConfig)() );
+	unsigned int GetVertexVBO() { return vertexVBO; }
 	void UpdateShaderVariables( float *lightPosition, float *cameraPosition, float *modelMatrix, float *viewMatrix );
 };
 

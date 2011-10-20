@@ -1,0 +1,16 @@
+/////////////////SERVER CONFIGURATION///////////////////////
+DATA            VALUE
+IPADRESS        localhost
+PORTNUMBER      2000
+SERVERNAME      Birches First Server
+MAXIMUMPLAYERS  142
+PACKETSIZE      256
+SCROLLBACK      512
+GAMEID          5
+
+
+-------------------------------------------------------------
+Do not change the order the above lines appear in.
+Do not change the left column, which are in-game variables.
+
+Only change the value column.

@@ -1,6 +1,7 @@
 #ifndef _SQLROW_H
 #define _SQLROW_H
 #include "include.h"
+#include "function.h"
 #include "SQLAPI.h"
 
 namespace cgl

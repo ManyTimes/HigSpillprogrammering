@@ -22,7 +22,7 @@ namespace cgl
 		//Runs a non-select query against the database
 		void SqlCommand::Execute(std::string query);
 		//Runs select query against the database
-		void SqlCommand::Execute(std::string query, std::string selectColumns[], int columnsLength);
+		void SqlCommand::Execute(std::string query, std::string selectColumns[], int lengthOfColumns);
 		void SqlCommand::SetConnection(SqlConnection* sqlcon);
 		//Remove result set and the query form the memory
 		void SqlCommand::ClearResult();

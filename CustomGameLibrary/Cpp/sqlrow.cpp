@@ -9,15 +9,22 @@ namespace cgl
 	
 	SqlRow::~SqlRow()
 	{
-		delete [] this->column;
+		//delete [] this->column;
 	}
 
 	void SqlRow::Initialize(int numberOfColumns)
 	{
-		column = new std::string[numberOfColumns];
-		for(int i = 0; i < numberOfColumns; i++)
+		if(numberOfColumns > 0)
 		{
-			column[i] = "";
+			this->column = new std::string[numberOfColumns];
+			for(int i = 0; i < numberOfColumns; i++)
+			{
+				this->column[i] = "";
+			}
+		}
+		else
+		{
+			cgl::Cout("Cannot initialize SqlRow of size 0");
 		}
 	}
 

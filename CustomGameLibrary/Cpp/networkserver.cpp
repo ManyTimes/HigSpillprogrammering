@@ -14,12 +14,12 @@ namespace cgl
 		this->isSocketFree = new bool[this->MAXCLIENTS];
 		if(SDLNet_Init() == -1)
 		{
-			cgl::Error("Could not INIT");
+			cgl::Cout("Could not Initiliaze SDLNet.");
 		}
 		this->sockets = SDLNet_AllocSocketSet(this->MAXCLIENTS);
 		if(!this->sockets)
 		{
-			cgl::Error("Allocate Sockets");
+			cgl::Cout("Allocate Sockets");
 		}
 		for(int i = 0; i < this->MAXCLIENTS; i++)
 		{
@@ -29,24 +29,34 @@ namespace cgl
 		int hostresolved = SDLNet_ResolveHost(&this->serverIP, NULL, this->portnumber);
 		if(hostresolved == -1)
 		{
-			cgl::Error("Resolved host");
+			cgl::Cout("Resolved host");
 		}
 		else
 		{
 			cgl::CoutIP((Uint8*)&this->serverIP.host);
 		}
 		this->serversocket = SDLNet_TCP_Open(&this->serverIP);		//ServerIP is 0.0.0.0, hm, localhost?
+		if(CGL_DEBUG_MODE == true)
 		if(!this->serversocket)
 		{
-			cgl::Error("Server socket closed");
+			cgl::Cout("Server socket closed");
 		}
 		else
 		{
-			cgl::Cout("Success established a server socket");
+			if(CGL_DEBUG_MODE == true)
+			{
+				cgl::Cout("Success established a server socket");
+			}
 		}
 		SDLNet_TCP_AddSocket(this->sockets, this->serversocket);
 	}
 
+
+	void NetworkServer::Initialize(std::string MessageServerIsFullToJoinedClient, std::string MessageToJoinedClient)
+	{
+		this->SERVERISFULL = MessageServerIsFullToJoinedClient;
+		this->SERVERNOTFULL = MessageToJoinedClient;
+	}
 	//Returns 0 if no activity, returns more than 0 if serversocket got activity (incoming clients)
 	int NetworkServer::IsClientIncoming()
 	{
@@ -76,7 +86,7 @@ namespace cgl
 			strcpy(this->buffer, this->SERVERNOTFULL.c_str());
 			this->length = strlen(this->buffer) + 1;
 			SDLNet_TCP_Send(this->clientsocket[freeslot], (void*)this->buffer, this->length);
-			cgl::Cout("Client added " + freeslot);
+			cgl::Cout("Client Added in slot : " + freeslot);
 			return 1;
 		}
 		else
@@ -86,7 +96,10 @@ namespace cgl
 			this->length = strlen(this->buffer) + 1;
 			SDLNet_TCP_Send(tempsocket, (void*) this->buffer, this->length);
 			SDLNet_TCP_Close(tempsocket);
-			cgl::Cout("Maximum clients reached on the server");
+			if(CGL_DEBUG_MODE == true)
+			{
+				cgl::Cout("Maximum clients reached on the server");
+			}
 		}
 		return 0;
 	}
@@ -94,11 +107,34 @@ namespace cgl
 	//Closes the connection and emptys the socket of client number N
 	void NetworkServer::CloseClient(int clientnumber)
 	{
+		cgl::Cout("Closing client " + clientnumber);
 		SDLNet_TCP_DelSocket(this->sockets, this->clientsocket[clientnumber]);
 		SDLNet_TCP_Close(this->clientsocket[clientnumber]);
 		this->clientsocket[clientnumber] = NULL;
 		this->isSocketFree[clientnumber] = true;
 		this->clientcount = this->clientcount - 1;
+	}
+
+	void NetworkServer::CloseClient(TCPsocket* clientsocket)
+	{
+		int clientnumber = -1;
+		for(int i = 0; i < this->MAXCLIENTS; i++)
+		{
+			if(this->clientsocket[i] == (TCPsocket&)clientsocket)
+			{
+				clientnumber = i;
+				i = this->MAXCLIENTS;
+			}
+		}
+		cgl::Cout("Closing client " + clientnumber);
+		if(clientnumber > -1)
+		{
+			SDLNet_TCP_DelSocket(this->sockets, this->clientsocket[clientnumber]);
+			SDLNet_TCP_Close(this->clientsocket[clientnumber]);
+			this->clientsocket[clientnumber] = NULL;
+			this->isSocketFree[clientnumber] = true;
+			this->clientcount = this->clientcount - 1;
+		}
 	}
 
 	//Reads data sent from client N, stores data in the buffer (member variable)
@@ -111,13 +147,36 @@ namespace cgl
 			this->receivedbytes = SDLNet_TCP_Recv(this->clientsocket[clientnumber], this->buffer, BUFFERSIZE);
 			if(this->receivedbytes <= 0)
 			{
-				if(DEBUG == true)
+				if(CGL_DEBUG_MODE == true)
 				{
 					std::string temp = "Client number " + clientnumber;
 					temp = temp + " is removed";
 					cgl::Cout(temp);
 				}
 				this->CloseClient(clientnumber);										//Deletes and frees the socket
+				std::cout << "Client is closed" << std::endl;
+				return 0;																//Client disconnected
+			}
+			return 1;
+		}
+		return -1;
+	}
+
+	//Reads Received data from socket into buffer. Returns -1 if no data is read, returns 0 if clientsocket is closing, else returns 1
+	int NetworkServer::ReadReceivedData(TCPsocket* clientsocket)
+	{
+		this->clientactivity = SDLNet_SocketReady(clientsocket);
+		if(clientactivity != 0)
+		{
+			this->receivedbytes = SDLNet_TCP_Recv((TCPsocket&)clientsocket, this->buffer, BUFFERSIZE);
+			if(this->receivedbytes <= 0)
+			{
+				if(CGL_DEBUG_MODE == true)
+				{
+					cgl::Cout("Client is removed");
+				}
+				this->CloseClient(clientsocket);										//Deletes and frees the socket
+				std::cout << "Client is closed" << std::endl;
 				return 0;																//Client disconnected
 			}
 			return 1;
@@ -127,7 +186,7 @@ namespace cgl
 
 	//Sends data stored in the buffer to client N
 	//Returns 1 on success, 0 on no data to send/error
-	int NetworkServer::SendReceivedData(int toClientNumber, int fromClientNumber)
+	bool NetworkServer::SendReceivedData(int toClientNumber, int fromClientNumber)
 	{
 		this->length = strlen(this->buffer)+1;
 		if(this->length > 1 && toClientNumber != fromClientNumber && this->isSocketFree[toClientNumber] == false)
@@ -136,33 +195,56 @@ namespace cgl
 		}
 		else
 		{
-			return 0;
+			return false;
 		}
-		return 1;
+		return true;
 	}
 
 	//Returns 1 on success, 0 on error. Sends data to a connected client through his socket
-	int NetworkServer::SendData(int clientnumber, char data[])
+	bool NetworkServer::SendData(int clientNumber, char data[])
 	{
-		strcpy(this->buffer, data);
+		strcpy(this->buffer, data);						//Why do I copy data to buffer, when they are of the same type, above me... :)
 		this->length = strlen(this->buffer) + 1;
-		if(this->length > 1 && this->isSocketFree[clientnumber] == false && this->clientsocket[clientnumber] != NULL)
+		if(this->length > 1 && this->isSocketFree[clientNumber] == false && this->clientsocket[clientNumber] != NULL)//Data not too short and socket is in use
 		{
-			if(SDLNet_TCP_Send(this->clientsocket[clientnumber], (void*)this->buffer, this->length) < this->length)
-			{
-				return 0;
+			if(SDLNet_TCP_Send(this->clientsocket[clientNumber], (void*)this->buffer, this->length) < this->length)	//Length of data sent, less than length of data
+			{																										//Something failed, send 0
+				return false;
 			}
 		}
 		else
 		{
-			return 0;
+			return false;
 		}
-		return 1;
+		return true;
+	}
+
+	//Returns true on success, 0 if error happened
+	bool NetworkServer::SendData(int clientNumber, const char* data)
+	{
+		strcpy(this->buffer, data);
+		this->length = strlen(this->buffer) +1;
+		if(this->length > 1 && this->isSocketFree[clientNumber] == false && this->clientsocket[clientNumber] != NULL)
+		{
+			if(SDLNet_TCP_Send(this->clientsocket[clientNumber], (void*)this->buffer, this->length) < this->length)
+			{
+				return false;
+			}
+		}
+		else
+		{	
+			return false;
+		}
+		return true;
 	}
 
 	//Clears all sockets and closes the server socket
 	void NetworkServer::Exit()
 	{
+		for(int i = 0; i < this->MAXCLIENTS; i++)	
+		{											
+			this->SendData(i, "exit");					//Informing clients that we are shutting down the server
+		}
 		SDLNet_FreeSocketSet(this->sockets);
 		SDLNet_TCP_Close(this->serversocket);
 		delete []isSocketFree;

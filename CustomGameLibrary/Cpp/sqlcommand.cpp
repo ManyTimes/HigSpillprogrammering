@@ -30,10 +30,10 @@ namespace cgl
 
 	//Runs query against the database
 	//Result is stored within the member "result", if any result exists
-	void SqlCommand::Execute(std::string query, std::string selectColumns[], int columnsLength)
+	void SqlCommand::Execute(std::string query, std::string selectColumns[], int lengthOfColumns)
 	{
 		this->query = query;
-		this->columnsLength = columnsLength;
+		this->columnsLength = lengthOfColumns;
 		this->result = new SqlResult(selectColumns, this->columnsLength);
 		this->result->totalRows = 0;
 		this->totalRows = 0;

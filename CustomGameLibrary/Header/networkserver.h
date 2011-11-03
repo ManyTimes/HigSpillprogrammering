@@ -10,6 +10,7 @@ namespace cgl
 		int MAXCLIENTS;
 		std::string SERVERNOTFULL;
 		std::string SERVERISFULL;
+
 		int receivedbytes;
 		int clientactivity;
 		int length;
@@ -25,15 +26,19 @@ namespace cgl
 
 		//Constructor
 		NetworkServer::NetworkServer(int portnumber, int maximumClients);
-
+		//NetworkServer automatically sends back "OK" or "FULL" messages, these can be changed here by Initialize();
+		void NetworkServer::Initialize(std::string MessageServerIsFullToJoinedClient, std::string MessageToJoinedClient);
 		//Object functions
 		int NetworkServer::GetNumberOfActiveSockets();
 		int NetworkServer::IsClientIncoming();
 		int NetworkServer::CreateClient();
 		void NetworkServer::CloseClient(int clientnumber);
+		void NetworkServer::CloseClient(TCPsocket* clientsocket);
 		int NetworkServer::ReadReceivedData(int clientnumber);
-		int NetworkServer::SendReceivedData(int toClientNumber, int fromClientNumber);
-		int NetworkServer::SendData(int clientnumber, char data[]);
+		int NetworkServer::ReadReceivedData(TCPsocket* clientsocket);
+		bool NetworkServer::SendReceivedData(int toClientNumber, int fromClientNumber);
+		bool NetworkServer::SendData(int clientnumber, char data[]);
+		bool NetworkServer::SendData(int clientNumber, const char* data);
 		void NetworkServer::Exit();
 	};
 }

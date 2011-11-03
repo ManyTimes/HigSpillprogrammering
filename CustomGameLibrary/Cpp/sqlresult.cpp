@@ -3,15 +3,18 @@
 namespace cgl
 {
 	//***********CONSTRUCTOR***********
-	SqlResult::SqlResult(std::string selectColumns[],int columnsLength)
+	SqlResult::SqlResult(std::string selectColumns[],int numberOfColumns)
 	{
 		this->totalRows = 0;
 		this->allocateIncrementSize = 10;
-		this->columnsLength = columnsLength;
+		this->columnsLength = numberOfColumns;
 		this->row = new SqlRow[allocateIncrementSize];
 		for(int i = 0; i < allocateIncrementSize; i++)							//For all rows, init their column values
 		{
-			this->row[i].Initialize(this->columnsLength);
+			if(numberOfColumns > 0)
+			{
+				this->row[i].Initialize(this->columnsLength);
+			}
 		}
 	}
 	SqlResult::~SqlResult()

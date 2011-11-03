@@ -9,6 +9,7 @@ namespace cgl
 		try
 		{
 			this->con = new SAConnection();
+			cgl::Cout("Server Connection Established to: " + serv);
 			con->setOption("DBPROP_INIT_TIMEOUT") = cgl::i2s(timeout).c_str();
 			if(serv.length() < 2 || db.length() < 2)
 			{

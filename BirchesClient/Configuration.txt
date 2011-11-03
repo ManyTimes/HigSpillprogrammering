@@ -1,0 +1,12 @@
+/////////////////CLIENT CONFIGURATION///////////////////////
+DATA            VALUE
+JOINADDRESS     localhost
+JOINPORTNUMBER  9999
+PLAYERNAME      ManyTimes
+
+
+-------------------------------------------------------------
+Do not change the order the above lines appear in.
+Do not change the left column, which are in-game variables.
+
+Only change the value column.

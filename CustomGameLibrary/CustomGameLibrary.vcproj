@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="CustomGameLibrary"
 	ProjectGUID="{E0C11DE2-9F0A-4104-B7E8-E07664DCE412}"
 	RootNamespace="CustomGameLibrary"
@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\SpillProgrammering\CustomGameLibrary"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CUSTOMGAMELIBRARY_EXPORTS"
+				AdditionalIncludeDirectories="Libraries\GL\include;&quot;Libraries\GLFW-2.7.2\include&quot;;&quot;Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\include&quot;;Libraries\SQLAPI\include;&quot;Libraries\SDL-1.2.14\include&quot;;CustomGameLibrary\Header"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CGLDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,8 +61,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib SQLAPI.lib OpenGL32.lib GLFW.lib"
-				OutputFile="C:\SpillProgrammering\Build\CustomGameLibrary\$(ProjectName).dll"
+				AdditionalDependencies="Libraries\SDL-1.2.14\lib\SDL.lib Libraries\SDL-1.2.14\lib\SDLmain.lib Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\lib\SDL_net.lib Libraries\SQLAPI\lib\SQLAPI.lib Libraries\GL\lib\opengl32.lib Libraries\GL\lib\glew32.lib Libraries\GL\lib\GlAux.lib Libraries\GL\lib\Glu32.lib Libraries\GL\lib\Glut32.lib Libraries\GLFW-2.7.2\lib-msvc90\$(ConfigurationName)\GLFWDLL.lib Winmm.lib"
+				OutputFile="$(OutDir)\..\..\Build\CustomGameLibrary\$(ProjectName).dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -172,11 +172,7 @@
 			Name="Header"
 			>
 			<File
-				RelativePath=".\Header\camera.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Header\cgl.h"
+				RelativePath=".\Header\autoarray.h"
 				>
 			</File>
 			<File
@@ -192,11 +188,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Header\keyboardListener.h"
+				RelativePath=".\Header\includegl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Header\opengl.h"
+				RelativePath=".\Header\keyboard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Header\mathtool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Header\mouse.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Header\settings.h"
 				>
 			</File>
 			<Filter
@@ -215,11 +223,27 @@
 				Name="Environment"
 				>
 				<File
+					RelativePath=".\Header\camera.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\grid.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Header\sound.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Header\terrain.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\time.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\weather.h"
 					>
 				</File>
 			</Filter>
@@ -231,6 +255,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Header\image.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Header\menu.h"
 					>
 				</File>
@@ -238,24 +266,24 @@
 					RelativePath=".\Header\text.h"
 					>
 				</File>
-				<File
-					RelativePath=".\Header\weather.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Unit"
 				>
 				<File
-					RelativePath=".\Header\ability.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Header\birch.h"
 					>
 				</File>
 				<File
+					RelativePath=".\Header\boundingbox.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Header\entity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\projectile.h"
 					>
 				</File>
 			</Filter>
@@ -291,12 +319,32 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Graphics"
+				>
+				<File
+					RelativePath=".\Header\image2d.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\model3d.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\opengl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\textureTGA.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Cpp"
 			>
 			<File
-				RelativePath=".\Cpp\camera.cpp"
+				RelativePath=".\Cpp\autoarray.cpp"
 				>
 			</File>
 			<File
@@ -304,11 +352,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Cpp\keyboardListener.cpp"
+				RelativePath=".\Cpp\keyboard.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Cpp\opengl.cpp"
+				RelativePath=".\Cpp\mathtool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Cpp\mouse.cpp"
 				>
 			</File>
 			<Filter
@@ -335,10 +387,6 @@
 				Name="Unit"
 				>
 				<File
-					RelativePath=".\Cpp\ability.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Cpp\birch.cpp"
 					>
 				</File>
@@ -346,12 +394,24 @@
 					RelativePath=".\Cpp\entity.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Cpp\projectile.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="UI"
 				>
 				<File
+					RelativePath=".\Cpp\boundingbox.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Cpp\button.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\image.cpp"
 					>
 				</File>
 				<File
@@ -379,11 +439,23 @@
 				Name="Environment"
 				>
 				<File
+					RelativePath=".\Cpp\camera.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\grid.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Cpp\sound.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Cpp\terrain.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\time.cpp"
 					>
 				</File>
 				<File
@@ -404,6 +476,26 @@
 				</File>
 				<File
 					RelativePath=".\Cpp\player.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Graphics"
+				>
+				<File
+					RelativePath=".\Cpp\image2d.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\model3d.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\opengl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\textureTGA.cpp"
 					>
 				</File>
 			</Filter>

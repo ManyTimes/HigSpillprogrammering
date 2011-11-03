@@ -1,0 +1,22 @@
+/////////////////SERVER CONFIGURATION///////////////////////
+DATA            VALUE
+PORTNUMBER      9999
+SERVERNAME      Birches First Server
+MAXIMUMPLAYERS  10
+PACKETSIZE      256
+SCROLLBACK      512
+GAMEID          5
+SQLSERVERNAME   bergpc\sqlexpress
+SQLDATABASE     Spillprogrammering
+SQLUser         Oyvind
+SQLPassword     123
+SQLTimeoutSec.  3
+
+
+
+-------------------------------------------------------------
+Do not change the order the above lines appear in.
+Do not change the left column, which are in-game variables.
+Do note that white space between DATA and VALUE requires to be spaced, not tabbed.
+
+Only change the value column.

@@ -116,8 +116,8 @@ void ReadServerData()
 		}
 		for(i = 0; i < MAXIMUMPLAYERS; i++)
 		{
-			//std::cout << "Player " << i << " name: " << player[i].playername << " XYZ " << player[i].position.x << "," << player[i].position.y << std::endl;
-			//player[i].SetModel("Data/TestModel.3ds");
+			std::cout << "Player " << i << " name: " << player[i].playername << " XYZ " << player[i].position.x << "," << player[i].position.y << std::endl;
+			player[i].SetModel("Data/TestModel.3ds");
 		}
 	}
 }

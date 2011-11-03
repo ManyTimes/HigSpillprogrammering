@@ -259,10 +259,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Header\menu.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Header\text.h"
 					>
 				</File>
@@ -310,10 +306,6 @@
 			<Filter
 				Name="Player"
 				>
-				<File
-					RelativePath=".\Header\npc.h"
-					>
-				</File>
 				<File
 					RelativePath=".\Header\player.h"
 					>
@@ -415,10 +407,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Cpp\menu.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Cpp\text.cpp"
 					>
 				</File>
@@ -470,10 +458,6 @@
 			<Filter
 				Name="Player"
 				>
-				<File
-					RelativePath=".\Cpp\npc.cpp"
-					>
-				</File>
 				<File
 					RelativePath=".\Cpp\player.cpp"
 					>

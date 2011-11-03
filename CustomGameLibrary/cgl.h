@@ -49,10 +49,8 @@
 
 //PLAYER
 #ifdef _CGLPROGRAM
-#include "../../CustomGameLibrary/Header/npc.h"
 #include "../../CustomGameLibrary/Header/player.h"
 #else
-#include "Header/npc.h"
 #include "Header/player.h"
 #endif
 
@@ -71,11 +69,9 @@
 //UI
 #ifdef _CGLPROGRAM
 #include "../../CustomGameLibrary/Header/button.h"
-#include "../../CustomGameLibrary/Header/menu.h"
 #include "../../CustomGameLibrary/Header/text.h"
 #else
 #include "Header/button.h"
-#include "Header/menu.h"
 #include "Header/text.h"
 #endif
 

@@ -1,3 +1,4 @@
+#include <fstream>
 #include "../Header/model3d.h"
 
 namespace cgl
@@ -21,31 +22,25 @@ namespace cgl
 	void Model3D::Load(const char *filename)
 	{
 		// Open file
-		std::fstream fp(filename, std::ios::in | std::ios::out | std::ios::binary);
-		cgl::Cout("1");
+		std::fstream fp(filename,std::ios::in | std::ios::out | std::ios::binary);
 		// Read file into buffer: data, and store file size
 		if (fp.is_open()) 
 		{
-			fp.seekg(0, std::ios::end);
-			cgl::Cout("D");
+			fp.seekg(0, std::ios_base::end);
 			filesize = fp.tellg();
-			cgl::Cout("A");
 			data = new char[filesize];
 			fp.seekg(0, std::ios::beg);
 			fp.read(data, filesize);
-			cgl::Cout("B");
 			data[filesize] = '\0';
-			cgl::Cout("C");
 			fp.close();
 		}
 		else 
 		{
 			cgl::Cout("Could not open 3D file");
+			return;
 		}
 
-		cgl::Cout("2");
 		ChunkInfo_3ds* pointer = (ChunkInfo_3ds*)data;
-		cgl::Cout("3");
 		if(pointer->ID == MAIN3DS) 
 		{
 			unsigned char* version = (unsigned char*)(data+28);	// Find version.

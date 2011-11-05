@@ -2,5 +2,5 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "cgl.h"
+#include "../../CustomGameLibrary/cgl.h"
 

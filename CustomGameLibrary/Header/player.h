@@ -8,7 +8,6 @@ namespace cgl
 	class DECLARE Player : public Birch
 	{
 	private:
-		int numModels;							//Whats this int used for? Hm... :)
 	public:
 		//Public data
 		Uint8* IPaddress;						//A players own IP adress

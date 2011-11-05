@@ -1,10 +1,10 @@
 #ifndef _MODEL3D_H
 #define _MODEL3D_H
+#include "GL/glew.h"
 #include "include.h"
 #include "mathtool.h"
 #include "function.h"
 #include "includegl.h"
-#include <fstream>
 
 namespace cgl
 {

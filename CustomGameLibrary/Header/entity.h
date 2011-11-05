@@ -16,6 +16,7 @@ namespace cgl
 	private:
 		int size;				//The collision size, number of smallest gridbox of space it takes (bounding box of this size, entity is positioned in the middle
 		Model3D *model;
+		int numModels;							//Whats this int used for? Hm... :)
 		Vector3f angles;		// Euler angles
 		Vector3f scale;			// scale
 		float matrix[16];		// Matrix used to combine all above values
@@ -32,6 +33,8 @@ namespace cgl
 		Vector3f viewangle;
 		//********CONSTRUCTOR **********/
 		Entity::Entity();
+		//********DESTRUCTOR **********/
+		Entity::~Entity();
 		//********FUNCTIONS **********/
 
 		int Entity::GetSize();

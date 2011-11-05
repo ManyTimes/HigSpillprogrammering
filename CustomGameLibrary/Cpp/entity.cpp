@@ -14,6 +14,16 @@ namespace cgl
 		matrix[8] = matrix[9] = matrix[11] = 0.0f;
 		matrix[15] = 1.0f;
 		matrix[12] = matrix[13] = matrix[14] = 0.0f;
+
+		model = new Model3D;
+	}
+	Entity::~Entity()
+	{
+		if(numModels)
+		{
+			if(model != NULL)		// For now just one model.
+				delete model;
+		}
 	}
 
 	/*********FUNCTIONS******************/

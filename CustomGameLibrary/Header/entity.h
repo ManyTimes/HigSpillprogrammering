@@ -29,6 +29,7 @@ namespace cgl
 		Volumef volume;
 		BoundingBox boundingBox;
 		Vector3f position;		// world x y z coordinates
+		Vector3f viewangle;
 		//********CONSTRUCTOR **********/
 		Entity::Entity();
 		//********FUNCTIONS **********/

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Spillprogrammering\CustomGameLibrary\Libraries\SQLAPI\include;&quot;C:\Spillprogrammering\CustomGameLibrary\Libraries\SDL-1.2.14\include&quot;;&quot;C:\Spillprogrammering\CustomGameLibrary\Libraries\glui-2.36\src\include&quot;;&quot;C:\Spillprogrammering\CustomGameLibrary\Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\include&quot;;&quot;C:\Spillprogrammering\CustomGameLibrary\Libraries\GLFW-2.7.2\include&quot;;C:\Spillprogrammering\CustomGameLibrary\Libraries\GL\include;C:\Spillprogrammering\CustomGameLibrary"
+				AdditionalIncludeDirectories="&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SQLAPI\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\glui-2.36\src\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GLFW-2.7.2\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CGLPROGRAM;_CGLDEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

@@ -49,10 +49,8 @@
 
 //PLAYER
 #ifdef _CGLPROGRAM
-#include "../../CustomGameLibrary/Header/npc.h"
 #include "../../CustomGameLibrary/Header/player.h"
 #else
-#include "Header/npc.h"
 #include "Header/player.h"
 #endif
 
@@ -71,11 +69,9 @@
 //UI
 #ifdef _CGLPROGRAM
 #include "../../CustomGameLibrary/Header/button.h"
-#include "../../CustomGameLibrary/Header/menu.h"
 #include "../../CustomGameLibrary/Header/text.h"
 #else
 #include "Header/button.h"
-#include "Header/menu.h"
 #include "Header/text.h"
 #endif
 
@@ -85,10 +81,12 @@
 #include "../../CustomGameLibrary/Header/Image2d.h"
 #include "../../CustomGameLibrary/Header/opengl.h"
 #include "../../CustomGameLibrary/Header/model3d.h"
+#include "../../CustomGameLibrary/Header/modelmd2.h"
 #else
-#include "Header/Image2d.h"
+#include "Header/image2d.h"
 #include "Header/opengl.h"
 #include "Header/model3d.h"
+#include "Header/modelmd2.h"
 #endif
 
 //OTHER

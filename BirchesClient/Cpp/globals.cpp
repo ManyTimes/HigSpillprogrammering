@@ -18,6 +18,7 @@ std::string messageFeedback = "";
 bool SERVERRESPONSE = false;		//When we join, we wait for a response from server
 									//before a player can play/move/draw/render/send network stuff
 //GLOBAL OBJECTS
+cgl::ModelMD2* rock;
 cgl::NetworkClient* client;
 cgl::Terrain* terrain;
 cgl::Grid* grid;

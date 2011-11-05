@@ -259,10 +259,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Header\menu.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Header\text.h"
 					>
 				</File>
@@ -311,10 +307,6 @@
 				Name="Player"
 				>
 				<File
-					RelativePath=".\Header\npc.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Header\player.h"
 					>
 				</File>
@@ -328,6 +320,10 @@
 				</File>
 				<File
 					RelativePath=".\Header\model3d.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\modelmd2.h"
 					>
 				</File>
 				<File
@@ -415,10 +411,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Cpp\menu.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Cpp\text.cpp"
 					>
 				</File>
@@ -471,10 +463,6 @@
 				Name="Player"
 				>
 				<File
-					RelativePath=".\Cpp\npc.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Cpp\player.cpp"
 					>
 				</File>
@@ -488,6 +476,10 @@
 				</File>
 				<File
 					RelativePath=".\Cpp\model3d.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\modelmd2.cpp"
 					>
 				</File>
 				<File

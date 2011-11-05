@@ -21,6 +21,7 @@ extern bool SERVERRESPONSE;
 
 
 //GLOBAL OBJECTS
+extern cgl::ModelMD2* rock;
 extern cgl::NetworkClient* client;
 extern cgl::Terrain* terrain;
 extern cgl::Grid* grid;

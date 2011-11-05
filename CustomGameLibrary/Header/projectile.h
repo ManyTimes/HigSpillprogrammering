@@ -5,6 +5,7 @@
 #include "includegl.h"
 #include "model3d.h"
 #include "entity.h"
+#include "mathtool.h"
 
 namespace cgl
 {
@@ -12,17 +13,25 @@ namespace cgl
 	class DECLARE Projectile : public Entity
 	{
 	private:
-		float lifespan;				//When lifespan reaches 0, the projectile is no longer drawn, it is dead.
-		int rangeTravelled;			//Increases each time the porjectile is moved
-		void Projectile::Move();	//Called within Draw() automatic
+		bool hasModel;
+		int lifetime;				//Life span left of the projectile to live, if projectile hits soemthing, set this to 0
+		int maxTimeToLive;			
+		cgl::Model3D* model;		//THe projectile modelfile
+		float maximumRange;			//Max range the projectile can move before not drawn
+		float range;				//Current range the projectile has moved, if it hits objects, set this to 0
+		float RGB[3];				//Colors of the projectile
+		bool Projectile::Move();	//Called within Draw() automatic
 	public:
-		int maximumRange;			//Maximum range it travels from starting position
-		int size;					//Model Size
-		float missileArc;
-		float movespeed;
-		float angle;				//Angle, direction it is moving towards
-		Projectile::Projectile(char* modelFilenam, cgl::Vector3f position, float angle, float movespeed, float missileArc);
-		void Projectile::Initialize(float lifespan, float size, int maximumRange);
+		float viewingAngle;			//Current angle the projectile is currently moving towards
+		int damage;					//Damage the projectile can do upon hit
+		float size;					//Size of the projectile, how large scale it is been drawn to
+		float projectileArc;		//The missile arc of the projectile, while flying in air
+		float movespeed;			//Number of coordinates it moves each time "draw()" is called
+		Projectile::Projectile(float RGBcolor[3], float projectileSize,int maxTimeToLive, float maximumRange, float projectileArcDegress, float movespeed);
+		Projectile::Projectile(cgl::Model3D* modelObject, float projectileSize, int maxTimeToLive, float maximumRange, float projectileArcDegress, float movespeed);
+		void Projectile::Shoot(float unitPositionX, float unitPositionZ, float unitViewingAngle, int damageUponImpact);
+		void Projectile::Shoot(float unitPositionX, float unitPositionY, float unitPositionZ, float unitViewingAngle, int damageUponImpact);
+		void Projectile::Shoot(cgl::Vector3f unitPosition, cgl::Vector3f unitViewingDirection, int damageUponImpact);
 		void Projectile::Draw();
 	};
 }

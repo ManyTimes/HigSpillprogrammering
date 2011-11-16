@@ -95,6 +95,7 @@ void Network()
 	{
 		if(server->ReadReceivedData(i) == 1)	//Data from client/player i has arrived
 		{
+			
 			//Data received from Clients
 			//0 - Playername only, init
 			//1 - XYZ
@@ -113,13 +114,33 @@ void Network()
 				}
 				player[i].playername = GetPlayerName();
 				break;
-			case '1':
-				break;
+			case '1':							//new player position incomming
+				{
+					for (int i = 0; i < server->clientcount; i++)	//Sends the position data back out to all players connected
+					{
+						server->SendData(i, server->buffer);
+					}
+					break;
+				}
 			case '2':
+				
+
 				break;
 			case '3':
-				break;
+				{
+					for (int i = 0; i < server->clientcount; i++)
+					{
+						server->SendData(i, server->buffer);
+					}
+					break;
+				}
 			case '4':
+				{
+					for (int i = 0; i < server->clientcount; i++)
+					{
+						server->SendData(i, server->buffer);
+					}
+				}
 				break;
 			case '5':	//Client has left the game
 				player[i].playername = "<Empty Slot>";

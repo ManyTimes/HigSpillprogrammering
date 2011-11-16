@@ -6,4 +6,5 @@
 void Network();
 void ConnectToServer();
 void DisconnectFromServer();
+void SendPosition();
 #endif

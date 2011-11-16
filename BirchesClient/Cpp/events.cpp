@@ -36,6 +36,50 @@ void KeyboardClicked()
 			{
 				gamestate = 2;			//Viewing menu while playing
 			}
+			if (keyboard->isKeyPressed("W") == true)		//move forward
+			{
+				float distance = 10.0f;
+				float *matrix = player->GetMatrix();
+				cgl::Vector3f position = player->GetPositionRef();
+
+				cgl::Vector3f forward(matrix[8], matrix[9], matrix[10]);
+
+				position += forward * distance;
+
+				player->SetPosition(position);
+				SendPosition();
+			}
+			if (keyboard->isKeyPressed("S") == true)		//move backwards
+			{
+				float distance = 10.0f;
+				float *matrix = player->GetMatrix();
+				cgl::Vector3f position = player->GetPositionRef();
+
+				cgl::Vector3f forward(matrix[8], matrix[9], matrix[10]);
+
+				position -= forward * distance;
+
+				player->SetPosition(position);
+				SendPosition();
+			}
+			if (keyboard->isKeyPressed("D") == true)		//turn right
+			{
+				float turn = 5.0f;
+				cgl::Vector3f angel = player->GetAngles();
+
+				player->SetAngles(angel.x, angel.y+turn,angel.z);
+
+				//Should we send angels to the clients? (so that each player can see which way each other player is facing)
+			}
+			if (keyboard->isKeyPressed("A") == true)		//turn left
+			{
+				float turn = 5.0f;
+				cgl::Vector3f angel = player->GetAngles();
+
+				player->SetAngles(angel.x, angel.y-turn,angel.z);
+
+				//Should we send angels to the clients? (so that each player can see which way each other player is facing)
+			}
 		}
 		else
 		{//We are in game, but the "Menu" (quit/continue) is showing

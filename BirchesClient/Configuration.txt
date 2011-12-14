@@ -2,7 +2,7 @@
 DATA            VALUE
 JOINADDRESS     localhost
 JOINPORTNUMBER  9999
-PLAYERNAME      ManyTimes
+PLAYERNAME      Colaoye
 
 
 -------------------------------------------------------------

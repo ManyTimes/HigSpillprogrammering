@@ -12,7 +12,7 @@ namespace cgl
 	private:
 		SAConnection* con;
 		//***********FUNCTIONS***********
-		void SqlConnection::Initalize(std::string serv, std::string db, std::string user, std::string pwd, int timeout);
+		void SqlConnection::Initalize(std::string serv, std::string db, std::string user, std::string pwd, int timeoutSeconds);
 		void SqlConnection::Connect(std::string serv, std::string db, std::string user, std::string pwd);
 	public:
 		std::string server;

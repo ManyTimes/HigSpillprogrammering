@@ -1,7 +1,6 @@
 #ifndef _ENTITY_H
 #define _ENTITY_H
 #include "include.h"
-#include "model3d.h"
 #include "mathtool.h"
 #include "boundingbox.h"
 
@@ -15,15 +14,14 @@ namespace cgl
 	{
 	private:
 		int size;				//The collision size, number of smallest gridbox of space it takes (bounding box of this size, entity is positioned in the middle
-		Model3D *model;
-		int numModels;							//Whats this int used for? Hm... :)
 		Vector3f angles;		// Euler angles
-		Vector3f scale;			// scale
+		Vector3f scale;			// Scale
 		float matrix[16];		// Matrix used to combine all above values
 		bool queueUpdateMatrix;	// Used to update the matrix when values are potentially changed by being referenced.
 	protected:
 		void Entity::UpdateMatrix(bool pos = true, bool angle = true, bool scale = true);
 	public:
+
 		int ID;
 		Vertex3i positioni;
 		Vertex3i oldPositioni;
@@ -36,11 +34,7 @@ namespace cgl
 		//********DESTRUCTOR **********/
 		Entity::~Entity();
 		//********FUNCTIONS **********/
-
 		int Entity::GetSize();
-		void Entity::Draw();
-		void Entity::Draw(float m[16]);
-		bool Entity::SetModel(const char* filename);
 		void Entity::SetSize(int collisionSize);
 		void Entity::SetPosition(float x, float y, float z) ;
 		void Entity::SetPosition(float p[3]);

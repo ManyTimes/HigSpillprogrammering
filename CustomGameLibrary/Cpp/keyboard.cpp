@@ -79,6 +79,7 @@ namespace cgl
 		conversion["UP"] = 283;
 		conversion["DOWN"] = 284;
 		conversion["ALT"] = 291;
+		conversion["SPACE"] = 32;
 
 		for(int i = 0; i < 321; i++)
 		{

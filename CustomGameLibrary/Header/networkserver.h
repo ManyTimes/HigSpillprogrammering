@@ -16,7 +16,10 @@ namespace cgl
 		int length;
 		IPaddress serverIP;
 		SDLNet_SocketSet sockets;
+		void (*CallbackOnClose)(int);
 	public:
+		void (NetworkServer::*callbackClose)(int clientNumber);                // C++
+		void (NetworkServer::*callbackCloseConst)(int) const;     // C++
 		int portnumber;
 		char buffer[BUFFERSIZE];			//Holds received data, if any (requires a call to ReadReceivedData(int)
 		TCPsocket serversocket;				//The incoming server socket
@@ -39,6 +42,9 @@ namespace cgl
 		bool NetworkServer::SendReceivedData(int toClientNumber, int fromClientNumber);
 		bool NetworkServer::SendData(int clientnumber, char data[]);
 		bool NetworkServer::SendData(int clientNumber, const char* data);
+		bool NetworkServer::SendData(int clientNumber, std::string data);
+		bool NetworkServer::SendDataToConnectedClients(std::string data);
 		void NetworkServer::Exit();
+		void NetworkServer::CallbackOnClientClosed(void (*function)(int clientNumber));
 	};
 }

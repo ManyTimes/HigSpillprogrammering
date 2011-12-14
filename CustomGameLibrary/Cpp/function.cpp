@@ -5,9 +5,18 @@ namespace cgl
 	void CGLInitialize()
 	{
 		srand((unsigned)time(NULL));					//Initialize random seed with time
-		cgl::GetRandomInt(1,3);							//First random run silently from the library
-		cgl::GetRandomFloat(1.0f, 2.0f);
+		cgl::GetRandomInt(1,3);							//First random runs silently from the library, to start off the fixed seed
+		cgl::GetRandomFloat(1.0f, 2.0f);				//This function shoudl actually call on InitGLFW, InitOpengl, InitSDL, InitSDLNet, so calling this
+	}													//Will automatically init all sub-libraries this library uses without the need of actually creating objects from this library
+														//in a particular order for some objects to work...
+	//Returns whether the system is little-endian
+	bool isSystemLittleEndian() 
+	{
+		//The short value 1 has bytes (1, 0) in little-endian and (0, 1) in//big-endian
+		short s = 1;
+		return (((char*)&s)[0]) == 1;
 	}
+
 	int GetRandomInt(int low, int high)
 	{
 		//#define RANDOMINT(lownumber, highnumber) (int)((lownumber) + (highnumber + 1 - lownumber) * (rand() / (float) RAND_MAX));
@@ -87,6 +96,11 @@ namespace cgl
 		return returnvalue;
 	}
 
+	float s2f(std::string value)
+	{
+		return c2f((char*)value.c_str());
+	}
+
 	int d2i(double value)
 	{
 		return (int)value;
@@ -156,6 +170,35 @@ namespace cgl
 	char* s2c(std::string value)
 	{
 		return (char*)value.c_str();
+	}
+
+	void Sleep(int ms)
+	{
+		SDL_Delay(ms);
+	}
+	void Sleep(float ms)
+	{
+		SDL_Delay(ms);
+	}
+
+	void Delay(int ms)
+	{
+		SDL_Delay(ms);
+	}
+
+	void Delay(float ms)
+	{
+		SDL_Delay(ms);
+	}
+
+	void Wait(int ms)
+	{
+		SDL_Delay(ms);
+	}
+
+	void Wait(float ms)
+	{
+		SDL_Delay(ms);
 	}
 	
 	/************///////////NOTE 
@@ -305,6 +348,8 @@ namespace cgl
 		input.read(buffer, 2);
 		return toShort(buffer);
 	}
+
+
 
 	/*template<class T>auto_array<T>::~auto_array() 
 	{

@@ -66,7 +66,14 @@ namespace cgl
 
 	float Terrain::GetHeight(int x, int z)
 	{
-		return heights[z][x];
+		if(this->length < z && z > -1)
+		{	
+			if(this->width < x && x > -1)
+			{
+				return heights[z][x];
+			}
+		}
+		return 0;
 	}
 
 	//Computing normals, this is done automatically through constructor of this class

@@ -227,9 +227,9 @@ namespace cgl
 		float x, y, z;
 		Vertex3f::Vertex3f(float dx = 0, float dy = 0, float dz = 0)
 		{
-			x = dx; 
-			y = dy; 
-			z = dz;
+			this->x = dx; 
+			this->y = dy; 
+			this->z = dz;
 		}
 
 		//OPERATORS
@@ -819,9 +819,9 @@ namespace cgl
 		float x, y, z;
 		Vector3f::Vector3f(float dx = 0, float dy = 0, float dz = 0)
 		{
-			x = dx; 
-			y = dy; 
-			z = dz;
+			this->x = dx;
+			this->y = dy; 
+			this->z= dz;
 		}
 
 		//OPERATORS
@@ -833,6 +833,7 @@ namespace cgl
 			res.z = c * v.z;
 			return res;
 		}
+
 		Vector3f Vector3f::operator*(const float c) const
 		{
 			Vector3f res;

@@ -4,6 +4,9 @@ namespace cgl
 {
 	NetworkServer::NetworkServer(int portnumber, int maximumClients)
 	{
+		this->CallbackOnClose = NULL;
+		this->callbackClose = NULL;
+		this->callbackCloseConst = NULL;
 		this->length = 0;
 		this->SERVERISFULL = "FULL";
 		this->SERVERNOTFULL = "OK";
@@ -86,7 +89,7 @@ namespace cgl
 			strcpy(this->buffer, this->SERVERNOTFULL.c_str());
 			this->length = strlen(this->buffer) + 1;
 			SDLNet_TCP_Send(this->clientsocket[freeslot], (void*)this->buffer, this->length);
-			cgl::Cout("Client Added in slot : " + freeslot);
+			cgl::Cout("Client Added in slot : " + cgl::i2s(freeslot));
 			return 1;
 		}
 		else
@@ -107,12 +110,16 @@ namespace cgl
 	//Closes the connection and emptys the socket of client number N
 	void NetworkServer::CloseClient(int clientnumber)
 	{
-		cgl::Cout("Closing client " + clientnumber);
+		cgl::Cout("Closing client " + cgl::i2s(clientnumber));
 		SDLNet_TCP_DelSocket(this->sockets, this->clientsocket[clientnumber]);
 		SDLNet_TCP_Close(this->clientsocket[clientnumber]);
 		this->clientsocket[clientnumber] = NULL;
 		this->isSocketFree[clientnumber] = true;
 		this->clientcount = this->clientcount - 1;
+		if(this->CallbackOnClose != NULL)
+		{
+			this->CallbackOnClose(clientnumber);
+		}
 	}
 
 	void NetworkServer::CloseClient(TCPsocket* clientsocket)
@@ -126,7 +133,7 @@ namespace cgl
 				i = this->MAXCLIENTS;
 			}
 		}
-		cgl::Cout("Closing client " + clientnumber);
+		cgl::Cout("Closing client " + cgl::i2s(clientnumber));
 		if(clientnumber > -1)
 		{
 			SDLNet_TCP_DelSocket(this->sockets, this->clientsocket[clientnumber]);
@@ -134,6 +141,10 @@ namespace cgl
 			this->clientsocket[clientnumber] = NULL;
 			this->isSocketFree[clientnumber] = true;
 			this->clientcount = this->clientcount - 1;
+			if(this->CallbackOnClose != NULL)
+			{
+				this->CallbackOnClose(clientnumber);
+			}
 		}
 	}
 
@@ -154,7 +165,6 @@ namespace cgl
 					cgl::Cout(temp);
 				}
 				this->CloseClient(clientnumber);										//Deletes and frees the socket
-				std::cout << "Client is closed" << std::endl;
 				return 0;																//Client disconnected
 			}
 			return 1;
@@ -175,8 +185,7 @@ namespace cgl
 				{
 					cgl::Cout("Client is removed");
 				}
-				this->CloseClient(clientsocket);										//Deletes and frees the socket
-				std::cout << "Client is closed" << std::endl;
+				this->CloseClient(clientsocket);									//Deletes and frees the socket
 				return 0;																//Client disconnected
 			}
 			return 1;
@@ -185,7 +194,7 @@ namespace cgl
 	}
 
 	//Sends data stored in the buffer to client N
-	//Returns 1 on success, 0 on no data to send/error
+	//Returns 1 on success, 0 on no data to send/error, usually chat messages can be received and sent right to clients
 	bool NetworkServer::SendReceivedData(int toClientNumber, int fromClientNumber)
 	{
 		this->length = strlen(this->buffer)+1;
@@ -219,6 +228,11 @@ namespace cgl
 		return true;
 	}
 
+	bool NetworkServer::SendData(int clientNumber, std::string data)
+	{
+		return this->SendData(clientNumber, data.c_str());
+	}
+
 	//Returns true on success, 0 if error happened
 	bool NetworkServer::SendData(int clientNumber, const char* data)
 	{
@@ -234,6 +248,15 @@ namespace cgl
 		else
 		{	
 			return false;
+		}
+		return true;
+	}
+
+	bool NetworkServer::SendDataToConnectedClients(std::string data)
+	{
+		for(int i = 0; i < this->clientcount; i++)
+		{
+			this->SendData(i, data.c_str());
 		}
 		return true;
 	}
@@ -257,5 +280,11 @@ namespace cgl
 		//Waiting time in MS, 0 means no wait, -1 means waiting time of 49 days.
 		return SDLNet_CheckSockets(this->sockets, 0);
 	}
+
+	void NetworkServer::CallbackOnClientClosed(void (*function)(int clientNumber))
+	{
+		this->CallbackOnClose = function;
+	}
+
 
 }

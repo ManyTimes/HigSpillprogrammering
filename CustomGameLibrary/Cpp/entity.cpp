@@ -14,16 +14,9 @@ namespace cgl
 		matrix[8] = matrix[9] = matrix[11] = 0.0f;
 		matrix[15] = 1.0f;
 		matrix[12] = matrix[13] = matrix[14] = 0.0f;
-
-		model = new Model3D;
 	}
 	Entity::~Entity()
 	{
-		if(numModels)
-		{
-			if(model != NULL)		// For now just one model.
-				delete model;
-		}
 	}
 
 	/*********FUNCTIONS******************/
@@ -83,14 +76,14 @@ namespace cgl
 		} 
 	}
 
-	void Entity::Draw()
+	/*void Entity::Draw()
 	{
 		// Draw all models, might have multiple all together.
 		// For now, just one model.
 		model->Draw(GetMatrix());		// Pass on the entities position, angles and scale.
-	}
+	}*/
 
-	void Entity::Draw(float m[16])
+	/*void Entity::Draw(float m[16])
 	{
 		float m2[16];
 
@@ -98,14 +91,7 @@ namespace cgl
 	//	m2 = matrix*m; // Combine the matrices
 	//	model->Draw(m2);
 		//model->Draw(GetMatrix());
-	}
-
-
-	bool Entity::SetModel(const char *filename)
-	{
-		model->Load(filename);
-		return true;
-	}
+	}*/
 
 	void Entity::SetSize(int collisionSize)
 	{

@@ -267,10 +267,6 @@
 				Name="Unit"
 				>
 				<File
-					RelativePath=".\Header\birch.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Header\boundingbox.h"
 					>
 				</File>
@@ -280,6 +276,10 @@
 				</File>
 				<File
 					RelativePath=".\Header\projectile.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\unit.h"
 					>
 				</File>
 			</Filter>
@@ -316,6 +316,10 @@
 				>
 				<File
 					RelativePath=".\Header\image2d.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Header\model.h"
 					>
 				</File>
 				<File
@@ -383,15 +387,15 @@
 				Name="Unit"
 				>
 				<File
-					RelativePath=".\Cpp\birch.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Cpp\entity.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Cpp\projectile.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\unit.cpp"
 					>
 				</File>
 			</Filter>
@@ -472,6 +476,10 @@
 				>
 				<File
 					RelativePath=".\Cpp\image2d.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\model.cpp"
 					>
 				</File>
 				<File

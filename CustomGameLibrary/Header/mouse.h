@@ -33,7 +33,7 @@ namespace cgl
 			cout  << "Mouse btn: " << button << " Act: " << action << endl;
 		}*/
 		void Mouse::CursorFramed();
-	public:		
+	public:
 		int cursorx;
 		int cursory;
 		bool enableMouseFrame;													//Enabling a limit of mousemovement within this window or not

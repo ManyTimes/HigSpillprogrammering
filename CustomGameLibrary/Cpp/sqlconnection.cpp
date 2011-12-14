@@ -4,13 +4,13 @@
 namespace cgl
 {
 	//***********PRIVATE FUNCTIONS***********
-	void SqlConnection::Initalize(std::string serv, std::string db, std::string user, std::string pwd, int timeout)
+	void SqlConnection::Initalize(std::string serv, std::string db, std::string user, std::string pwd, int timeoutSeconds)
 	{
 		try
 		{
 			this->con = new SAConnection();
 			cgl::Cout("Server Connection Established to: " + serv);
-			con->setOption("DBPROP_INIT_TIMEOUT") = cgl::i2s(timeout).c_str();
+			con->setOption("DBPROP_INIT_TIMEOUT") = cgl::i2s(timeoutSeconds).c_str();
 			if(serv.length() < 2 || db.length() < 2)
 			{
 				cgl::Error("Cannot initialize SQL connection, too short db/server name");

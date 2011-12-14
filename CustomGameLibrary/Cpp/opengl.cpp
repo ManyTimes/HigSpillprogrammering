@@ -323,6 +323,7 @@ namespace cgl
 		}
 	}
 
+
 	void OpenGL::Enable(int token)
 	{
 		glfwEnable(token);

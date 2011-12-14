@@ -80,6 +80,7 @@ namespace cgl
 	//Draws the weather using GL_TEXTURE_2D with GL_TRIANGLE_STRIP, for all started -not dead- particles
 	void Weather::Draw()
 	{
+		glPushMatrix();
 		glEnable(GL_DEPTH_TEST);			//Make GL draw objects behind see-through objects
 		glEnable(GL_BLEND);					//Blending ON
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -182,6 +183,7 @@ namespace cgl
 		glDisable(GL_DEPTH_TEST);			//Make GL draw objects behind see-through objects
 		glDisable(GL_BLEND);					//Blending ON
 		this->Move();
+		glPopMatrix();
 	}
 
 	//Starts one particle from the sky, letting it fall down automatically when you call Draw() unless max limit has been reached

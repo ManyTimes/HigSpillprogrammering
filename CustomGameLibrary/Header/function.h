@@ -10,9 +10,11 @@
 namespace cgl
 {
 	DECLARE void CGLInitialize();
+	DECLARE bool isSystemLittleEndian();
 	DECLARE int s2i(std::string value);
 	DECLARE std::string i2s(int value);
 	DECLARE char* s2c(std::string value);
+	DECLARE float s2f(std::string value);
 	DECLARE void i2c (char returnChar[], int value);
 	DECLARE double s2d(std::string value);
 	DECLARE int d2i(double value, bool round);
@@ -35,6 +37,12 @@ namespace cgl
 	DECLARE float RANDOMFLOAT(float low, float high);
 	DECLARE int GetRandomInt(int low, int high);
 	DECLARE float GetRandomFloat(float low, float high);
+	DECLARE void Sleep(int ms);
+	DECLARE void Sleep(float ms);
+	DECLARE void Delay(int ms);
+	DECLARE void Delay(float ms);
+	DECLARE void Wait(int ms);
+	DECLARE void Wait(float ms);
 
 
 	/*template<class T> class DECLARE auto_array

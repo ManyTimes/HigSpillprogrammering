@@ -280,8 +280,7 @@ namespace cgl
 		glVertexPointer(3, GL_FLOAT, 0/*sizeof(Vertex3D)*/, 0);
 		glBindBuffer(GL_ARRAY_BUFFER,normalVBO);
 		glNormalPointer(GL_FLOAT, 0, 0);//(char*)(NULL + offsetof(VertexData, normal)));
-
-		glColor3f ( 0.2f, 0.2f, 0.2f ) ;
+		//glColor3f ( 0.2f, 0.2f, 0.2f ) ;
 		//glDrawElements(GL_TRIANGLES, meshes[0].numFace*3, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 		glDrawArrays(GL_TRIANGLES,0,totalFaces*3);
 

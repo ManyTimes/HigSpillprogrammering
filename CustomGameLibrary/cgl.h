@@ -57,11 +57,11 @@
 //UNIT
 #ifdef _CGLPROGRAM
 #include "../../CustomGameLibrary/Header/projectile.h"
-#include "../../CustomGameLibrary/Header/birch.h"
+#include "../../CustomGameLibrary/Header/unit.h"
 #include "../../CustomGameLibrary/Header/entity.h"
 #else
 #include "Header/projectile.h"
-#include "Header/birch.h"
+#include "Header/unit.h"
 #include "Header/entity.h"
 #endif
 
@@ -82,11 +82,13 @@
 #include "../../CustomGameLibrary/Header/opengl.h"
 #include "../../CustomGameLibrary/Header/model3d.h"
 #include "../../CustomGameLibrary/Header/modelmd2.h"
+#include "../../CustomGameLibrary/Header/model.h"
 #else
 #include "Header/image2d.h"
 #include "Header/opengl.h"
-#include "Header/model3d.h"
-#include "Header/modelmd2.h"
+#include "Header/model.h"
+//#include "Header/model3d.h"
+//#include "Header/modelmd2.h"
 #endif
 
 //OTHER

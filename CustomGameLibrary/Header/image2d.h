@@ -6,7 +6,7 @@
 #include "include.h"
 #include "includegl.h"										// Header for OpenGL32 library
 #include "function.h"
-#include "textureTGA.h"m
+#include "textureTGA.h"
 #include "autoarray.h"
 
 namespace cgl

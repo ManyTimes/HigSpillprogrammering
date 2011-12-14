@@ -33,29 +33,61 @@ void RenderMainMenu()
 	opengl->EndDraw();
 }
 
+float xxx = 20.0f;
 void RenderGame()
 {
-
-	opengl->StartDraw();
-	opengl->CreateViewport(true, 800,500,0,100,0.0f, 100.0f);
+	glColor3f(1.0, 1.0, 1.0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glColor3f(1.0, 1.0, 1.0);
-	glTranslatef(0.0f, 0.0f, -25.0f);				//Sets camera
-	glRotatef(30.0f, 1.0, 0.0, 0.0);
-	glRotatef(-30.0f, 0.0, 1.0, 0.0);
-	DrawGround(imgbtnStart->ID);
+	//camera.set( SpawnPoint, LookAt, Up);
+	/*glEnable(GL_LINE_SMOOTH);
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION ) ;
+	glEnable ( GL_COLOR_MATERIAL ) ;
+	glFrontFace(GL_CW);			// Winding of elements*/
+
+	xxx += 0.015;
+	opengl->StartDraw();
+	opengl->CreateViewport(true, 800,500,0,100,0.0f, 500.0f);
+	cgl::Vector3f SpawnPoint(xxx,10,xxx);			// Where camera spawns
+	cgl::Vector3f LookAt(0,0,0);					// Where camera points at
+	cgl::Vector3f Up(0,1,0);						// Cameras up direction.
+
+
+	camera->Set(SpawnPoint,LookAt, Up);
+	camera->SetShape(40,SCREENWIDTH/SCREENHEIGHT, 0.01f, 500.0f);
+
+	//camera->Set(cgl::Vector3f(0.0, 0.0, -0.0), cgl::Vector3f(0.0, 0.0, 0.0), cgl::Vector3f());
+	//glTranslatef(0.0f, 0.0f, -25.0f);				//Sets camera
+	//glRotatef(30.0, 1.0, 0.0, 0.0);
+	//glRotatef(-30.0, 0.0, 1.0, 0.0);
+	
+	glScalef(0.5, 0.5,0.5);
+	terrain->Draw(0.0);
+//	DrawGround(imgbtnStart->ID);
 	float velocity[3];
 	velocity[0] = velocity[2] = cgl::GetRandomFloat(-0.1, 0.1);
-	velocity[1] = cgl::GetRandomFloat(-.02, -0.04);
+	velocity[1] = cgl::GetRandomFloat(-.015, -0.03);
 	float position[3];
 	position[0] = cgl::GetRandomFloat(-5.0, 5.0);
 	position[2] = cgl::GetRandomFloat(-5.0, 5.0);
-	position[1] = 15;
+	position[1] = 10;
 	weather->StartOneParticle(velocity, position);
-	
-	weather->Draw();
 
+
+	for(int i = 0; i < MAXIMUMPLAYERS; i++)
+	{
+		if(player[i].ID != -1)
+		{
+			unit[i].Draw();
+		}
+	}
+	weather->Draw();
 
 
 	opengl->CreateViewport2D(SCREENWIDTH,SCREENHEIGHT,0, 0, 0, 0);			//Drawing text requires viewport 2D, with Z far and Z near to be 0//equal each other
@@ -71,46 +103,43 @@ void RenderGame()
 	opengl->CreateViewport2D(SCREENWIDTH,SCREENHEIGHT,0, 0, 0, 1);			//Drawing buttons requires Viewport 2D, with z far and near not equal each other
 	imgMenu->Draw(SCREENWIDTH-50,SCREENHEIGHT-50, 50,50, true);
 
-	//imgMenu->Draw(0,0, 32, 32, true);
-	//opengl->CreateViewport3D(600,600,0,0,0.1, 1000);
-
-	
 	if(gamestate > 1)				//Viewing a menu while playing
 	{
 		opengl->CreateViewport2D(SCREENWIDTH,SCREENHEIGHT,0, 0, 0, 1);			//Drawing buttons requires Viewport 2D, with z far and near not equal each other
 		btnCancel->Draw();	
 		btnQuitGame->Draw();
-		//Images will not draw, what so ever?
-		//imgMenu->Draw(0,0, true);
-		//imgMenu->Draw(50,50, true);
-		//imgMenu->Draw(0,0, false);
-		//imgMenu->Draw(50,50, false);
-		
 	}
 	opengl->EndDraw();
-
 }
 
 
 
 void DrawGround(GLuint textureID)
 {
-	//glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
 	glColor3f(0.1f, 0.5f, 0.9f);
-	//glBindTexture(GL_TEXTURE_2D, textureID);
-	glBegin(GL_TRIANGLE_STRIP);
-	
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	int w = SCREENWIDTH;
+	int h = SCREENHEIGHT;
+	for(int i = 1; i <= 2; i++)
+	{
+		glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2i(0, 0);
-		glVertex3f(-SCREENWIDTH, 0, -SCREENHEIGHT);
+		glVertex3f(-w*i, 0, -h*i);
 
 		glTexCoord2i(1, 0);
-		glVertex3f(SCREENWIDTH, 0, -SCREENHEIGHT);
+		glVertex3f(w*i, 0, -h*i);
 
 		glTexCoord2i(0, 1);
-		glVertex3f(-SCREENWIDTH, 0, SCREENHEIGHT);
+		glVertex3f(-w*i, 0, h*i);
 
 		glTexCoord2i(1, 1);
-		glVertex3f(SCREENWIDTH, 0, SCREENHEIGHT);
-	glEnd();
+		glVertex3f(w*i, 0, h*i);
+		glEnd();
+	}
 	glDisable(GL_TEXTURE_2D);
 }

@@ -32,9 +32,48 @@ void KeyboardClicked()
 	{
 		if(gamestate == 1)				//We are playing, hotkeys for moving (WASD space enter)
 		{
+			if(keyboard->isKeyPressed("Q") == true)
+			{
+				for(int a = 0; a < 4; a++)
+				{
+					std::cout << "Player: " << a << " ID, " << player[a].ID << " X Y Z :" << unit[a].position.x << ", " << unit[a].position.y << ", " << unit[a].position.z << std::endl;
+					std::cout << "Your ID: " << thisPlayer << std::endl;
+				}
+			}
 			if(keyboard->isKeyPressed("F10") == true)
 			{
 				gamestate = 2;			//Viewing menu while playing
+			}
+			if(keyboard->isKeyPressed("W") == true)
+			{
+				SendDataForward();
+				//This was for 3DS models... Right now; using MD2 (99-style)
+				//cgl::Vector3f& pos = unit[0].GetPositionRef();
+				
+			}
+			if(keyboard->isKeyPressed("D") == true)
+			{
+				SendDataRight();
+				//cgl::Vector3f& pos = unit[0].GetPositionRef();
+				//pos.x += 0.9;
+			}
+			if(keyboard->isKeyPressed("A") == true)
+			{
+				SendDataLeft();
+				//cgl::Vector3f& pos = unit[0].GetPositionRef();
+				//pos.x -= 0.9;
+			}
+			if(keyboard->isKeyPressed("S") == true)
+			{
+				SendDataBackward();
+				//cgl::Vector3f& pos = unit[0].GetPositionRef();
+				//pos.z += 0.9;
+			}
+			if(keyboard->isKeyPressed("SPACE") == true)
+			{
+				//cgl::Vector3f& pos = unit[0].GetPositionRef();
+				SendDataShoot();
+				//projectilepl1->Shoot(pos.x, pos.z, 1.0, 1);
 			}
 		}
 		else
@@ -48,7 +87,8 @@ void KeyboardClicked()
 				if(keyboard->isKeyPressed("Q") == true)
 				{
 					DisconnectFromServer();	
-					
+					opengl->SetWindowTitle(GAMENAME);
+					thisPlayer = -1;
 					client->Exit();
 					gamestate = 0;
 					SERVERRESPONSE = false;	
@@ -80,8 +120,10 @@ void MouseClicked()
 			if(btnQuitGame->isPressed() == true)
 			{	
 				DisconnectFromServer();	//Say goodbye to the server
+				opengl->SetWindowTitle(GAMENAME);
 				client->Exit();			//Exit server
 				gamestate = 0;			//Back to main menu
+				thisPlayer = -1;
 				SERVERRESPONSE = false;	//Need new response from server
 			}
 			if(btnCancel->isPressed() == true)

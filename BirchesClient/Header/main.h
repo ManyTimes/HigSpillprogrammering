@@ -8,5 +8,4 @@
 #include "initialize.h"
 #include "gameloop.h"
 
-
 #endif

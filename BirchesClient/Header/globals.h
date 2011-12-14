@@ -10,8 +10,9 @@ extern std::string SERVERNAME;				//Received from server upon joining
 extern std::string JOINADDRESS;
 extern std::string JOINPORTNUMBER;
 extern std::string PLAYERNAME;
+extern std::string GAMENAME;
 extern int MAXIMUMPLAYERS;
-extern int playerNumber;					//Received from server upon joining
+extern int thisPlayer;					//Received from server upon joining
 extern int SCREENWIDTH;
 extern int SCREENHEIGHT;
 extern int SLEEPTIME;
@@ -20,9 +21,10 @@ extern std::string messageFeedback;
 extern bool SERVERRESPONSE;
 
 
+
 //GLOBAL OBJECTS
-extern cgl::ModelMD2* rock;
 extern cgl::NetworkClient* client;
+extern cgl::Camera* camera;
 extern cgl::Terrain* terrain;
 extern cgl::Grid* grid;
 extern cgl::OpenGL* opengl;
@@ -32,7 +34,7 @@ extern cgl::Image2D* imgbtnExit;			//Texture for the btnExit
 extern cgl::Image2D* imgbtnExitClicked;		//Texture for the btnExit
 extern cgl::Image2D* imgbtnStart;			//Texture for the btnStart
 extern cgl::Image2D* imgbtnStartClicked;	//Texture for the btnStart
-extern cgl::Image2D* imgbtnQuitGame;			//Image 
+extern cgl::Image2D* imgbtnQuitGame;		//Image 
 extern cgl::Image2D* imgbtnQuitGameClicked;	//Image
 extern cgl::Button* btnStart;				//Joins server and starts drawing game
 extern cgl::Button* btnExit;				//An Exit program button
@@ -41,6 +43,7 @@ extern cgl::Button* btnQuitGame;			//Quit the game, server you joined
 extern cgl::Time* gametime;
 extern cgl::Keyboard* keyboard;
 extern cgl::Mouse* mouse;
+extern cgl::Unit* unit;						//One unit per player
 extern cgl::Player* player;					//Recieves xyz, playernames, etc from server when joining
 extern cgl::Text* text;						//Drawing some text, chat? All text drawn through this obj.
 extern cgl::Text* textFeedback;				//Drawing some text, chat? All text drawn through this obj.
@@ -50,9 +53,12 @@ extern cgl::Sound* soundHit;				//Sound played when you are hit
 extern cgl::Image2D* imgMenu;	
 extern cgl::Image2D* imgBackground;
 extern cgl::Weather* weather;
-extern cgl::Image2D* weatherTexture;			//Loads a texture from the harddrive
+extern cgl::Image2D* weatherTexture;		//Loads a texture from the harddrive
+extern cgl::Projectile* projectilepl1;
+//extern cgl::ModelMD2* modd2;
+extern cgl::Model3D mod3d;
 
 //GAME/SERVER DATA
 extern int gamestate;						//0 = mainmenu, 1 = game, 2 = game + menu drawn above it (cancel/exit)
-
+extern float MD2Normals[486];
 #endif

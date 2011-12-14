@@ -38,6 +38,7 @@ extern cgl::Mouse* mouse;
 extern cgl::SqlConnection* sqlcon;
 extern cgl::SqlCommand* sqlcmd;	
 extern cgl::SqlResult* sqlresult;
+extern cgl::Unit* unit;					//One unit per player object
 extern cgl::Player* player;
 extern cgl::Text* text;
 

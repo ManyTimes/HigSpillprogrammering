@@ -3,4 +3,3 @@
 #include <fstream>
 #include <string>
 #include "cgl.h"
-

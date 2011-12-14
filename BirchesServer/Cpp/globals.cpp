@@ -34,6 +34,7 @@ cgl::SqlConnection* sqlcon;				//Connects to DB
 cgl::SqlCommand* sqlcmd;				//Runs a query against the sqlcon
 cgl::SqlResult* sqlresult;				//If query is a select-statement, it can be held within this object
 cgl::Grid* grid;						//Grid upon the terrain
+cgl::Unit* unit;
 cgl::Player* player;
 cgl::Image2D* imgbtnExit;
 cgl::Image2D* imgbtnExitClicked;

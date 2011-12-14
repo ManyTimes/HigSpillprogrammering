@@ -13,5 +13,13 @@ void Network();
 void Events();
 void Render();
 std::string GetPlayerName();
+void ClientClosed(int clientNumber);
+
+//Helper functions
+int GetIntValue(char end);
+int GetFloatValue(char end);
+std::string GetStringValue(char end);
+
+
 
 #endif

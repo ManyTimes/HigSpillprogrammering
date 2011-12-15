@@ -143,7 +143,7 @@ void InitializeGame()
 	//rock = new cgl::ModelMD2("Data/rock.md2", img->ID, MD2Normals, 10);
 	//rock->SetAnimation("run");
 	//Server only holds terrain and grid, to do some calculations for collision, etc...
-	terrain = new cgl::Terrain("Data/heightmap.bmp", 10);						//Would have been nice to download the image, heightmap.bmp from the server actually!
+	terrain = new cgl::Terrain("Data/heightmap.bmp", 10); //Would have been nice to download the image, heightmap.bmp from the server actually!
 																					//It is actually kind of easy, just sending over "img->dataBMP"... bit by bit... :)
 	grid = new cgl::Grid(terrain, cgl::GridSize::SEVERAL);						//FEW SEVERAL LOTS
 	music = new cgl::Sound("birchtheme.wav", true, true);

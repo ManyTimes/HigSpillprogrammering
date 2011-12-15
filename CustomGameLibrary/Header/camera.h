@@ -13,7 +13,7 @@ namespace cgl
 	private:
 		Vector3f eye, look;
 		Vector3f up;
-		Vector3f u, v, n;
+		Vector3f u, v, n;			//Up, normal, v...
 		double viewAngle, aspect, nearDist, farDist;
 		void SetModelViewMatrix();
 	public:

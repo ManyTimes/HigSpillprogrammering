@@ -118,11 +118,7 @@ void Network()
 		serverData = "";
 		if(server->ReadReceivedData(i) == 1)	//Data from client/player i has arrived
 		{
-<<<<<<< HEAD
 			readData = cgl::c2s(server->buffer);
-=======
-			
->>>>>>> 7e6b5d9d8859e1cfa0ad316f15b32a8f31be387c
 			//Data received from Clients
 			//0 - Playername only, Player connected to server with playername
 			//1 - XYZ
@@ -149,7 +145,6 @@ void Network()
 				serverData = "0|" + cgl::i2s(i) + "|" + player[i].playername + "|" + cgl::i2s(player[i].kills) + "|" + cgl::i2s(player[i].deaths) + "|" + cgl::f2s(unit[i].position.x) + "|"+ cgl::f2s(unit[i].position.y) + "|"+ cgl::f2s(unit[i].position.z);
 				server->SendDataToConnectedClients(serverData);
 				break;
-<<<<<<< HEAD
 			case '1':
 				switch(server->buffer[1])
 				{
@@ -215,35 +210,11 @@ void Network()
 						break;
 				}
 				break;
-=======
-			case '1':							//new player position incomming
-				{
-					for (int i = 0; i < server->clientcount; i++)	//Sends the position data back out to all players connected
-					{
-						server->SendData(i, server->buffer);
-					}
-					break;
-				}
->>>>>>> 7e6b5d9d8859e1cfa0ad316f15b32a8f31be387c
 			case '2':
-				
-
 				break;
 			case '3':
-				{
-					for (int i = 0; i < server->clientcount; i++)
-					{
-						server->SendData(i, server->buffer);
-					}
-					break;
-				}
+				break;
 			case '4':
-				{
-					for (int i = 0; i < server->clientcount; i++)
-					{
-						server->SendData(i, server->buffer);
-					}
-				}
 				break;
 			case '5':	//Client has left the game
 				player[i].playername = "<Empty Slot>";

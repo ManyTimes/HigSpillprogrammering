@@ -231,6 +231,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Header\simplecamera.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Header\sound.h"
 					>
 				</File>
@@ -440,6 +444,10 @@
 				</File>
 				<File
 					RelativePath=".\Cpp\grid.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\simplecamera.cpp"
 					>
 				</File>
 				<File

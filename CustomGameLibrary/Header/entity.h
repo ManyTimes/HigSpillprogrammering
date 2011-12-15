@@ -7,7 +7,7 @@
 namespace cgl
 {
 	enum EULER {ROLL, YAW, PITCH};
-	#define PI 3.14159265358979323846
+	#define PI 3.1415926535897
 	#define DEG2RAD(DEG) ((DEG)*((PI)/(180.0)))
 
 	class DECLARE Entity 

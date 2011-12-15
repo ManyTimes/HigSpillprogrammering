@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="Birches Server"
 	ProjectGUID="{4C6F16BE-9962-446A-9A4D-08F08058B328}"
 	RootNamespace="Birches"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Users\henrik\Desktop\spill2\ManyTimes-HigSpillprogrammering-1626d2c\CustomGameLibrary\Libraries\SQLAPI\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\glui-2.36\src\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GLFW-2.7.2\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary&quot;"
+				AdditionalIncludeDirectories="&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SQLAPI\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\glui-2.36\src\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GLFW-2.7.2\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\include&quot;;&quot;$(Outdir)\..\..\CustomGameLibrary&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CGLPROGRAM;_CGLDEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\lib\SDL.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\lib\SDLmain.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\lib\SDL_net.lib&quot; C:\Users\henrik\Desktop\spill2\ManyTimes-HigSpillprogrammering-1626d2c\CustomGameLibrary\Libraries\SQLAPI\lib\sqlapi.lib &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\opengl32.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\GlAux.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\glew32.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GLFW-2.7.2\lib-msvc90\$(ConfigurationName)\GLFWDLL.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\glu32.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\glut32.lib&quot; &quot;$(Outdir)\..\..\Build\CustomGameLibrary\customgamelibrary.lib&quot; Winmm.lib"
+				AdditionalDependencies="&quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\lib\SDL.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL-1.2.14\lib\SDLmain.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SDL_net-devel-1.2.7-VC8\SDL_net-1.2.7\lib\SDL_net.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\SQLAPI\lib\SQLAPI.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\opengl32.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\GlAux.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\glew32.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GLFW-2.7.2\lib-msvc90\$(ConfigurationName)\GLFWDLL.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\glu32.lib&quot; &quot;$(Outdir)\..\..\CustomGameLibrary\Libraries\GL\lib\glut32.lib&quot; &quot;$(Outdir)\..\..\Build\CustomGameLibrary\customgamelibrary.lib&quot; Winmm.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"

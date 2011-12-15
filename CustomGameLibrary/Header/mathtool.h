@@ -8,6 +8,7 @@ namespace cgl
 
 
 	const double PI = 4.0 * atan(1.0);
+	const float PIdiv180 = PI/180;
 
 
 
@@ -842,6 +843,8 @@ namespace cgl
 			res.z = c * z;
 			return res;
 		}
+
+
 		const Vector3f &Vector3f::operator*=(float scale) 
 		{
 			x *= scale;

@@ -4,6 +4,21 @@
 //COPYRIGHT: ØYVIND, NICOLAS, THOMAS, HENRIK, KNUT, 2011-2016.
 //CONTACT US AT colaoye@hotmail.com for lisence information
 
+//Missing in CGL to be a decent library for any game 
+//Working Camera FPS/RTS/Third Person
+//Particle [missile] calculate path from one destination to another [ based on entity to be used within Grid]
+//UDP networking
+//Ray-picking or selection of objects throguh GLSELECTION (?)
+//Fully working grid that returns entity upon "hit". (Can use grid with raypicking to effectivily get the selected unit)
+//Some objects renders strangely, glPush or not glPush...
+//Sprite loading of images, and rendering sprites.
+//MD5
+//Textbox
+//Label
+//Button with a working "onclick texture", it should be displayed for "5-10" frame updates (OnClickTextureDuration::Long/Short) (5 or 15)
+
+
+
 
 //NETWORK
 #ifdef _CGLPROGRAM
@@ -19,6 +34,7 @@
 #ifdef _CGLPROGRAM
 #include "../../CustomGameLibrary/Header/grid.h"
 #include "../../CustomGameLibrary/Header/camera.h"
+#include "../../CustomGameLibrary/Header/simplecamera.h"
 #include "../../CustomGameLibrary/Header/sound.h"
 #include "../../CustomGameLibrary/Header/terrain.h"
 #include "../../CustomGameLibrary/Header/weather.h"
@@ -26,6 +42,7 @@
 #else
 #include "Header/grid.h"
 #include "Header/camera.h"
+#include "Header/simplecamera.h"
 #include "Header/sound.h"
 #include "Header/terrain.h"
 #include "Header/weather.h"

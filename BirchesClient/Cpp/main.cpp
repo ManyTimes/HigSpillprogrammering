@@ -49,7 +49,10 @@ public:
 		this->position.x = startPosition.x;
 		this->position.y = startPosition.y;
 		this->position.z = startPosition.z;
-		this->viewdirection = viewdirection;
+		//this->viewdirection = viewdirection;
+		this->viewdirection.x = viewdirection.x;
+		this->viewdirection.y = viewdirection.y;
+		this->viewdirection.z = viewdirection.z;
 		this->model = model;
 		this->playerID = playerID;
 		this->damage = damage;
@@ -67,8 +70,8 @@ public:
 		this->position.y += this->move.y;
 		this->position.z += this->move.z;
 		std::cout << " pos xy " << position.x << " , " << position.y << ", " << position.z << std::endl;
-		MoveCamera();
-		MoveCameraUp();
+		//MoveCamera();
+		//MoveCameraUp();
 	}
 
 	//Angle is in celsius, need radians
@@ -97,11 +100,11 @@ public:
 
 			glPushMatrix();
 			glScalef(0.05, 0.05, 0.05);
+			glTranslatef(this->position.x, this->position.y, this->position.z);
 			glRotatef(-yaw,1.0,0.0,0.0);	//rotate the camera (more precisly move everything in the opposit direction)
 			glRotatef(-pitch,0.0,1.0,0.0);
-			glTranslatef(this->position.x, this->position.y, this->position.z);
-			glPopMatrix();
 			this->model->Draw();
+			glPopMatrix();
 
 		}
 	}
@@ -277,6 +280,7 @@ int main(int argc, char *argv[])
 	mouse->ShowWindowsCursor(false);
 	CamTest* ct = new CamTest(mouse);
 	Projectile* pp = new Projectile(10000);	//10.k frames
+	glFrontFace(GL_CCW);			// Winding of elements
 
 
 	bool b = true;
@@ -337,9 +341,14 @@ int main(int argc, char *argv[])
 			if(shooting == false)
 			{
 				shooting = true;
-				pp->Fire(cgl::Vector3f(ct->x, ct->y, ct->z),cam->GetDirection(), mod, 100, 0);
+				cgl::Vector3f camDir(ct->camPitch, ct->camYaw, 0); // cam->GetDirection()
+				cam->RotateX(ct->camYaw);
+				cam->RotateY(ct->camPitch);
+				cam->GetViewDirection();
+				pp->Fire(cgl::Vector3f(ct->x, ct->y, ct->z), cam->GetDirection(), mod, 100, 0);
 				std::cout << "Drawing at: " << pp->position.x << ", " << pp->position.y << ", " << pp->position.z << std::endl;
 				std::cout << "Cam pos: " <<ct->x << ", " << ct->y << ", " << ct->z << std::endl;
+				std::cout << "Cam direction: " << cam->GetDirection().x << ", " << cam->GetDirection().y << ", " << cam->GetDirection().z << std::endl;
 			}
 		}
 

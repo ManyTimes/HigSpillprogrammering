@@ -152,4 +152,126 @@ namespace cgl
 		}
 		Slide(0, 0, delN, true);
 	}
+
+	void Camera::SetupThirdPersonCamera(Entity *followTarget, float distance, Vector3f offset, bool aligntarget)
+	{
+		thirdPerson.target = followTarget;
+		thirdPerson.distance = distance;
+		thirdPerson.offset = offset;
+		thirdPerson.alignTarget = aligntarget;
+	}
+	
+	void Camera::SetThirdPersonTarget(Entity *followTarget)
+	{
+		thirdPerson.target = followTarget;
+	}
+
+	void Camera::SetThirdPersonDistance(float distance)
+	{
+		thirdPerson.distance = distance;
+	}
+
+	void Camera::SetThirdPersonOffset(Vector3f offset)
+	{
+		thirdPerson.offset = offset;
+	}
+
+	void Camera::SetThirdPersonAlign(bool aligntarget)
+	{
+		thirdPerson.alignTarget = aligntarget;
+	}
+
+	void Camera::ThirdPersonCameraUpdate()
+	{
+		Vector3f result;
+		Vector3f position = thirdPerson.target->GetPosition();
+		Vector3f offset = thirdPerson.offset;
+
+		result.z = thirdPerson.distance;
+
+		result = thirdPerson.matrix * result;
+		offset = *thirdPerson.target->GetMatrix() * offset;
+
+		position += offset;
+		result += position;
+		Set(result, position, thirdPerson.matrix.GetUpVector());
+
+		if(thirdPerson.alignTarget)
+		{
+			Vector3f angles = thirdPerson.target->GetAngles();
+			angles[YAW] = thirdPerson.angles[YAW];
+			thirdPerson.target->SetAngles(angles);
+		}
+	}
+
+	void Camera::UpdateThirdPersonMatrix()
+	{
+		Vector3f r_angles;
+		r_angles.x = DEG2RAD(thirdPerson.angles.x);
+		r_angles.y = DEG2RAD(thirdPerson.angles.y);
+		r_angles.z = DEG2RAD(thirdPerson.angles.z);
+
+		float sa = sin(r_angles.z);
+		float ca = cos(r_angles.z);
+		float sb = sin(r_angles.x);
+		float cb = cos(r_angles.x);
+		float sh = sin(r_angles.y);
+		float ch = cos(r_angles.y);
+
+		thirdPerson.matrix[0] = ch*ca;
+		thirdPerson.matrix[1] = sa;
+		thirdPerson.matrix[2] = -sh*ca;
+
+		thirdPerson.matrix[4] = -ch*sa*cb + sh*sb;
+		thirdPerson.matrix[5] = ca*cb;
+		thirdPerson.matrix[6] = sh*sa*cb + ch*sb;
+
+		thirdPerson.matrix[8] = ch*sa*sb + sh*cb;
+		thirdPerson.matrix[9] = -ca*sb;
+		thirdPerson.matrix[10] = -sh*sa*sb + ch*cb;
+
+		thirdPerson.matrix[3] = 0;
+		thirdPerson.matrix[7] = 0;
+		thirdPerson.matrix[11] = 0;
+	}
+
+	void Camera::ThirdPersonRotatePitch(float angle)
+	{
+		thirdPerson.angles[PITCH] += angle;
+
+		if(thirdPerson.angles[PITCH] > 90.0f && thirdPerson.angles[PITCH] < 270.0f)
+			thirdPerson.angles[PITCH] -= angle;
+
+		if(thirdPerson.angles[PITCH] > 360.0f)
+			thirdPerson.angles[PITCH] -= 360.0f;
+		else if(thirdPerson.angles[PITCH] < 0.0f)
+			thirdPerson.angles[PITCH] += 360.0f;
+
+		UpdateThirdPersonMatrix();
+	}
+
+	void Camera::ThirdPersonRotateYaw(float angle)
+	{
+		thirdPerson.angles[YAW] += angle;
+
+		if(thirdPerson.angles[YAW] > 360.0f)
+			thirdPerson.angles[YAW] -= 360.0f;
+		else if(thirdPerson.angles[YAW] < 0.0f)
+			thirdPerson.angles[YAW] += 360.0f;
+
+		UpdateThirdPersonMatrix();
+	}
+
+	void Camera::ThirdPersonRotateRoll(float angle)
+	{
+		thirdPerson.angles[ROLL] += angle;
+
+		if(thirdPerson.angles[ROLL] > 360.0f)
+			thirdPerson.angles[ROLL] -= 360.0f;
+		else if(thirdPerson.angles[ROLL] < 0.0f)
+			thirdPerson.angles[ROLL] += 360.0f;
+
+		UpdateThirdPersonMatrix();
+	}
+
 }

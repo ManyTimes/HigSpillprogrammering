@@ -37,6 +37,7 @@ namespace cgl
 		//3DS FUNCTIONS
 		Model::Model(char* modelFilename3DS);
 		void Model::Draw(float modelmatrix[16]);
+		void Model::Draw(Matrix modelmatrix);
 		void Model::Load(char* modelFilename3DS);
 	};
 

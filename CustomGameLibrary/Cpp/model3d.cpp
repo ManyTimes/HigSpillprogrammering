@@ -127,7 +127,7 @@ namespace cgl
 							std::swap(meshes[meshIndex].vertex[i][1],meshes[meshIndex].vertex[i][2]);
 
 							// Models are mirrored for some reason, swap the vertices here and turn winding
-							std::swap(meshes[meshIndex].vertex[i][0],meshes[meshIndex].vertex[i][2]);
+							//std::swap(meshes[meshIndex].vertex[i][0],meshes[meshIndex].vertex[i][2]);
 						}
 
 						position+=info->length;
@@ -174,7 +174,7 @@ namespace cgl
 							}
 
 							// Last part in fixing the mirroring from 3DS max, turn the winding.
-							std::swap(meshes[meshIndex].face[i].f1, meshes[meshIndex].face[i].f3);
+							//std::swap(meshes[meshIndex].face[i].f1, meshes[meshIndex].face[i].f3);
 
 							VectorCopy(meshes[meshIndex].vertex[meshes[meshIndex].face[i].f1], points[0]);
 							VectorCopy(meshes[meshIndex].vertex[meshes[meshIndex].face[i].f2], points[1]);

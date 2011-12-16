@@ -826,6 +826,13 @@ namespace cgl
 		}
 
 		//OPERATORS
+		void Vector3f::operator=(Vector3f vec)
+		{
+			x = vec.x;
+			y = vec.y;
+			z = vec.z;
+		}
+
 		friend Vector3f Vector3f::operator*(const float c, const Vector3f & v)
 		{
 			Vector3f res;
@@ -1026,6 +1033,5 @@ namespace cgl
 			return *this;
 		}*/
 	};
-
 }
 #endif

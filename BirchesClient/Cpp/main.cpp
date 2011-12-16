@@ -261,10 +261,13 @@ public:
 };
 
 void UpdateMouse();
+void MovementHandle();
 cgl::Vector3f SpawnPoint(-0,50,-150);			// Where camera spawns
 cgl::Vector3f LookAt(0,0,0);					// Where camera points at
 cgl::Vector3f Up(0,1,0);						// Cameras up direction.
 cgl::Camera *tp_camera;
+cgl::Unit tp_player;							// Unit to follow. [TP_CAMERA]
+#define MOVEMENT_SPEED 20.0f					// Camera movement speed.
 
 int main(int argc, char *argv[])
 {
@@ -288,13 +291,12 @@ int main(int argc, char *argv[])
 	Projectile* pp = new Projectile(10000);	//10.k frames
 	glFrontFace(GL_CW);			// Winding of elements
 
-	cgl::Unit player;			// Unit to follow. [TP_CAMERA]
 
-	player.Load("Data/TestModel3.3ds");		// Model to use [TP_CAMERA]
-	player.SetScale(1,0,0);				// and scale it down. Scale only supports uniform scale using the first component atm. [TP_CAMERA]
+	tp_player.Load("Data/TestModel3.3ds");		// Model to use [TP_CAMERA]
+	tp_player.SetScale(0.01,0,0);				// and scale it down. Scale only supports uniform scale using the first component atm. [TP_CAMERA]
 
 	tp_camera = new cgl::Camera(SpawnPoint, LookAt, h, w, 0.1f, 4000.0f);				// Setup the camera normally [TP_CAMERA]
-	tp_camera->SetupThirdPersonCamera( &player, 150, cgl::Vector3f(0, 75, 0), true);	// Settings: Target to follow, distance from target (is scaled with model), offset (to align with head, is also scaled), force the model to face same direction as camera [TP_CAMERA]
+	tp_camera->SetupThirdPersonCamera( &tp_player, 150, cgl::Vector3f(0, 75, 0), true);	// Settings: Target to follow, distance from target (is scaled with model), offset (to align with head, is also scaled), force the model to face same direction as camera [TP_CAMERA]
 
 	bool b = true;
 	bool mousein = false;
@@ -326,8 +328,9 @@ int main(int argc, char *argv[])
 		//ct->Control(0.2, 0.2, mousein);
 		//ct->UpdateCamera();
 		UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
+		MovementHandle();						// Handle keyboard input [TP_CAMERA]
 		tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
-		player.Draw();							// Draw the player [TP_CAMERA]
+		tp_player.Draw();							// Draw the tp_player [TP_CAMERA]
 
 		//OLD CAM, OR NEW, WHATEVER
 		/*int midx = 400;	//Half of screen sizes
@@ -569,4 +572,28 @@ void UpdateMouse()		// Function to control mouse [TP_CAMERA]
 
 	old_x = x;
 	old_y = y;
+}
+
+void MovementHandle()	// Handles movement [TP_CAMERA]
+{
+	if(keyboard->isKeyPressed("W") == true)
+	{
+		//camera.slide(0,0,-MOVEMENT_SPEED/FPS, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetForwardVector())*-MOVEMENT_SPEED);
+	}
+	if(keyboard->isKeyPressed("S") == true)
+	{
+		//camera.slide(0,0,MOVEMENT_SPEED/FPS, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetForwardVector())*MOVEMENT_SPEED);
+	}
+	if(keyboard->isKeyPressed("A") == true)
+	{
+		//camera.slide(-MOVEMENT_SPEED/FPS,0,0, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetRightVector())*-MOVEMENT_SPEED);
+	}
+	if(keyboard->isKeyPressed("D") == true)
+	{
+		//camera.slide(MOVEMENT_SPEED/FPS,0,0, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetRightVector())*MOVEMENT_SPEED);
+	}
 }

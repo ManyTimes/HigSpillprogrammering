@@ -39,7 +39,7 @@ namespace cgl
 
 	Vector3f Matrix::GetForwardVector()
 	{
-		return Vector3f(m[7], m[8], m[9]); 
+		return Vector3f(m[8], m[9], m[10]); 
 	}
 
 	float& Matrix::operator[](int i) 

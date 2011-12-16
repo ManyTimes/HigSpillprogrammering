@@ -20,7 +20,7 @@ namespace cgl
 		Matrix matrix;		// Matrix used to combine all above values
 		bool queueUpdateMatrix;	// Used to update the matrix when values are potentially changed by being referenced.
 	protected:
-		void Entity::UpdateMatrix(bool pos = true, bool angle = true, bool scale = true);
+		void Entity::UpdateMatrix();
 	public:
 
 		int ID;
@@ -40,6 +40,7 @@ namespace cgl
 		void Entity::SetPosition(float x, float y, float z) ;
 		void Entity::SetPosition(float p[3]);
 		void Entity::SetPosition(Vector3f p);
+		void Entity::AddPosition(Vector3f v);
 		void Entity::SetAngles(float roll, float yaw, float pitch);
 		void Entity::SetAngles(float p[3]);
 		void Entity::SetAngles(Vector3f p);

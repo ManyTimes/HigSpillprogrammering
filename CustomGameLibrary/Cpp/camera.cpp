@@ -189,7 +189,7 @@ namespace cgl
 
 		result.z = thirdPerson.distance * thirdPerson.target->GetScale().x;
 
-		result = thirdPerson.matrix * result;
+		result = thirdPerson.matrix * result;//uniform * result; //
 		offset = *thirdPerson.target->GetMatrix() * offset;
 
 		position += offset;
@@ -272,6 +272,11 @@ namespace cgl
 			thirdPerson.angles[ROLL] += 360.0f;
 
 		UpdateThirdPersonMatrix();
+	}
+
+	Matrix* Camera::GetTPMatrix()
+	{
+		return &thirdPerson.matrix;
 	}
 
 }

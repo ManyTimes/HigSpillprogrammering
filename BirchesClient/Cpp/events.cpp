@@ -16,6 +16,7 @@ void KeyboardClicked()
 		}
 		if(keyboard->isKeyPressed("S") == true || keyboard->isKeyPressed("ENTER") == true)		//Start game
 		{
+			DISABLEMOUSECONTROL = true;
 			ConnectToServer();
 			gamestate = 1;
 		}	
@@ -86,6 +87,8 @@ void KeyboardClicked()
 			{							//Quit Game, back to main menu
 				if(keyboard->isKeyPressed("Q") == true)
 				{
+					DISABLEMOUSECONTROL = false;
+					ISCONNECTED = false;
 					DisconnectFromServer();	
 					opengl->SetWindowTitle(GAMENAME);
 					thisPlayer = -1;
@@ -109,6 +112,7 @@ void MouseClicked()
 		}
 		if(btnStart->isPressed() == true)
 		{
+			DISABLEMOUSECONTROL = true;
 			ConnectToServer();
 			gamestate = 1;
 		}
@@ -121,9 +125,11 @@ void MouseClicked()
 			{	
 				DisconnectFromServer();	//Say goodbye to the server
 				opengl->SetWindowTitle(GAMENAME);
+				ISCONNECTED = false;
 				client->Exit();			//Exit server
 				gamestate = 0;			//Back to main menu
 				thisPlayer = -1;
+				DISABLEMOUSECONTROL = false;
 				SERVERRESPONSE = false;	//Need new response from server
 			}
 			if(btnCancel->isPressed() == true)

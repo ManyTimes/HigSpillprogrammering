@@ -61,19 +61,53 @@ namespace cgl
 
 	void Terrain::SetHeight(int positionX, int positionZ, float height)
 	{
-		heights[positionZ][positionX] = height;
+		heights[positionX][positionZ] = height;
 	}
 
 	float Terrain::GetHeight(int x, int z)
 	{
-		if(this->length < z && z > -1)
-		{	
-			if(this->width < x && x > -1)
+		if(z < this->length-1)
+		{
+			if(z > -1)
 			{
-				return heights[z][x];
+				if(x < this->width-1)
+				{
+					if(x > -1)
+					{
+						return heights[x][z];
+					}
+					return heights[0][z];
+				}
+				return heights[this->width-1][z];
+			}
+			else
+			{
+				if(x < this->width-1)
+				{
+					if(x > -1)
+					{
+						return heights[x][0];
+					}
+					return heights[0][0];
+				}
+				return heights[this->width-1][0];
 			}
 		}
-		return 0;
+		else
+		{
+			if(x < this->width-1)
+			{
+				if(x > -1)
+				{
+					return heights[x][this->length-1];
+				}
+				return heights[0][this->length-1];
+			}
+			else
+			{
+				return heights[this->width-1][this->length-1];
+			}
+		}
 	}
 
 	//Computing normals, this is done automatically through constructor of this class
@@ -112,19 +146,19 @@ namespace cgl
 				}
 				if (x > 0 && z > 0) 
 				{
-					sum += out.Cross(left).NormalizeNew();
+					sum += out.Cross(left).Normalize();
 				}
 				if (x > 0 && z < this->length - 1) 
 				{
-					sum += left.Cross(in).NormalizeNew();
+					sum += left.Cross(in).Normalize();
 				}
 				if (x < this->width - 1 && z < this->length - 1) 
 				{
-					sum += in.Cross(right).NormalizeNew();
+					sum += in.Cross(right).Normalize();
 				}
 				if (x < this->width - 1 && z > 0) 
 				{
-					sum += right.Cross(out).NormalizeNew();
+					sum += right.Cross(out).Normalize();
 				}
 
 				/*if (x > 0 && z > 0) 
@@ -172,7 +206,7 @@ namespace cgl
 					sum += normals2[z + 1][x] * FALLOUT_RATIO;
 				}
 				
-				if (sum.magnitude() == 0) 
+				if (sum.Magnitude() == 0) 
 				{
 					sum = cgl::Vector3f(0.0f, 1.0f, 0.0f);
 				}

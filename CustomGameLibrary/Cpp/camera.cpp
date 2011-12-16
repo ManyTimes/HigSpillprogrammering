@@ -37,26 +37,25 @@ namespace cgl
 
 	void Camera::Set(Vector3f Eye, Vector3f Look, Vector3f Up)
 	{
-		eye.Set(Eye);
-		look.Set(Look);
-		up.Set(Up);
-		n.Set(eye.x - look.x, eye.y - look.y, eye.z - look.z);
-		u.Set(up.Cross(n));
-		n.Normalize();
-		u.Normalize();
-		v.Set(n.Cross(u));
+		eye = Eye;
+		look = Look;
+		up = Up;
+		n = eye - look;
+		u = up.Cross(n);
+		n = n.Normalize();
+		u = u.Normalize();
+		v = n.Cross(u);
 		SetModelViewMatrix();
 	}
 
 	void Camera::SetEye(const Vector3f& Eye)
 	{
 		eye = Eye;
-		eye.Set(Eye);
-		n.Set(eye.x - look.x, eye.y - look.y, eye.z - look.z);
-		u.Set(up.Cross(n));
-		n.Normalize();
-		u.Normalize();
-		v.Set(n.Cross(u));
+		n = eye - look;
+		u = up.Cross(n);
+		n = n.Normalize();
+		u = u.Normalize();
+		v = n.Cross(u);
 		SetModelViewMatrix();
 	}
 
@@ -129,7 +128,7 @@ namespace cgl
 		Vector3f t = n;
 		n = cos(angle) * t + sin(angle) * u;
 		u = axis.Cross(n);
-		u.Normalize();
+		u = u.Normalize();
 		v = n.Cross(u);
 		//u = -sin(angle) * t + cos(angle) * u;
 		SetModelViewMatrix();

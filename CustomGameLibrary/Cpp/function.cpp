@@ -17,6 +17,19 @@ namespace cgl
 		return (((char*)&s)[0]) == 1;
 	}
 
+	//Not working because of the way SDL is created
+	void CommandLine(bool showCommandLine)
+	{
+		std::cout << "Cannot use the function CommandLine(bool) due to the way SDL is built" << std::endl;
+		std::cout << "Suggested fix, add this line in your main.cpp:" << std::endl;
+		std::cout << "#pragma comment(linker, //subsystem:\"windows\" /entry:\"mainCRTStartup\"";
+		if(showCommandLine == false)
+		{
+			//SDL does not like this one, setting entry to mainCRTStartup
+			//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+		}
+	}
+
 	int GetRandomInt(int low, int high)
 	{
 		//#define RANDOMINT(lownumber, highnumber) (int)((lownumber) + (highnumber + 1 - lownumber) * (rand() / (float) RAND_MAX));
@@ -44,8 +57,8 @@ namespace cgl
 
 	int GetArrayLength(int inputarray[])
 	{
-		std::cout << sizeof(inputarray) / sizeof(inputarray[0]) << std::endl;
-		return 0;
+		//std::cout << sizeof(inputarray) / sizeof(inputarray[0]) << std::endl;
+		return (int) sizeof(inputarray) / sizeof(inputarray[0]);
 	}
 
 	int GetArrayLength(char inputarray[])

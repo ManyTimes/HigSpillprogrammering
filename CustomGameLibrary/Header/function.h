@@ -10,6 +10,7 @@
 namespace cgl
 {
 	DECLARE void CGLInitialize();
+	DECLARE void CommandLine(bool show);
 	DECLARE bool isSystemLittleEndian();
 	DECLARE int s2i(std::string value);
 	DECLARE std::string i2s(int value);

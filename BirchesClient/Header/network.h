@@ -19,4 +19,5 @@ void SendDataShoot();
 int GetIntValue(char end);
 int GetFloatValue(char end);
 std::string GetStringValue(char end);
+void GetVector3fValue(char end);
 #endif

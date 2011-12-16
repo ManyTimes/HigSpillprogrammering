@@ -197,10 +197,10 @@ namespace cgl
 		return instance->key[conversion[keyPressed]];			//Maps a string to an int, which again maps to either true (if pressed) or false (not pressed)
 	}
 
-	/*bool Keyboard::isKeyPressed(char keyPressed)
+	bool Keyboard::isKeyPressed(char keyPressed)
 	{
-		return instance.key[keyPressed];
-	}*/
+		return instance->key[keyPressed];
+	}
 
 	/*void Keyboard::KeyPressed(std::string keyPressed)
 	{

@@ -2,8 +2,19 @@
 
 void ReadData();
 void ReadServerData();
+void CoutVec(cgl::Vector3f vec)
+{
+	std::cout << " Vector: " << vec.x << " ," << vec.y << " " << vec.z << std::endl;
+}
+
+void CoutVec(cgl::Vector3f vec, std::string msg)
+{
+	std::cout << msg;
+	CoutVec(vec);
+}
 
 std::string data = "";
+cgl::Vector3f tempvec;
 std::string temp = "";
 int playernumber = 0;
 int i = 0;
@@ -35,52 +46,68 @@ void Network()
 //Sends all data needed to the server when it is required to send new data
 void SendDataForward()
 {
+	if(ISCONNECTED == false)
+	{
+		return;
+	}
 	if(hasSent[0] == false)				//Even if events, click action fires multiple times, we send only once per game-loop-sequence
 	{
-		client->SendData("1z1" + cgl::i2s(thisPlayer));		//Moving Z positive Player
-		
-		//That is basically it, sending action and position.
-		//And from the server we get position of others (and our own HP if it dropped, we were damaged.)
-		//And if it dropped below 0 , we died and got a whole new position, and text of who killed us:
-		//format: case|2|playerKilling|x|y|z (new position)
-		//If player[thisPlayer].action != 0, send playernumber, xyz, action
-		//else send playernumber, xyz
-			//Send Playernumber, X,Y,Z
+		client->SendData("1W" + cgl::i2s(thisPlayer));		//Moving Z positive Player
 		hasSent[0] = true;
 	}
 }
 
 void SendDataBackward()
 {
-	if(hasSent[1] == false)	
+	if(ISCONNECTED == false)
+	{
+		return;
+	}
+	if(hasSent[1] == false)
 	{	
-		client->SendData("1z0" + cgl::i2s(thisPlayer));		//Moving Z negative Player
+		client->SendData("1S" + cgl::i2s(thisPlayer));		//Moving Z negative Player
 		hasSent[1] = true;
 	}
 }
 
 void SendDataLeft()
 {
+	if(ISCONNECTED == false)
+	{
+		return;
+	}
 	if(hasSent[2] == false)	
 	{
-		client->SendData("1x0" + cgl::i2s(thisPlayer));		//Moving X negative Player
+		client->SendData("1A" + cgl::i2s(thisPlayer));		//Moving X negative Player
 		hasSent[2] = true;
 	}
 }
 
 void SendDataRight()
 {
+	if(ISCONNECTED == false)
+	{
+		return;
+	}
 	if(hasSent[3] == false)	
 	{
-		client->SendData("1x1" + cgl::i2s(thisPlayer));		//Moving X positive Player
+		client->SendData("1D" + cgl::i2s(thisPlayer));		//Moving X positive Player
 		hasSent[3] = true;
 	}
 }
 
 void SendDataShoot()
 {
+	if(ISCONNECTED == false)
+	{
+		return;
+	}
 	if(hasSent[4] == false)	
 	{
+		//Current player shooting, calc projectile at server, send back 
+		//position and draw projectile at position.
+		//Server checks collision while calculating new projectile thing
+		//client->SendData("2" + cgl::i2s(thisPlayer));
 		hasSent[4] = true;
 	}
 }
@@ -112,6 +139,7 @@ void ReadServerData()
 		SERVERNAME = temp;
 		unit = new cgl::Unit[MAXIMUMPLAYERS];
 		player = new cgl::Player[MAXIMUMPLAYERS];
+		simpleCamera = new cgl::SimpleCamera[MAXIMUMPLAYERS];
 		opengl->SetWindowTitle(GAMENAME + ", Playing at: " + SERVERNAME);
 		for(int a = 0; a < MAXIMUMPLAYERS; a++)
 		{
@@ -168,6 +196,8 @@ void ReadServerData()
 						case 5:
 							z = cgl::c2f((char*)temp.c_str());
 							unit[playernumber].SetPosition(x,terrain->GetHeight(x,z),z);
+							simpleCamera->position = unit[playernumber].position;
+							simpleCamera->position.Cout();
 							temp = "";
 							break;
 						default: 
@@ -183,6 +213,9 @@ void ReadServerData()
 		unitTexture->LoadBMP("Data/snake.bmp");
 		for(i = 0; i < MAXIMUMPLAYERS; i++)	//Setting all to default values
 		{
+			simpleCamera[i].Initialize(keyboard, mouse, SCREENWIDTH, SCREENHEIGHT);
+			simpleCamera->Initialize(0.1, 0.1);
+			simpleCamera->AllowMovement = false;
 			unit[i].armor = 0;
 			unit[i].shield = 10;
 			unit[i].mana = 10;
@@ -269,6 +302,7 @@ void ReadData()
 					break;
 				case 1:
 					y = cgl::s2f(temp);
+					std::cout << " Y : " << y << std::endl;
 					break;
 				case 2:
 					z = cgl::s2f(temp);
@@ -279,37 +313,29 @@ void ReadData()
 				}
 			}
 			break;
-		case '1':
-			//A unit has moved, for a player.
-			temp = "";
-			switch(data[1])						//Format: 1xPOSX|playernumber
+		case '1':								//A player has moved, we have recieved his positionvector
+			i = 2;
+			playernumber = GetIntValue('|');
+			if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
 			{
-			case 'x':							//A player moved in X direction
-				i = 2;
-				x = GetFloatValue('|');
-				i++;							//Skip '|'
-				playernumber = GetIntValue('|');
-				unit[playernumber].position.x = x;
-				unit[playernumber].position.y = terrain->GetHeight(x, unit[playernumber].position.z);
-				break;
-			case 'y':
-				i = 2;
-				y = GetFloatValue('|');
-				i++;							//Skip '|'
-				playernumber = GetIntValue('|');
-				unit[playernumber].flyheight = y;
-				unit[playernumber].position.y = terrain->GetHeight(unit[playernumber].position.x, unit[playernumber].position.z) + unit[playernumber].flyheight;
-				break;
-			case 'z':
-				i = 2;
-				z = GetFloatValue('|');
-				i++;							//Skip '|'
-				playernumber = GetIntValue('|');
-				unit[playernumber].position.z = z;
-				unit[playernumber].position.y = terrain->GetHeight(unit[playernumber].position.x,z);
-				break;
-			default:
-				break;
+				switch(data[1])
+				{
+				case 'W':
+					simpleCamera[playernumber].MoveForward(0.25);
+					break;
+				case 'S':
+					simpleCamera[playernumber].MoveBackwards(0.25);
+					break;
+				case 'A':
+					simpleCamera[playernumber].MoveStrafeLeft(0.25);
+					break;
+				case 'D':
+					simpleCamera[playernumber].MoveStrafeRight(0.25);
+					break;
+				default:
+					break;
+				}
+				unit[playernumber].position = simpleCamera[playernumber].position;
 			}
 			break;
 		case '2':
@@ -342,10 +368,12 @@ void ConnectToServer()
 {
 	if(client->Connect(1000) == false)
 	{
+		ISCONNECTED = false;
 		messageFeedback = "Could not connect to server. Server might be down, try again later";
 	}
 	else
 	{
+		ISCONNECTED = true;
 		//Data is split at server:
 		//0 - Playername only, init
 		//1 - XYZ
@@ -394,4 +422,32 @@ std::string GetStringValue(char end)
 		i++;
 	}while(data[i] != end && i < data.length());
 	return temp;
+}
+
+
+void GetVector3fValue(char end)
+{
+	temp = "";
+	do
+	{
+		temp += data[i];
+		i++;
+	}while(data[i] != end && i < data.length());
+	tempvec.x = cgl::s2f(temp);
+	i++;							//Skip 'end' character
+	temp ="";
+	do
+	{
+		temp += data[i];
+		i++;
+	}while(data[i] != end && i < data.length());
+	tempvec.y = cgl::s2f(temp);
+	i++;							//Skip 'end' character
+	temp = "";
+	do
+	{
+		temp += data[i];
+		i++;
+	}while(data[i] != end && i < data.length());
+	tempvec.z = cgl::s2f(temp);
 }

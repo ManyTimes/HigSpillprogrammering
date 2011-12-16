@@ -27,7 +27,7 @@ cgl::Button* btnExit;
 cgl::Button* btnCancel;				
 cgl::Time* gametime;					//Display current time?
 cgl::Weather* weather;					//Draw weather?
-cgl::Camera* camera;		
+cgl::SimpleCamera* simpleCamera;		//One for each player
 cgl::Keyboard* keyboard;
 cgl::Mouse* mouse;					
 cgl::SqlConnection* sqlcon;				//Connects to DB

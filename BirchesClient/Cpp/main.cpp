@@ -262,35 +262,44 @@ public:
 
 void UpdateMouse();
 void MovementHandle();
-cgl::Vector3f SpawnPoint(-0,50,-150);			// Where camera spawns
-cgl::Vector3f LookAt(0,0,0);					// Where camera points at
+cgl::Vector3f SpawnPoint(-0,5,-5);			// Where camera spawns
+cgl::Vector3f LookAt(5,0,5);					// Where camera points at
 cgl::Vector3f Up(0,1,0);						// Cameras up direction.
 cgl::Camera *tp_camera;
 cgl::Unit tp_player;							// Unit to follow. [TP_CAMERA]
 #define MOVEMENT_SPEED 20.0f					// Camera movement speed.
-
 int main(int argc, char *argv[])
 {
 	cgl::CGLInitialize();	//Library Initialize
 	initGL();
+	InitializeLighting();
 	Initialize();			//Initialize game objects
-	cam->Move(cgl::Vector3f(0,0,0));
-	cam->MoveForward( -1.0);
-//	x1 = x2 = y1 = y2 = 0.0;
-//	x1 = mouse->cursorx;
-//	y1 = mouse->cursory;
+//	cam->Move(cgl::Vector3f(0,0,0));
+//	cam->MoveForward( -1.0);
 
+	//////UNCOMMENT THE FIRST /* */ TO TEST THE SHOOTING AND CAMERA MOVING WITHOUT NETWORK
+	//////----------------------------
 	cgl::Image2D* uu = new cgl::Image2D();
-	uu->LoadBMP("Data/snake.bmp");
-	cgl::Model* mod = new cgl::Model("Data/snake.md2", uu->ID, 0.0025, MD2Normals);
+	uu->LoadBMP("Data/banana.bmp");
+	cgl::Model* mod = new cgl::Model("Data/banana.md2", uu->ID, 0.0025, MD2Normals);
+	cgl::Unit player;
+	player.Load("Data/banana.md2", uu->ID, 0.0025, MD2Normals);
 	delete uu;
 	mouse->enableMouseFrame = true;
-	//mouse->EnableMouseFrame(true);
-	mouse->ShowWindowsCursor(false);
-	CamTest* ct = new CamTest(mouse);
-	Projectile* pp = new Projectile(10000);	//10.k frames
-	glFrontFace(GL_CW);			// Winding of elements
+	mouse->ShowWindowsCursor(true);
+	bool b = true;
+	bool shooting = false;
+	bool mousein = false;
+	cgl::SimpleCamera* cam = new cgl::SimpleCamera(keyboard, mouse, 800, 600);//Our camera, either FREE VIEW; FPS OR THIRD PERSON
+	cam->Initialize(0.3,0.3);
+	cam->MoveForward( -1.0);
+	player.SetScale(5.0, 0.0, 0.0);
+	//glFrontFace(GL_CW);			// Winding of elements
 
+	cgl::ProjectileBullet* bullet = new cgl::ProjectileBullet();
+	bullet->size = 0.005f;
+	bullet->speed = 5.0f;
+	bullet->SetModel(mod);
 
 	tp_player.Load("Data/TestModel3.3ds");		// Model to use [TP_CAMERA]
 	tp_player.SetScale(0.01,0,0);				// and scale it down. Scale only supports uniform scale using the first component atm. [TP_CAMERA]
@@ -298,11 +307,8 @@ int main(int argc, char *argv[])
 	tp_camera = new cgl::Camera(SpawnPoint, LookAt, h, w, 0.1f, 4000.0f);				// Setup the camera normally [TP_CAMERA]
 	tp_camera->SetupThirdPersonCamera( &tp_player, 150, cgl::Vector3f(0, 75, 0), true);	// Settings: Target to follow, distance from target (is scaled with model), offset (to align with head, is also scaled), force the model to face same direction as camera [TP_CAMERA]
 
-	bool b = true;
-	bool mousein = false;
-	float pitch, yaw;
-	pitch = yaw = 0.0;
-	bool shooting = false;
+
+
 	while(b)
 	{
 		if(keyboard->isKeyPressed("P") == true)
@@ -325,55 +331,68 @@ int main(int argc, char *argv[])
 		glLoadIdentity();
 		opengl->StartDraw();
 		opengl->CreateViewport(true, 800,600,0,100,0.001f, 1000.0f);
-		//ct->Control(0.2, 0.2, mousein);
-		//ct->UpdateCamera();
+		if(midx-tmpx > 2 || midx-tmpx < -1)*/
+		//player.position = cam->position;
+		//player.position += 0.4;
+
 		UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
 		MovementHandle();						// Handle keyboard input [TP_CAMERA]
 		tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
 		tp_player.Draw();							// Draw the tp_player [TP_CAMERA]
 
-		//OLD CAM, OR NEW, WHATEVER
-		/*int midx = 400;	//Half of screen sizes
-		int midy = 300;
-		int tmpx, tmpy;
-		tmpx = mouse->cursorx;
-		tmpy = mouse->GetCursorPositionY();
-		if(midx-tmpx > 2 || midx-tmpx < -1)
+		if(shooting )
 		{
-			yaw += 0.2 * (midx-tmpx);
+			cam->position.Cout();
+			cam->Update();
 		}
-		if(midy-tmpy > 2 || midy-tmpy < -1)
+		else
 		{
-			pitch += 0.2 * (midy-tmpy);
+			player.position.Cout();
+			UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
+			tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
 		}
-		mouse->SetCursorPosition(midx, midy);*/
-
-		//glRotatef(-pitch,1.0,0.0,0.0);	//rotate the camera (more precisly move everything in the opposit direction)
-		//glRotatef(-yaw,0.0,1.0,0.0);
-		//cam->MoveForward(0.25);
-		//cam->Render();
-
-//		mouse->SetCursorPosition(400, 300);
+		player.Draw();
+		//cam->Update(mousein);	//Update, Place? View? ...Function name shall we use? Render? Draw()? Action()? 
+		terrain->Draw(0.0);
 		
+		player.position.Cout();
+		if(keyboard->isKeyPressed("Y") == true)
+		{
+			cam->MoveForward(1.0);
+		}
+				
+		if(keyboard->isKeyPressed("U") == true)
+		{
+			cam->MoveBackwards(1.0);
+		}
+
+		if(keyboard->isKeyPressed("K") == true)
+		{
+			cam->MoveStrafeRight(1.0);
+		}
+				
+		if(keyboard->isKeyPressed("J") == true)
+		{
+			cam->MoveStrafeLeft(1.0);
+		}
+
 		if(keyboard->isKeyPressed("SPACE") == true)
 		{
-			if(shooting == false)
+			if(shooting)
+			{
+			shooting = false;
+			}
+			else
 			{
 				shooting = true;
-				cgl::Vector3f camDir(ct->camPitch, ct->camYaw, 0); // cam->GetDirection()
-				cam->RotateX(ct->camYaw);
-				cam->RotateY(ct->camPitch);
-				cam->GetViewDirection();
-				pp->Fire(cgl::Vector3f(ct->x, ct->y, ct->z), cam->GetDirection(), mod, 100, 0);
-				std::cout << "Drawing at: " << pp->position.x << ", " << pp->position.y << ", " << pp->position.z << std::endl;
-				std::cout << "Cam pos: " <<ct->x << ", " << ct->y << ", " << ct->z << std::endl;
-				std::cout << "Cam direction: " << cam->GetDirection().x << ", " << cam->GetDirection().y << ", " << cam->GetDirection().z << std::endl;
 			}
+			//bullet->Shoot(cam->position, cam->GetViewDirection(), 1000);
 		}
 
 		if(shooting == true)
 		{
-			pp->Draw();
+			//glColor3f(0.0, 1.0,0.0);
+			//bullet->Draw();
 		}
 	
 		GLfloat size = 2.0;
@@ -405,70 +424,10 @@ int main(int argc, char *argv[])
 			DrawNet(size,LinesX,LinesZ);
 		glPopMatrix();
 
-
-		if(keyboard->isKeyPressed("W") == true)
-		{
-			cam->MoveForward(-0.1);
-		}
-		if(keyboard->isKeyPressed("S") == true)
-		{
-			cam->MoveForward(0.1);
-		}
-
-	//	x1 = mouse->cursorx;
-	//	y1 = mouse->cursory;
-
-	//	x1 = (100 * (mouse->cursorx - (400)) / 400);
-
-		/*if(x1-x2 > 3)
-		{
-			cam->RotateY(1.0);
-		}
-		else
-		{
-			if(x1-x2 < -3)
-			{
-				cam->RotateY(-1.0);
-			}
-		}*/
-		//std::cout << "X: " << x1 << " - x2 " << x2  << " = " << (x1-x2) <<std::endl;
-		/*if(mouse->cursorx < 390)		//Half of x - 10
-		{
-			cam->RotateY(0.4);
-			std::cout << "X: " << mouse->cursorx << " < 390 " << std::endl;
-			//mouse->cursorx = 400;
-		}
-		else
-		{
-			if(mouse->cursorx > 410)
-			{
-				std::cout << "X: " << mouse->cursorx << " > 410 " << std::endl;
-				cam->RotateY(-0.4);
-			}
-		}*/
-
 		if(keyboard->isKeyPressed("Q") == true)
 		{
 			b = false;
 		}
-
-		//mouse->SetCursorPosition(400, 300);
-		/*if(keyboard->isKeyPressed("A") == true)
-		{
-			cam->RotateY(1);
-		}
-		if(keyboard->isKeyPressed("D") == true)
-		{
-			cam->RotateY(-1);
-		}*/
-
-
-		//glTranslatef(0.0, 0.0, -30.0);
-		//cam->x = -30.0f;
-		terrain->Draw(0.0);
-		//cam->
-
-
 
 		float velocity[3];
 		velocity[0] = velocity[2] = cgl::GetRandomFloat(-0.05, 0.07);
@@ -480,10 +439,11 @@ int main(int argc, char *argv[])
 		weather->StartOneParticle(velocity, position);
 		weather->Draw();
 		opengl->EndDraw();
-		cgl::Sleep(56);
+		cgl::Sleep(55);
 	}
-	//InitializeLighting();
-	//GameLoop();				//Starts the program/Server/game loop
+
+	InitializeLighting();
+	GameLoop();				//Starts the program/Server/game loop
 	return 0;
 }
 

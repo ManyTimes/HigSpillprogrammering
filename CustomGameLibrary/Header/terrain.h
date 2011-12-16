@@ -15,8 +15,8 @@ namespace cgl
 	private:
 		int width;						//Width of terrain
 		int length;						//Length of terrain
-		float** heights;				//Heights
 		Vector3f** normals;				//X-Z of normals in a 2D which contains a XYZ value for 3D
+		float** heights;				//Heights
 	public:
 		Terrain::Terrain(char* heightMapTexture, float maximumTerrainHeight);
 		Terrain::~Terrain();

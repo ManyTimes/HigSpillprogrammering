@@ -115,6 +115,7 @@ void InitializeServer()
 	server = new cgl::NetworkServer(cgl::s2i(PORTNUMBER), MAXIMUMPLAYERS);
 	player = new cgl::Player[MAXIMUMPLAYERS];
 	unit = new cgl::Unit[MAXIMUMPLAYERS];
+	simpleCamera = new cgl::SimpleCamera[MAXIMUMPLAYERS];
 	for(int i = 0; i < MAXIMUMPLAYERS; i++)
 	{
 		player[i].deaths = 0;
@@ -129,7 +130,8 @@ void InitializeServer()
 		unit[i].damage = 10;
 		unit[i].action = 0;
 		unit[i].hitpoints = 0;
-		unit[i].SetPosition(cgl::GetRandomFloat(-5.0f, 5.0f), 1.0f, cgl::GetRandomFloat(-5.0, 5.0f));
+		unit[i].position = 1.0f;
+		simpleCamera[i].position = unit[i].position;
 		//std::cout << " X Y " << unit[i].position.x << ", " << unit[i].position[1] << std::endl;
 		//player[i].SetPosition(cgl::GetRandomFloat(-5.0f, 5.0f), 1.0f, cgl::GetRandomFloat(-5.0, 5.0f));
 		//std::cout << " X Y " << player[i].position.x << ", " << player[i].position[1] << std::endl;

@@ -17,10 +17,13 @@ int thisPlayer = -1;				//Clients' player number
 int SLEEPTIME = 5;
 bool play = true;	
 std::string messageFeedback = "";
+bool ISCONNECTED = false;
+bool DISABLEMOUSECONTROL = false;
 bool SERVERRESPONSE = false;		//When we join, we wait for a response from server
 									//before a player can play/move/draw/render/send network stuff
 //GLOBAL OBJECTS
 cgl::Camera* camera;
+cgl::SimpleCamera* simpleCamera;
 cgl::NetworkClient* client;
 cgl::Terrain* terrain;
 cgl::Grid* grid;

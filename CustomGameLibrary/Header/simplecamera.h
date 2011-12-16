@@ -3,11 +3,55 @@
 
 #include "mathtool.h"
 #include "include.h"
-#include "math.h"
+#include "keyboard.h"
 #include "mouse.h"
+#include "entity.h"
 
 namespace cgl
 {
+	enum CAMERATYPE { FreeView, FPS, ThirdPerson }; 
+	class DECLARE SimpleCamera
+	{
+		private: 
+			float temp;
+			float camYaw;
+			float camPitch;
+			float PIdiv180;
+			float mousevelocity, movevelocity;
+			cgl::Mouse* mousept;
+			cgl::Keyboard* keyboardpt;
+			int viewportMidX, viewportMidY;
+			int cameratype;
+			char movekeys[4];
+			cgl::Entity* attachedObject;
+			void SimpleCamera::LockCamera();
+			void SimpleCamera::MoveCamera(float distance, float direction);
+
+			void SimpleCamera::MoveCameraUp(float distance, float direction);
+			void SimpleCamera::Move();
+		public:
+			cgl::Vector3f position;
+			bool AllowMovement;
+			bool lockViewAngleTopBottom;
+			SimpleCamera::SimpleCamera();
+			SimpleCamera::SimpleCamera(cgl::Keyboard* keyboardObject, cgl::Mouse* mouseObject, int viewportCenterX, int viewportCenterY);
+			void SimpleCamera::Initialize(cgl::Keyboard* keyboardObject, cgl::Mouse* mouseObject, int viewportWidth, int viewportHeight);
+			void SimpleCamera::Initialize(float movespeed, float mousevelocity);
+			void SimpleCamera::Initialize(float movespeed, float mousevelocity, char movementKeys[4], cgl::CAMERATYPE type);
+			void SimpleCamera::Initialize(float movespeed, float mousevelocity, char movementKeys[4], cgl::CAMERATYPE type, cgl::Entity* objectToFollow);
+			void SimpleCamera::MoveForward(float distance);
+			void SimpleCamera::MoveBackwards(float distance);
+			void SimpleCamera::MoveStrafeRight(float distance);
+			void SimpleCamera::MoveStrafeLeft(float distance);
+			void SimpleCamera::Update();
+			void SimpleCamera::Update(bool disableControlOfCursor);
+			cgl::Vector3f SimpleCamera::GetViewDirection();
+	};
+
+
+
+
+
 	/*class DECLARE SimpleCamera
 	{
 	private:
@@ -82,7 +126,7 @@ namespace cgl
 	};*/
 
 
-	class DECLARE SimpleCamera
+	/*class DECLARE SimpleCamera
 	{
 	private:
 		bool viewchanged;
@@ -191,116 +235,7 @@ namespace cgl
 			this->position->y += this->move.y;
 			this->position->z += this->move.z;
 		}
-
-		//Youtube video tutorial camera, movement, mouse, nice
-		/*
-		float x = 0.0,y = 0.0,z = 0.0;
-		float camYaw = 0.0;
-		float camPitch =0.0;
-		void lockCamera()
-		{
-			if(camPitch > 90)
-			{
-				camPitch = 90;
-			}
-			else
-			{
-				if(camPitch < -90)
-				{
-					camPitch = -90;
-				}
-			}
-			if(camYaw < 0.0)
-			{
-				camYaw += 360.0;
-			}
-			else
-			{
-				if(camYaw > 360.0)
-				{
-					camYaw -= 360.0;
-				}
-			}
-		}
-
-		//Angle is in celsius, need radians
-		void moveCamera(float distance, float direction)
-		{
-			float radian = (camYaw + direction) * PIdiv180;
-			x -= sin(radian) * distance;
-			z -= cos(radian) * distance;
-		}
-
-		void moveCameraUp(float distance, float direction)
-		{
-			float radian = (camPitch + direction) * PIdiv180;
-			y += sin(radian) * distance;
-		}
-
-		void Control(float movevelocity, float mousevelocity, bool mouseIn)
-		{
-			if(mouseIn)
-			{
-				int midx = 400;	//Half of screen sizes
-				int midy = 300
-				int tmpx, tmpy;
-				tmpx = mouse->cursorx;
-				tmpy = mouse->cursory;
-				camYaw += mousevelocity * (midx-tmpx);
-				camPitch += mousevelocity * (midy-tmpy);
-				lockCamera();
-				mouse->SetCursorPosition(midx, midy);	//Reset to middle
-				if(keyboard->isKeyPressed("W") == true)
-				{
-					if(camPitch != 90 && camPitch != -90)
-					{
-						moveCamera(movevelocity, 0.0);
-					}
-					moveCameraUp(movevelocity, 0.0);
-				}
-				else
-				{
-					if(keyboard->isKeyPressed("S") == true)
-					{
-						if(camPitch != 90 && camPitch != -90)
-						{
-							moveCamera(movevelocity, 180.0);
-						}
-						moveCameraUp(movevelocity, 180.0);
-					}
-				}
-				if(keyboard->isKeyPressed("A") == true)
-				{
-					moveCamera(movevelocity, 90.0);
-				}
-				else
-				{
-					if(keyboard->isKeyPressed("D") == true)
-					{
-						moveCamera(movevelocity, 270.0);
-					}
-				}
-			}
-			glRotatef(-camPitch, 1.0, 0.0, 0.0);
-			glRotatef(-camYaw, 0.0, 1.0, 0.0);
-		}
-
-
-		void UpdateCamera()
-		{
-			glTranslatef(-x, -y, -z);
-		}
-
-		//Outside the class
-		//p (pause) toggles on off the mouseIn (mouse in, if app is in focus)
-		void Display()
-		{
-			Control(0.2, 0.2, mousein);
-			UpdateCamera();
-		}
-
-		*/
-	};
+	};*/
 
 }
 

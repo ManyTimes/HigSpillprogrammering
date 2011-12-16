@@ -287,6 +287,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Header\projectilebullet.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Header\unit.h"
 					>
 				</File>
@@ -404,6 +408,10 @@
 				</File>
 				<File
 					RelativePath=".\Cpp\projectile.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\projectilebullet.cpp"
 					>
 				</File>
 				<File

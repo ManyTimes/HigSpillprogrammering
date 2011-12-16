@@ -18,13 +18,16 @@ extern int SCREENHEIGHT;
 extern int SLEEPTIME;
 extern bool play;	
 extern std::string messageFeedback;
+extern bool DISABLEMOUSECONTROL;
 extern bool SERVERRESPONSE;
+extern bool ISCONNECTED;
 
 
 
 //GLOBAL OBJECTS
 extern cgl::NetworkClient* client;
 extern cgl::Camera* camera;
+extern cgl::SimpleCamera* simpleCamera;
 extern cgl::Terrain* terrain;
 extern cgl::Grid* grid;
 extern cgl::OpenGL* opengl;

@@ -84,6 +84,8 @@ namespace cgl
 
 	void Mouse::SetCursorPosition(int x, int y)
 	{
+		instance->cursorx = x;
+		instance->cursory = y;
 		glfwSetMousePos(x,y);
 	}
 

@@ -11,6 +11,17 @@ std::string temp = "";
 int playernumber = 0;					//Current player to work on
 int ii = 0;								//Loop of data read [ii]
 
+void CoutVec(cgl::Vector3f vec)
+{
+	std::cout << " Vector: " << vec.x << " ," << vec.y << " " << vec.z << std::endl;
+}
+
+void CoutVec(cgl::Vector3f vec, std::string msg)
+{
+	std::cout << msg;
+	CoutVec(vec);
+}
+
 
 //Main loop of the program
 void Program()
@@ -90,7 +101,7 @@ void Network()
 	{
 		server->CreateClient();					//Create new client; Init new unit
 		int index = server->clientcount-1;		//Resetting the new player, to new position, etc.
-		unit[index].SetPosition(cgl::GetRandomFloat(5.0, 10.0), 0.01, cgl::GetRandomFloat(5.0, 10.0));
+		unit[index].SetPosition(cgl::GetRandomFloat(0.0, 60.0), 3.0, cgl::GetRandomFloat(0.0, 60.0));
 		unit[index].hitpoints = 100;
 		unit[index].ID = index;
 		unit[index].armor = 0;
@@ -100,6 +111,9 @@ void Network()
 		player[index].playername = "<Empty Slot>";
 		player[index].ID = index;
 		player[index].score = 0;
+		simpleCamera[index].position = unit[index].position;
+		simpleCamera[index].position.Cout();
+
 
 		serverData = cgl::i2s(MAXIMUMPLAYERS) + "|" + SERVERNAME + "|";								//Send data of all players to joining player; 
 		for(int i = 0; i < server->clientcount-1; i++)								//format: count|playername?kills?deaths?posx?posy?posz?|playername?kills?...
@@ -146,69 +160,38 @@ void Network()
 				server->SendDataToConnectedClients(serverData);
 				break;
 			case '1':
-				switch(server->buffer[1])
+				//A player has moved, send it to all connected players
+				server->SendDataToConnectedClients(server->buffer);
+				/*ii = 2;
+				playernumber = GetIntValue('|');
+				if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
 				{
-					case 'x':							//Moves in X direction
-						if(server->buffer[2] == '1')	//Positive Direction
-						{
-							temp = "";
-							ii = 3;
-							playernumber = GetIntValue('|');
-							unit[playernumber].position.x += 1.0f;
-							serverData = "1x" + cgl::f2s(unit[playernumber].position.x)  + "|" + temp;
-							server->SendDataToConnectedClients(serverData);		//Format: 1 x posX | playernumber
-						}
-						else
-						{
-							temp = "";
-							ii = 3;
-							playernumber = GetIntValue('|');
-							unit[playernumber].position.x -= 1.0f;
-							serverData = "1x" + cgl::f2s(unit[playernumber].position.x)  + "|" + temp;
-							server->SendDataToConnectedClients(serverData);		//Format: 1 x posX | playernumber
-						}
-						break;
-					case 'y':							//Moves in Y direction
-						if(server->buffer[2] == '1')	//Positive Direction
-						{
-							temp = "";
-							ii = 3;
-							playernumber = GetIntValue('|');
-							unit[playernumber].position.y += 1.0f;
-							serverData = "1y" + cgl::f2s(unit[playernumber].position.y)  + "|" + temp;
-							server->SendDataToConnectedClients(serverData);		//Format: 1 x posX | playernumber
-						}
-						else
-						{
-							temp = "";
-							ii = 3;
-							playernumber = GetIntValue('|');
-							unit[playernumber].position.y -= 1.0f;
-							serverData = "1y" + cgl::f2s(unit[playernumber].position.y)  + "|" + temp;
-							server->SendDataToConnectedClients(serverData);		//Format: 1 x posX | playernumber
-						}
-						break;
-					case 'z':							//Moves in Z direction
-						if(server->buffer[2] == '1')	//Positive Direction
-						{
-							temp = "";
-							ii = 3;
-							playernumber = GetIntValue('|');
-							unit[playernumber].position.z += 1.0f;
-							serverData = "1z" + cgl::f2s(unit[playernumber].position.z)  + "|" + temp;
-							server->SendDataToConnectedClients(serverData);		//Format: 1 x posX | playernumber
-						}
-						else
-						{
-							temp = "";
-							ii = 3;
-							playernumber = GetIntValue('|');
-							unit[playernumber].position.z -= 1.0f;
-							serverData = "1z" + cgl::f2s(unit[playernumber].position.z)  + "|" + temp;
-							server->SendDataToConnectedClients(serverData);		//Format: 1 x posX | playernumber
-						}
-						break;
-				}
+					switch(server->buffer[1])
+					{
+						case 'W':							//MOVES FORWARD
+							simpleCamera[playernumber].MoveForward(0.25);
+						case 'S':							//MOVES BACKWARDS
+							simpleCamera[playernumber].MoveBackwards(0.25);
+							break;
+						case 'A':							//STRAFE LEFT
+							simpleCamera[playernumber].MoveStrafeLeft(0.25);
+							break;
+						case 'D':							//STRAFE RIGHT
+							simpleCamera[playernumber].MoveStrafeRight(0.25);
+							break;
+						default:
+							break;
+					}
+					unit[playernumber].position.x = simpleCamera[playernumber].position.x;
+					unit[playernumber].position.y = simpleCamera[playernumber].position.y;
+					unit[playernumber].position.z = simpleCamera[playernumber].position.z;
+					//Sends back current position of player
+					serverData = "1" + cgl::f2s(unit[playernumber].position.x)
+								+ "|" + cgl::f2s(unit[playernumber].position.y)
+								+ "|" + cgl::f2s(unit[playernumber].position.z)
+								+ "|" + temp;//Temp is playernumber
+					server->SendDataToConnectedClients(serverData);
+					CoutVec(unit[playernumber].position, " Unit Pos: ");*/
 				break;
 			case '2':
 				break;
@@ -285,4 +268,33 @@ std::string GetStringValue(char end)
 		ii++;
 	}while(readData[ii] != end && ii < readData.length());
 	return temp;
+}
+
+cgl::Vector3f GetVector3fValue(char end)
+{
+	cgl::Vector3f returnvalue;
+	temp = "";
+	do
+	{
+		temp += readData[ii];
+		ii++;
+	}while(readData[ii] != end && ii < readData.length());
+	returnvalue.x = cgl::s2f(temp);
+	ii++;							//Skip 'end' character
+	temp ="";
+	do
+	{
+		temp += readData[ii];
+		ii++;
+	}while(readData[ii] != end && ii < readData.length());
+	returnvalue.y = cgl::s2f(temp);
+	ii++;							//Skip 'end' character
+	temp = "";
+	do
+	{
+		temp += readData[ii];
+		ii++;
+	}while(readData[ii] != end && ii < readData.length());
+	returnvalue.z = cgl::s2f(temp);
+	return returnvalue;
 }

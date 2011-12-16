@@ -1,6 +1,6 @@
 #include "../Header/main.h"
-//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") //Disable CMD-window
 
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") //Disable CMD-wind
 int x = 800;
 int y = 600;
 int w = 800;
@@ -20,6 +20,92 @@ cgl::Image2D* unitText;
 cgl::ModelMD2* model2;
 cgl::Projectile** pro;
 
+
+
+#include "math.h"
+#define SQR(x) (x*x)
+cgl::Vector3f CrossProduct(cgl::Vector3f * u, cgl::Vector3f * v)
+{
+	cgl::Vector3f resVector;
+	resVector.x = u->y*v->z - u->z*v->y;
+	resVector.y = u->z*v->x - u->x*v->z;
+	resVector.z = u->x*v->y - u->y*v->x;
+	return resVector;
+}
+
+float GetCGLVectorLength( cgl::Vector3f * v)
+{
+	return (GLfloat)(sqrt(SQR(v->x)+SQR(v->y)+SQR(v->z)));
+}
+
+cgl::Vector3f Normalize3dVector( cgl::Vector3f v)
+{
+	cgl::Vector3f res;
+	float l = GetCGLVectorLength(&v);
+	if (l == 0.0f) return cgl::Vector3f(0,0,0);
+	res.x = v.x / l;
+	res.y = v.y / l;
+	res.z = v.z / l;
+	return res;
+}
+
+
+
+/*class Bullet
+{
+public:
+	float PIdiv180;
+	cgl::Vector3f viewdirection;
+	cgl::Vector3f position;
+	float xrot, yrot, zrot;
+	int lifespan;
+	float angle;
+	float speed;
+	Bullet::Bullet(float x, float z, float a)
+	{
+		this->PIdiv180 = 3.141592654/180;
+		speed = 0.25;
+		angle = a;
+		lifespan = 200;
+	}
+
+	void BulletDraw()
+	{
+		Forward();
+		glColor3f(1.0, 0.0,0.0);
+		glPushMatrix();
+		glTranslatef(position.x, position.y, position.z);
+		glScalef(0.4,0.4, 0.4);
+		float bulletMaterial[] = { 0.2, 0.6, 0.30, 1};
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, bulletMaterial);
+		glutSolidSphere(0.5, 20, 20);
+		glPopMatrix();
+		glColor3f(0.8,0.8,0.8);
+		lifespan -= 1;
+	}
+
+	void Bullet::Forward()
+	{
+		this->position.x = this->position.x + (viewdirection.x * speed);
+		this->position.y = this->position.y + (viewdirection.y * speed);
+		this->position.z = this->position.z + (viewdirection.z * speed);
+	}
+
+	void Bullet::Fire(cgl::Vector3f startposition, cgl::Vector3f view)
+	{
+		this->viewdirection.x = view.x;
+		this->viewdirection.y = view.y;
+		this->viewdirection.z = view.z;
+		this->position.x = startposition.x;
+		this->position.y = startposition.y;
+		this->position.z = startposition.z;
+		CoutVec(this->position, "pos");
+		CoutVec(this->viewdirection, "view");
+		lifespan = 200;
+	}
+};*/
+
+/*
 class Projectile 
 {
 private:
@@ -67,8 +153,8 @@ public:
 		this->position.y += this->move.y;
 		this->position.z += this->move.z;
 		std::cout << " pos xy " << position.x << " , " << position.y << ", " << position.z << std::endl;
-		MoveCamera();
-		MoveCameraUp();
+		//MoveCamera();
+		//MoveCameraUp();
 	}
 
 	//Angle is in celsius, need radians
@@ -99,16 +185,17 @@ public:
 			glScalef(0.05, 0.05, 0.05);
 			glRotatef(-yaw,1.0,0.0,0.0);	//rotate the camera (more precisly move everything in the opposit direction)
 			glRotatef(-pitch,0.0,1.0,0.0);
+
 			glTranslatef(this->position.x, this->position.y, this->position.z);
-			glPopMatrix();
 			this->model->Draw();
+			glPopMatrix();
+
 
 		}
 	}
 
-};
+};*/
 
-cgl::SimpleCamera* cam = new cgl::SimpleCamera();
 int angle = 50;
 
 void DrawNet(GLfloat size, GLint LinesX, GLint LinesZ)
@@ -135,9 +222,12 @@ void DrawNet(GLfloat size, GLint LinesX, GLint LinesZ)
 	glEnd();
 }
 
-class CamTest
+
+/*class CamTest
 {
 	//Youtube video tutorial camera, movement, mouse, nice
+private: 
+	float temp;
 public:
 	float x,y,z;
 	float camYaw;
@@ -146,6 +236,7 @@ public:
 	cgl::Mouse* mousept;
 	CamTest::CamTest(cgl::Mouse* m)
 	{
+		this->temp = 0.0;
 		this->mousept = m;
 		PIdiv180 =  3.1415926535/180;
 		x = y = z = 0.0;
@@ -164,7 +255,22 @@ public:
 		camYaw+=360.0;
 	if(camYaw>360.0)
 		camYaw-=360;
+	}
 
+	cgl::Vector3f CamTest::GetViewDirection()
+	{
+		cgl::Vector3f step1, step2;
+		//Rotate Y-axis
+		step1.x = cos((this->camYaw + 90.0) * PIdiv180);
+		step1.z = -sin((this->camYaw + 90.0) * PIdiv180);
+		//Rotate X-axis
+		this->temp = cos(this->camPitch * PIdiv180);
+		std::cout << " TEmp : " << temp;
+		step2.x = step1.x * this->temp;
+		step2.z = step1.z * this->temp;
+		step2.y = sin(this->camPitch * PIdiv180);
+		std::cout << " STEP XYZ " << step2.x << step2.y << step2.y << std::endl;
+		return step2;
 	}
 
 	//Angle is in celsius, need radians
@@ -194,19 +300,10 @@ public:
 			tmpx = this->mousept->cursorx;
 			tmpy = this->mousept->GetCursorPositionY();
 	
-			if(midx-tmpx > 2 || midx-tmpx < -1)
-			{
-				camYaw += mousevelocity * (midx-tmpx);
-			}
-
-			if(midy-tmpy > 2 || midy-tmpy < -1)
-			{
-				camPitch += mousevelocity * (midy-tmpy);
-			}
-
+			camYaw += mousevelocity * (midx-tmpx);
+			camPitch += mousevelocity * (midy-tmpy);
 			LockCamera();
 			this->mousept->SetCursorPosition(midx, midy);	//Reset to middle
-		//	std::cout << " X , Y " << this->mousept->cursorx << " , " << this->mousept->cursory << std::endl;
 			if(keyboard->isKeyPressed("W") == true)
 			{
 				if(camPitch != 90 && camPitch != -90)
@@ -246,44 +343,36 @@ public:
 	{
 		glTranslatef(-x, -y, -z);
 	}
-
-	//Outside the class
-	//p (pause) toggles on off the mouseIn (mouse in, if app is in focus)
-/*	void Display()
-	{
-		Control(0.2, 0.2, mousein);
-		UpdateCamera();
-	}*/
-};
+};*/
 
 
 int main(int argc, char *argv[])
 {
 	cgl::CGLInitialize();	//Library Initialize
 	initGL();
+	InitializeLighting();
 	Initialize();			//Initialize game objects
-	cam->Move(cgl::Vector3f(0,0,0));
-	cam->MoveForward( -1.0);
-//	x1 = x2 = y1 = y2 = 0.0;
-//	x1 = mouse->cursorx;
-//	y1 = mouse->cursory;
 
-	cgl::Image2D* uu = new cgl::Image2D();
-	uu->LoadBMP("Data/snake.bmp");
-	cgl::Model* mod = new cgl::Model("Data/snake.md2", uu->ID, 0.0025, MD2Normals);
+
+	//////UNCOMMENT THE FIRST /* */ TO TEST THE SHOOTING AND CAMERA MOVING WITHOUT NETWORK
+	//////----------------------------
+	/*cgl::Image2D* uu = new cgl::Image2D();
+	uu->LoadBMP("Data/banana.bmp");
+	cgl::Model* mod = new cgl::Model("Data/banana.md2", uu->ID, 0.0025, MD2Normals);
+	//cgl::Model* mod = new cgl::Model("Data/Banana.3ds");
 	delete uu;
 	mouse->enableMouseFrame = true;
-	//mouse->EnableMouseFrame(true);
-	mouse->ShowWindowsCursor(false);
-	CamTest* ct = new CamTest(mouse);
-	Projectile* pp = new Projectile(10000);	//10.k frames
-
-
+	mouse->ShowWindowsCursor(true);
 	bool b = true;
-	bool mousein = false;
-	float pitch, yaw;
-	pitch = yaw = 0.0;
 	bool shooting = false;
+	bool mousein = false;
+	cgl::SimpleCamera* cam = new cgl::SimpleCamera(keyboard, mouse, 800, 600);//Our camera, either FREE VIEW; FPS OR THIRD PERSON
+	cam->Initialize(0.3,0.3);
+	cgl::ProjectileBullet* bullet = new cgl::ProjectileBullet();
+	bullet->size = 0.005f;
+	bullet->speed = 5.0f;
+	bullet->SetModel(mod);
+
 	while(b)
 	{
 		if(keyboard->isKeyPressed("P") == true)
@@ -306,46 +395,40 @@ int main(int argc, char *argv[])
 		glLoadIdentity();
 		opengl->StartDraw();
 		opengl->CreateViewport(true, 800,600,0,100,0.001f, 1000.0f);
-		ct->Control(0.2, 0.2, mousein);
-		ct->UpdateCamera();
-
-		//OLD CAM, OR NEW, WHATEVER
-		/*int midx = 400;	//Half of screen sizes
-		int midy = 300;
-		int tmpx, tmpy;
-		tmpx = mouse->cursorx;
-		tmpy = mouse->GetCursorPositionY();
-		if(midx-tmpx > 2 || midx-tmpx < -1)
-		{
-			yaw += 0.2 * (midx-tmpx);
-		}
-		if(midy-tmpy > 2 || midy-tmpy < -1)
-		{
-			pitch += 0.2 * (midy-tmpy);
-		}
-		mouse->SetCursorPosition(midx, midy);*/
-
-		//glRotatef(-pitch,1.0,0.0,0.0);	//rotate the camera (more precisly move everything in the opposit direction)
-		//glRotatef(-yaw,0.0,1.0,0.0);
-		//cam->MoveForward(0.25);
-		//cam->Render();
-
-//		mouse->SetCursorPosition(400, 300);
+		cam->Update(mousein);	//Update, Place? View? ...Function name shall we use? Render? Draw()? Action()? 
+		terrain->Draw(0.0);
 		
+		if(keyboard->isKeyPressed("Y") == true)
+		{
+			cam->MoveForward(1.0);
+		}
+				
+		if(keyboard->isKeyPressed("U") == true)
+		{
+			cam->MoveBackwards(1.0);
+		}
+
+		if(keyboard->isKeyPressed("K") == true)
+		{
+			cam->MoveStrafeRight(1.0);
+		}
+
+				
+		if(keyboard->isKeyPressed("J") == true)
+		{
+			cam->MoveStrafeLeft(1.0);
+		}
+
 		if(keyboard->isKeyPressed("SPACE") == true)
 		{
-			if(shooting == false)
-			{
-				shooting = true;
-				pp->Fire(cgl::Vector3f(ct->x, ct->y, ct->z),cam->GetDirection(), mod, 100, 0);
-				std::cout << "Drawing at: " << pp->position.x << ", " << pp->position.y << ", " << pp->position.z << std::endl;
-				std::cout << "Cam pos: " <<ct->x << ", " << ct->y << ", " << ct->z << std::endl;
-			}
+			shooting = true;
+			bullet->Shoot(cam->position, cam->GetViewDirection(), 1000);
 		}
 
 		if(shooting == true)
 		{
-			pp->Draw();
+			glColor3f(0.0, 1.0,0.0);
+			bullet->Draw();
 		}
 	
 		GLfloat size = 2.0;
@@ -377,70 +460,10 @@ int main(int argc, char *argv[])
 			DrawNet(size,LinesX,LinesZ);
 		glPopMatrix();
 
-
-		if(keyboard->isKeyPressed("W") == true)
-		{
-			cam->MoveForward(-0.1);
-		}
-		if(keyboard->isKeyPressed("S") == true)
-		{
-			cam->MoveForward(0.1);
-		}
-
-	//	x1 = mouse->cursorx;
-	//	y1 = mouse->cursory;
-
-	//	x1 = (100 * (mouse->cursorx - (400)) / 400);
-
-		/*if(x1-x2 > 3)
-		{
-			cam->RotateY(1.0);
-		}
-		else
-		{
-			if(x1-x2 < -3)
-			{
-				cam->RotateY(-1.0);
-			}
-		}*/
-		//std::cout << "X: " << x1 << " - x2 " << x2  << " = " << (x1-x2) <<std::endl;
-		/*if(mouse->cursorx < 390)		//Half of x - 10
-		{
-			cam->RotateY(0.4);
-			std::cout << "X: " << mouse->cursorx << " < 390 " << std::endl;
-			//mouse->cursorx = 400;
-		}
-		else
-		{
-			if(mouse->cursorx > 410)
-			{
-				std::cout << "X: " << mouse->cursorx << " > 410 " << std::endl;
-				cam->RotateY(-0.4);
-			}
-		}*/
-
 		if(keyboard->isKeyPressed("Q") == true)
 		{
 			b = false;
 		}
-
-		//mouse->SetCursorPosition(400, 300);
-		/*if(keyboard->isKeyPressed("A") == true)
-		{
-			cam->RotateY(1);
-		}
-		if(keyboard->isKeyPressed("D") == true)
-		{
-			cam->RotateY(-1);
-		}*/
-
-
-		//glTranslatef(0.0, 0.0, -30.0);
-		//cam->x = -30.0f;
-		terrain->Draw(0.0);
-		//cam->
-
-
 
 		float velocity[3];
 		velocity[0] = velocity[2] = cgl::GetRandomFloat(-0.05, 0.07);
@@ -452,10 +475,13 @@ int main(int argc, char *argv[])
 		weather->StartOneParticle(velocity, position);
 		weather->Draw();
 		opengl->EndDraw();
-		cgl::Sleep(56);
+		cgl::Sleep(55);
 	}
-	//InitializeLighting();
-	//GameLoop();				//Starts the program/Server/game loop
+	*/
+
+
+	InitializeLighting();
+	GameLoop();				//Starts the program/Server/game loop
 	return 0;
 }
 

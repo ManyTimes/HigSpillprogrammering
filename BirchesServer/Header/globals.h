@@ -28,6 +28,7 @@ extern int SCREENHEIGHT;
 extern cgl::NetworkServer* server;
 extern cgl::Terrain* terrain;
 extern cgl::Grid* grid;
+extern cgl::SimpleCamera* simpleCamera;	//One for each player
 extern cgl::OpenGL* opengl;
 extern cgl::Image2D* imgbtnExit;		//Texture for the btnExit
 extern cgl::Image2D* imgbtnExitClicked;	//Texture for the btnExit

@@ -53,10 +53,11 @@ void InitializeRender()
 	opengl = new cgl::OpenGL(SCREENWIDTH,SCREENHEIGHT, 0,0,0,0,24,0, false, false);
 	opengl->Initialize(GAMENAME, false, false, true, true, true);
 
-	camera = new cgl::Camera(cgl::Vector3f(0.0, 1.0, -100.0), cgl::Vector3f(0.0, 0.0, 0.0), 500,800, 0.01, 100.0);
 	//Objects Init
 	mouse = cgl::Mouse::GetInstance(SCREENWIDTH, SCREENHEIGHT);
 	keyboard = cgl::Keyboard::GetInstance();
+
+	camera = new cgl::Camera(cgl::Vector3f(0.0, 1.0, -100.0), cgl::Vector3f(0.0, 0.0, 0.0), 500,800, 0.01, 100.0);
 
 	
 	//Load Images for the buttons

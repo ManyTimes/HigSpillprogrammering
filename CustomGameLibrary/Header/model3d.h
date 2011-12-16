@@ -11,7 +11,7 @@ namespace cgl
 	#define MAXCOORDINATES 3
 
 	//Copies a into b
-	//NOTE: Seriously? A into B and not B into A? This fucked up my head! I usually do "this" the opposite way.
+	//NOTE: Seriously? A into B and not B into A? And not B into A?!?!
 	#define VectorCopy(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
 
 	#pragma pack(push, PACK1, 2)						// Packing / Aligning the structure by 2 bytes instead of default 4.

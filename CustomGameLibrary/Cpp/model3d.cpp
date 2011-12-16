@@ -175,7 +175,11 @@ namespace cgl
 
 							// Last part in fixing the mirroring from 3DS max, turn the winding.
 							std::swap(meshes[meshIndex].face[i].f1, meshes[meshIndex].face[i].f3);
-
+							
+							//points[0] = meshes[meshIndex].vertex[meshes[meshIndex].face[i].f1;
+							//points[1] = meshes[meshIndex].vertex[meshes[meshIndex].face[i].f2;
+							//points[2] = meshes[meshIndex].vertex[meshes[meshIndex].face[i].f3;
+							
 							VectorCopy(meshes[meshIndex].vertex[meshes[meshIndex].face[i].f1], points[0]);
 							VectorCopy(meshes[meshIndex].vertex[meshes[meshIndex].face[i].f2], points[1]);
 							VectorCopy(meshes[meshIndex].vertex[meshes[meshIndex].face[i].f3], points[2]);

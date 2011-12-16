@@ -4,7 +4,7 @@
 //COPYRIGHT: ØYVIND, NICOLAS, THOMAS, HENRIK, KNUT, 2011-2016.
 //CONTACT US AT colaoye@hotmail.com for lisence information
 
-//Missing in CGL to be a decent library for any game 
+//Missing in CGL to be a decent library for any PC game 
 //Working Camera FPS/RTS/Third Person
 //Particle [missile] calculate path from one destination to another [ based on entity to be used within Grid]
 //UDP networking
@@ -74,10 +74,12 @@
 //UNIT
 #ifdef _CGLPROGRAM
 #include "../../CustomGameLibrary/Header/projectile.h"
+#include "../../CustomGameLibrary/Header/projectilebullet.h"
 #include "../../CustomGameLibrary/Header/unit.h"
 #include "../../CustomGameLibrary/Header/entity.h"
 #else
 #include "Header/projectile.h"
+#include "Header/projectilebullet.h"
 #include "Header/unit.h"
 #include "Header/entity.h"
 #endif

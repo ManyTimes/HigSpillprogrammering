@@ -33,7 +33,6 @@ void RenderMainMenu()
 	opengl->EndDraw();
 }
 
-float xxx = 20.0f;
 void RenderGame()
 {
 	glColor3f(1.0, 1.0, 1.0);
@@ -42,40 +41,31 @@ void RenderGame()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//camera.set( SpawnPoint, LookAt, Up);
-	/*glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION ) ;
 	glEnable ( GL_COLOR_MATERIAL ) ;
-	glFrontFace(GL_CW);			// Winding of elements*/
+	glFrontFace(GL_CW);			// Winding of elements
 
-	xxx += 0.015;
+	glClearColor(0,0,0,1);
 	opengl->StartDraw();
 	opengl->CreateViewport(true, 800,500,0,100,0.0f, 500.0f);
-	cgl::Vector3f SpawnPoint(xxx,10,xxx);			// Where camera spawns
-	cgl::Vector3f LookAt(0,0,0);					// Where camera points at
-	cgl::Vector3f Up(0,1,0);						// Cameras up direction.
-
-
-	camera->Set(SpawnPoint,LookAt, Up);
-	camera->SetShape(40,SCREENWIDTH/SCREENHEIGHT, 0.01f, 500.0f);
-
-	//camera->Set(cgl::Vector3f(0.0, 0.0, -0.0), cgl::Vector3f(0.0, 0.0, 0.0), cgl::Vector3f());
-	//glTranslatef(0.0f, 0.0f, -25.0f);				//Sets camera
-	//glRotatef(30.0, 1.0, 0.0, 0.0);
-	//glRotatef(-30.0, 0.0, 1.0, 0.0);
+	if(thisPlayer > -1)
+	{
+		simpleCamera[thisPlayer].Update(DISABLEMOUSECONTROL);
+	}
 	
-	glScalef(0.5, 0.5,0.5);
-	terrain->Draw(0.0);
-//	DrawGround(imgbtnStart->ID);
+	//terrain->Draw(0.0);
+	DrawGround(imgbtnStart->ID);
 	float velocity[3];
 	velocity[0] = velocity[2] = cgl::GetRandomFloat(-0.1, 0.1);
 	velocity[1] = cgl::GetRandomFloat(-.015, -0.03);
 	float position[3];
-	position[0] = cgl::GetRandomFloat(-5.0, 5.0);
-	position[2] = cgl::GetRandomFloat(-5.0, 5.0);
+	position[0] = cgl::GetRandomFloat(10.0, 50.0);
+	position[2] = cgl::GetRandomFloat(10.0, 50.0);
 	position[1] = 10;
 	weather->StartOneParticle(velocity, position);
 
@@ -84,7 +74,10 @@ void RenderGame()
 	{
 		if(player[i].ID != -1)
 		{
-			unit[i].Draw();
+			if(thisPlayer != i)				//Not drawing ourselves [FPS mode]
+			{
+				unit[i].Draw();
+			}
 		}
 	}
 	weather->Draw();
@@ -125,20 +118,21 @@ void DrawGround(GLuint textureID)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	int w = SCREENWIDTH;
 	int h = SCREENHEIGHT;
+	int y = -1.0f
 	for(int i = 1; i <= 2; i++)
 	{
 		glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2i(0, 0);
-		glVertex3f(-w*i, 0, -h*i);
+		glVertex3f(-w*i, y, -h*i);
 
 		glTexCoord2i(1, 0);
-		glVertex3f(w*i, 0, -h*i);
+		glVertex3f(w*i, y, -h*i);
 
 		glTexCoord2i(0, 1);
-		glVertex3f(-w*i, 0, h*i);
+		glVertex3f(-w*i, y, h*i);
 
 		glTexCoord2i(1, 1);
-		glVertex3f(w*i, 0, h*i);
+		glVertex3f(w*i, y, h*i);
 		glEnd();
 	}
 	glDisable(GL_TEXTURE_2D);

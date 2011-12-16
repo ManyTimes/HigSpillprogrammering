@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Header\matrix.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Header\mouse.h"
 				>
 			</File>
@@ -312,14 +316,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Player"
-				>
-				<File
-					RelativePath=".\Header\player.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Graphics"
 				>
 				<File
@@ -347,6 +343,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Player"
+				>
+				<File
+					RelativePath=".\Header\player.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Cpp"
@@ -365,6 +369,10 @@
 			</File>
 			<File
 				RelativePath=".\Cpp\mathtool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Cpp\matrix.cpp"
 				>
 			</File>
 			<File

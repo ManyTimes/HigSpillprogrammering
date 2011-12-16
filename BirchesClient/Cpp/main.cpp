@@ -135,7 +135,10 @@ public:
 		this->position.x = startPosition.x;
 		this->position.y = startPosition.y;
 		this->position.z = startPosition.z;
-		this->viewdirection = viewdirection;
+		//this->viewdirection = viewdirection;
+		this->viewdirection.x = viewdirection.x;
+		this->viewdirection.y = viewdirection.y;
+		this->viewdirection.z = viewdirection.z;
 		this->model = model;
 		this->playerID = playerID;
 		this->damage = damage;
@@ -183,13 +186,19 @@ public:
 
 			glPushMatrix();
 			glScalef(0.05, 0.05, 0.05);
+			glTranslatef(this->position.x, this->position.y, this->position.z);
 			glRotatef(-yaw,1.0,0.0,0.0);	//rotate the camera (more precisly move everything in the opposit direction)
 			glRotatef(-pitch,0.0,1.0,0.0);
+<<<<<<< HEAD
 
 			glTranslatef(this->position.x, this->position.y, this->position.z);
 			this->model->Draw();
 			glPopMatrix();
 
+=======
+			this->model->Draw();
+			glPopMatrix();
+>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
 
 		}
 	}
@@ -352,13 +361,29 @@ int main(int argc, char *argv[])
 	initGL();
 	InitializeLighting();
 	Initialize();			//Initialize game objects
-
-
+//<<<<<<< HEAD
+//=======
+	glFrontFace(GL_CCW);			// Winding of elements
+//>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
+	
 	//////UNCOMMENT THE FIRST /* */ TO TEST THE SHOOTING AND CAMERA MOVING WITHOUT NETWORK
 	//////----------------------------
-	/*cgl::Image2D* uu = new cgl::Image2D();
+	/*cgl::Unit* un = new cgl::Unit(100,10,10,10,0, 100);
+	cgl::Image2D* uu = new cgl::Image2D();
 	uu->LoadBMP("Data/banana.bmp");
 	cgl::Model* mod = new cgl::Model("Data/banana.md2", uu->ID, 0.0025, MD2Normals);
+
+	un->SetPosition(0,0,0);
+	un->Load("Data/banana.md2", uu->ID, 0.007);
+	cgl::Vector3f startpos(0,0,0);
+	cgl::Vector3f lookat(10,0,10);
+	cgl::Camera* cam2 = new cgl::Camera(startpos, lookat, 800,600, 0.1, 1000);
+	cam2->SetThirdPersonAlign(true);
+	cam2->SetThirdPersonDistance(100.0);
+	cam2->SetThirdPersonOffset(cgl::Vector3f(2,2,2));
+	cam2->SetThirdPersonTarget(un);
+
+	
 	//cgl::Model* mod = new cgl::Model("Data/Banana.3ds");
 	delete uu;
 	mouse->enableMouseFrame = true;
@@ -396,33 +421,44 @@ int main(int argc, char *argv[])
 		opengl->StartDraw();
 		opengl->CreateViewport(true, 800,600,0,100,0.001f, 1000.0f);
 		cam->Update(mousein);	//Update, Place? View? ...Function name shall we use? Render? Draw()? Action()? 
+		//cam2->UpdateThirdPersonMatrix();
+		//cam2->ThirdPersonCameraUpdate();
+		//cam->Update();
+		un->Draw();
 		terrain->Draw(0.0);
 		
 		if(keyboard->isKeyPressed("Y") == true)
 		{
-			cam->MoveForward(1.0);
+			//cam->MoveForward(1.0);
 		}
 				
 		if(keyboard->isKeyPressed("U") == true)
 		{
-			cam->MoveBackwards(1.0);
+			//cam->MoveBackwards(1.0);
 		}
 
 		if(keyboard->isKeyPressed("K") == true)
 		{
-			cam->MoveStrafeRight(1.0);
+			//cam->MoveStrafeRight(1.0);
 		}
 
 				
 		if(keyboard->isKeyPressed("J") == true)
 		{
-			cam->MoveStrafeLeft(1.0);
+			//cam->MoveStrafeLeft(1.0);
 		}
 
 		if(keyboard->isKeyPressed("SPACE") == true)
 		{
+//<<<<<<< HEAD
 			shooting = true;
-			bullet->Shoot(cam->position, cam->GetViewDirection(), 1000);
+			//bullet->Shoot(cam->position, cam->GetViewDirection(), 1000);
+//=======
+			if(shooting == false)
+			{
+				shooting = true;
+			}
+//>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
 		}
 
 		if(shooting == true)
@@ -477,8 +513,8 @@ int main(int argc, char *argv[])
 		opengl->EndDraw();
 		cgl::Sleep(55);
 	}
-	*/
 
+*/
 
 	InitializeLighting();
 	GameLoop();				//Starts the program/Server/game loop

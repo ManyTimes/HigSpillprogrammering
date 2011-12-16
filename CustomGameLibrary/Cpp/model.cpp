@@ -148,5 +148,10 @@ namespace cgl
 	{
 		this->model3d->Draw(modelmatrix);
 	}
+
+	void Model::Draw(Matrix modelmatrix)
+	{
+		this->model3d->Draw(modelmatrix.GetMatrixf());
+	}
 	/////////////////////// 3DS MODEL END
 }

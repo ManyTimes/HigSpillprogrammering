@@ -3,10 +3,11 @@
 #include "include.h"
 #include "mathtool.h"
 #include "boundingbox.h"
+#include "matrix.h"
 
 namespace cgl
 {
-	enum EULER {ROLL, YAW, PITCH};
+	enum EULER {PITCH, YAW, ROLL};
 	#define PI 3.1415926535897
 	#define DEG2RAD(DEG) ((DEG)*((PI)/(180.0)))
 
@@ -16,7 +17,7 @@ namespace cgl
 		int size;				//The collision size, number of smallest gridbox of space it takes (bounding box of this size, entity is positioned in the middle
 		Vector3f angles;		// Euler angles
 		Vector3f scale;			// Scale
-		float matrix[16];		// Matrix used to combine all above values
+		Matrix matrix;		// Matrix used to combine all above values
 		bool queueUpdateMatrix;	// Used to update the matrix when values are potentially changed by being referenced.
 	protected:
 		void Entity::UpdateMatrix(bool pos = true, bool angle = true, bool scale = true);
@@ -46,17 +47,20 @@ namespace cgl
 		void Entity::SetScale(float p[3]);
 		void Entity::SetScale(Vector3f p);
 		void Entity::SetMatrix(float m[16]);
+		void Entity::SetMatrix(Matrix m);
 		//float& GetMatrixRef(){ return matrix[0]; }
 		void Entity::Rotatef(float angle, float x, float y, float z);
 		void Entity::Scalef(float x, float y, float z);
 		void Entity::Translatef(float x, float y, float z);
 		void Entity::CheckUpdate();
+		Vector3f Entity::GetPosition();
 		Vector3f& Entity::GetPositionRef();
 		Vector3f Entity::GetAngles();
 		Vector3f& Entity::GetAnglesRef();
 		Vector3f Entity::GetScale();
 		Vector3f& Entity::GetScaleRef();
-		float* Entity::GetMatrix();
+		//float* Entity::GetMatrix();
+		Matrix* Entity::GetMatrix();
 	};
 }	//End namespace
 

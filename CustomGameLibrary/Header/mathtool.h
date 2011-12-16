@@ -1743,6 +1743,13 @@ struct Vector3f
 		}
 
 		//OPERATORS
+		void Vector3f::operator=(Vector3f vec)
+		{
+			x = vec.x;
+			y = vec.y;
+			z = vec.z;
+		}
+
 		friend Vector3f Vector3f::operator*(const float c, const Vector3f & v)
 		{
 			Vector3f res;
@@ -1963,6 +1970,7 @@ struct Vector3f
 			return res;
 		}
 	};
+<<<<<<< HEAD
 */
 
 	/*std::ostream &operator << (std::ostream& out, const  cgl::Vector3f& c)
@@ -1973,5 +1981,7 @@ struct Vector3f
 
 
 
+////=======
+////>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
 }
 #endif

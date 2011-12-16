@@ -118,7 +118,7 @@ void DrawGround(GLuint textureID)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	int w = SCREENWIDTH;
 	int h = SCREENHEIGHT;
-	int y = -1.0f
+	int y = -1.0f;
 	for(int i = 1; i <= 2; i++)
 	{
 		glBegin(GL_TRIANGLE_STRIP);

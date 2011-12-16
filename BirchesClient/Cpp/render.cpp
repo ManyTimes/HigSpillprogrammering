@@ -74,10 +74,10 @@ void RenderGame()
 	{
 		if(player[i].ID != -1)
 		{
-			if(thisPlayer != i)				//Not drawing ourselves [FPS mode]
-			{
+			//if(thisPlayer != i)				//Not drawing ourselves [FPS mode]
+		//	{
 				unit[i].Draw();
-			}
+		//	}
 		}
 	}
 	weather->Draw();

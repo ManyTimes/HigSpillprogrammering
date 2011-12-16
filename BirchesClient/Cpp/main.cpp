@@ -1,6 +1,7 @@
 #include "../Header/main.h"
+#include "../Header/include.h"
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") //Disable CMD-window
 
-//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") //Disable CMD-wind
 int x = 800;
 int y = 600;
 int w = 800;
@@ -20,92 +21,6 @@ cgl::Image2D* unitText;
 cgl::ModelMD2* model2;
 cgl::Projectile** pro;
 
-
-
-#include "math.h"
-#define SQR(x) (x*x)
-cgl::Vector3f CrossProduct(cgl::Vector3f * u, cgl::Vector3f * v)
-{
-	cgl::Vector3f resVector;
-	resVector.x = u->y*v->z - u->z*v->y;
-	resVector.y = u->z*v->x - u->x*v->z;
-	resVector.z = u->x*v->y - u->y*v->x;
-	return resVector;
-}
-
-float GetCGLVectorLength( cgl::Vector3f * v)
-{
-	return (GLfloat)(sqrt(SQR(v->x)+SQR(v->y)+SQR(v->z)));
-}
-
-cgl::Vector3f Normalize3dVector( cgl::Vector3f v)
-{
-	cgl::Vector3f res;
-	float l = GetCGLVectorLength(&v);
-	if (l == 0.0f) return cgl::Vector3f(0,0,0);
-	res.x = v.x / l;
-	res.y = v.y / l;
-	res.z = v.z / l;
-	return res;
-}
-
-
-
-/*class Bullet
-{
-public:
-	float PIdiv180;
-	cgl::Vector3f viewdirection;
-	cgl::Vector3f position;
-	float xrot, yrot, zrot;
-	int lifespan;
-	float angle;
-	float speed;
-	Bullet::Bullet(float x, float z, float a)
-	{
-		this->PIdiv180 = 3.141592654/180;
-		speed = 0.25;
-		angle = a;
-		lifespan = 200;
-	}
-
-	void BulletDraw()
-	{
-		Forward();
-		glColor3f(1.0, 0.0,0.0);
-		glPushMatrix();
-		glTranslatef(position.x, position.y, position.z);
-		glScalef(0.4,0.4, 0.4);
-		float bulletMaterial[] = { 0.2, 0.6, 0.30, 1};
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, bulletMaterial);
-		glutSolidSphere(0.5, 20, 20);
-		glPopMatrix();
-		glColor3f(0.8,0.8,0.8);
-		lifespan -= 1;
-	}
-
-	void Bullet::Forward()
-	{
-		this->position.x = this->position.x + (viewdirection.x * speed);
-		this->position.y = this->position.y + (viewdirection.y * speed);
-		this->position.z = this->position.z + (viewdirection.z * speed);
-	}
-
-	void Bullet::Fire(cgl::Vector3f startposition, cgl::Vector3f view)
-	{
-		this->viewdirection.x = view.x;
-		this->viewdirection.y = view.y;
-		this->viewdirection.z = view.z;
-		this->position.x = startposition.x;
-		this->position.y = startposition.y;
-		this->position.z = startposition.z;
-		CoutVec(this->position, "pos");
-		CoutVec(this->viewdirection, "view");
-		lifespan = 200;
-	}
-};*/
-
-/*
 class Projectile 
 {
 private:
@@ -189,22 +104,15 @@ public:
 			glTranslatef(this->position.x, this->position.y, this->position.z);
 			glRotatef(-yaw,1.0,0.0,0.0);	//rotate the camera (more precisly move everything in the opposit direction)
 			glRotatef(-pitch,0.0,1.0,0.0);
-<<<<<<< HEAD
-
-			glTranslatef(this->position.x, this->position.y, this->position.z);
 			this->model->Draw();
 			glPopMatrix();
-
-=======
-			this->model->Draw();
-			glPopMatrix();
->>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
 
 		}
 	}
 
-};*/
+};
 
+cgl::SimpleCamera* cam = new cgl::SimpleCamera();
 int angle = 50;
 
 void DrawNet(GLfloat size, GLint LinesX, GLint LinesZ)
@@ -231,12 +139,9 @@ void DrawNet(GLfloat size, GLint LinesX, GLint LinesZ)
 	glEnd();
 }
 
-
-/*class CamTest
+class CamTest
 {
 	//Youtube video tutorial camera, movement, mouse, nice
-private: 
-	float temp;
 public:
 	float x,y,z;
 	float camYaw;
@@ -245,7 +150,6 @@ public:
 	cgl::Mouse* mousept;
 	CamTest::CamTest(cgl::Mouse* m)
 	{
-		this->temp = 0.0;
 		this->mousept = m;
 		PIdiv180 =  3.1415926535/180;
 		x = y = z = 0.0;
@@ -264,22 +168,7 @@ public:
 		camYaw+=360.0;
 	if(camYaw>360.0)
 		camYaw-=360;
-	}
 
-	cgl::Vector3f CamTest::GetViewDirection()
-	{
-		cgl::Vector3f step1, step2;
-		//Rotate Y-axis
-		step1.x = cos((this->camYaw + 90.0) * PIdiv180);
-		step1.z = -sin((this->camYaw + 90.0) * PIdiv180);
-		//Rotate X-axis
-		this->temp = cos(this->camPitch * PIdiv180);
-		std::cout << " TEmp : " << temp;
-		step2.x = step1.x * this->temp;
-		step2.z = step1.z * this->temp;
-		step2.y = sin(this->camPitch * PIdiv180);
-		std::cout << " STEP XYZ " << step2.x << step2.y << step2.y << std::endl;
-		return step2;
 	}
 
 	//Angle is in celsius, need radians
@@ -309,10 +198,19 @@ public:
 			tmpx = this->mousept->cursorx;
 			tmpy = this->mousept->GetCursorPositionY();
 	
-			camYaw += mousevelocity * (midx-tmpx);
-			camPitch += mousevelocity * (midy-tmpy);
+			if(midx-tmpx > 2 || midx-tmpx < -1)
+			{
+				camYaw += mousevelocity * (midx-tmpx);
+			}
+
+			if(midy-tmpy > 2 || midy-tmpy < -1)
+			{
+				camPitch += mousevelocity * (midy-tmpy);
+			}
+
 			LockCamera();
 			this->mousept->SetCursorPosition(midx, midy);	//Reset to middle
+		//	std::cout << " X , Y " << this->mousept->cursorx << " , " << this->mousept->cursory << std::endl;
 			if(keyboard->isKeyPressed("W") == true)
 			{
 				if(camPitch != 90 && camPitch != -90)
@@ -352,7 +250,21 @@ public:
 	{
 		glTranslatef(-x, -y, -z);
 	}
-};*/
+
+	//Outside the class
+	//p (pause) toggles on off the mouseIn (mouse in, if app is in focus)
+/*	void Display()
+	{
+		Control(0.2, 0.2, mousein);
+		UpdateCamera();
+	}*/
+};
+
+void UpdateMouse();
+cgl::Vector3f SpawnPoint(-0,5,-5);			// Where camera spawns
+cgl::Vector3f LookAt(5,0,5);					// Where camera points at
+cgl::Vector3f Up(0,1,0);						// Cameras up direction.
+cgl::Camera *tp_camera;
 
 
 int main(int argc, char *argv[])
@@ -361,30 +273,15 @@ int main(int argc, char *argv[])
 	initGL();
 	InitializeLighting();
 	Initialize();			//Initialize game objects
-//<<<<<<< HEAD
-//=======
-	glFrontFace(GL_CCW);			// Winding of elements
-//>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
-	
+
+
 	//////UNCOMMENT THE FIRST /* */ TO TEST THE SHOOTING AND CAMERA MOVING WITHOUT NETWORK
 	//////----------------------------
-	/*cgl::Unit* un = new cgl::Unit(100,10,10,10,0, 100);
 	cgl::Image2D* uu = new cgl::Image2D();
 	uu->LoadBMP("Data/banana.bmp");
 	cgl::Model* mod = new cgl::Model("Data/banana.md2", uu->ID, 0.0025, MD2Normals);
-
-	un->SetPosition(0,0,0);
-	un->Load("Data/banana.md2", uu->ID, 0.007);
-	cgl::Vector3f startpos(0,0,0);
-	cgl::Vector3f lookat(10,0,10);
-	cgl::Camera* cam2 = new cgl::Camera(startpos, lookat, 800,600, 0.1, 1000);
-	cam2->SetThirdPersonAlign(true);
-	cam2->SetThirdPersonDistance(100.0);
-	cam2->SetThirdPersonOffset(cgl::Vector3f(2,2,2));
-	cam2->SetThirdPersonTarget(un);
-
-	
-	//cgl::Model* mod = new cgl::Model("Data/Banana.3ds");
+	cgl::Unit player;
+	player.Load("Data/banana.md2", uu->ID, 0.0025, MD2Normals);
 	delete uu;
 	mouse->enableMouseFrame = true;
 	mouse->ShowWindowsCursor(true);
@@ -393,10 +290,19 @@ int main(int argc, char *argv[])
 	bool mousein = false;
 	cgl::SimpleCamera* cam = new cgl::SimpleCamera(keyboard, mouse, 800, 600);//Our camera, either FREE VIEW; FPS OR THIRD PERSON
 	cam->Initialize(0.3,0.3);
+	cam->MoveForward( -1.0);
+	player.SetScale(5.0, 0.0, 0.0);
+	//glFrontFace(GL_CW);			// Winding of elements
+
 	cgl::ProjectileBullet* bullet = new cgl::ProjectileBullet();
 	bullet->size = 0.005f;
 	bullet->speed = 5.0f;
 	bullet->SetModel(mod);
+
+	tp_camera = new cgl::Camera(SpawnPoint, LookAt, h, w, 0.1f, 4000.0f);				// Setup the camera normally [TP_CAMERA]
+	tp_camera->SetupThirdPersonCamera( &player, 150, cgl::Vector3f(0, 75, 0), true);	// Settings: Target to follow, distance from target (is scaled with model), offset (to align with head, is also scaled), force the model to face same direction as camera [TP_CAMERA]
+
+
 
 	while(b)
 	{
@@ -420,51 +326,62 @@ int main(int argc, char *argv[])
 		glLoadIdentity();
 		opengl->StartDraw();
 		opengl->CreateViewport(true, 800,600,0,100,0.001f, 1000.0f);
-		cam->Update(mousein);	//Update, Place? View? ...Function name shall we use? Render? Draw()? Action()? 
-		//cam2->UpdateThirdPersonMatrix();
-		//cam2->ThirdPersonCameraUpdate();
-		//cam->Update();
-		un->Draw();
+		player.position = cam->position;
+		player.position += 0.4;
+		if(shooting )
+		{
+			cam->position.Cout();
+			cam->Update();
+		}
+		else
+		{
+			player.position.Cout();
+			UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
+			tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
+		}
+		player.Draw();
+		//cam->Update(mousein);	//Update, Place? View? ...Function name shall we use? Render? Draw()? Action()? 
 		terrain->Draw(0.0);
 		
+		player.position.Cout();
 		if(keyboard->isKeyPressed("Y") == true)
 		{
-			//cam->MoveForward(1.0);
+			cam->MoveForward(1.0);
 		}
 				
 		if(keyboard->isKeyPressed("U") == true)
 		{
-			//cam->MoveBackwards(1.0);
+			cam->MoveBackwards(1.0);
 		}
 
 		if(keyboard->isKeyPressed("K") == true)
 		{
-			//cam->MoveStrafeRight(1.0);
+			cam->MoveStrafeRight(1.0);
 		}
 
 				
 		if(keyboard->isKeyPressed("J") == true)
 		{
-			//cam->MoveStrafeLeft(1.0);
+			cam->MoveStrafeLeft(1.0);
 		}
 
 		if(keyboard->isKeyPressed("SPACE") == true)
 		{
-//<<<<<<< HEAD
-			shooting = true;
-			//bullet->Shoot(cam->position, cam->GetViewDirection(), 1000);
-//=======
-			if(shooting == false)
+			if(shooting)
+			{
+			shooting = false;
+			}
+			else
 			{
 				shooting = true;
 			}
-//>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
+			//bullet->Shoot(cam->position, cam->GetViewDirection(), 1000);
 		}
 
 		if(shooting == true)
 		{
-			glColor3f(0.0, 1.0,0.0);
-			bullet->Draw();
+			//glColor3f(0.0, 1.0,0.0);
+			//bullet->Draw();
 		}
 	
 		GLfloat size = 2.0;
@@ -513,8 +430,6 @@ int main(int argc, char *argv[])
 		opengl->EndDraw();
 		cgl::Sleep(55);
 	}
-
-*/
 
 	InitializeLighting();
 	GameLoop();				//Starts the program/Server/game loop
@@ -568,4 +483,42 @@ void InitializeLighting()
     GLfloat lightPos3[] = {1, 5.0f, 1., 1.0f};			//Positioned light
     glLightfv(GL_LIGHT3, GL_DIFFUSE, lightColor3);
     glLightfv(GL_LIGHT3, GL_POSITION, lightPos3);
+}
+
+void UpdateMouse()		// Function to control mouse [TP_CAMERA]
+{
+	static bool first = true;							// First time mouse enters screen.
+	static int old_x = 0, old_y = 0;
+	int pos_x, pos_y;
+	int x = mouse->GetCursorPositionX();
+	int y = mouse->GetCursorPositionY();
+
+	glfwGetWindowSize( &pos_x, &pos_y);
+	pos_x /= 2;
+	pos_y /= 2;
+
+	if(first)											// First time, center the mouse.
+	{
+		mouse->SetCursorPosition(pos_x,pos_y);
+		old_x = pos_x;
+		old_y = pos_y;
+		first = false;
+		return;
+	}
+
+	if((x-old_x) != 0)
+		tp_camera->ThirdPersonRotateYaw((old_x-x)/15.0f);
+		
+	if((y-old_y) != 0)
+			tp_camera->ThirdPersonRotatePitch((old_y-y)/15.0f);
+
+	if(x != old_x || y != old_y)
+	{
+		mouse->SetCursorPosition(pos_x,pos_y);
+        x = old_x=pos_x;
+        y = old_y=pos_y;
+	}
+
+	old_x = x;
+	old_y = y;
 }

@@ -186,7 +186,7 @@ namespace cgl
 		Vector3f position = thirdPerson.target->GetPosition();
 		Vector3f offset = thirdPerson.offset;
 
-		result.z = thirdPerson.distance;
+		result.z = thirdPerson.distance * thirdPerson.target->GetScale().x;
 
 		result = thirdPerson.matrix * result;
 		offset = *thirdPerson.target->GetMatrix() * offset;

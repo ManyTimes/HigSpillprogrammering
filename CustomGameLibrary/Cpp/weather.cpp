@@ -180,7 +180,7 @@ namespace cgl
 			}
 		}
 		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_DEPTH_TEST);			//Make GL draw objects behind see-through objects
+		//glDisable(GL_DEPTH_TEST);			//Make GL draw objects behind see-through objects
 		glDisable(GL_BLEND);					//Blending ON
 		this->Move();
 		glPopMatrix();

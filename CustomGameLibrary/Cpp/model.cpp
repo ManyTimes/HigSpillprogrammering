@@ -25,7 +25,7 @@ namespace cgl
 		{
 			if(this->modeltype == 2)
 			{
-				this->model3d->Draw();
+				this->model3d->Draw(GetMatrix()->GetMatrixf());
 			}
 		}
 	}

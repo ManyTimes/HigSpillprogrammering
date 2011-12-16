@@ -5,6 +5,7 @@ namespace cgl
 	Entity::Entity()
 	{
 		this->ID = -1;
+		scales.x = scales.y = scales.z = 1.0f;
 		/*matrix[0] = 1.0f;								// Replaced with Matrix class, loads identity matrix automatically.
 		matrix[1] = matrix[2] = matrix[3] = 0.0f;
 		matrix[5] = 1.0f;
@@ -60,8 +61,11 @@ namespace cgl
 			matrix[14] = position.z;//-Pos->dot(*Look);
 		}
 
-		if(scale)
+		if(angle || scale)
 		{
+			Matrix m_scale;
+			m_scale[0] = m_scale[5] = m_scale[10] = scales.x;
+			this->SetMatrix((m_scale * *this->GetMatrix()));
 		}
 		
 	//	matrix[3] = 0;//Pos->x; 
@@ -163,25 +167,25 @@ namespace cgl
 	}
 	void Entity::SetScale(float x, float y, float z) 
 	{ 
-		scale.x = x; 
-		scale.y = y; 
-		scale.z = z; 
+		scales.x = x; 
+		scales.y = y; 
+		scales.z = z; 
 		UpdateMatrix(false,false,true); 
 	}
 
 	void Entity::SetScale(float p[3]) 
 	{ 
-		scale.x = p[0]; 
-		scale.y = p[1];
-		scale.z = p[2];
+		scales.x = p[0]; 
+		scales.y = p[1];
+		scales.z = p[2];
 		UpdateMatrix(false,false,true); 
 	}
 
 	void Entity::SetScale(Vector3f p) 
 	{ 
-		scale.x = p.x; 
-		scale.y = p.y; 
-		scale.z = p.z; 
+		scales.x = p.x; 
+		scales.y = p.y; 
+		scales.z = p.z; 
 		UpdateMatrix(false,false,true); 
 	}
 
@@ -218,13 +222,13 @@ namespace cgl
 	}
 	Vector3f Entity::GetScale()
 	{ 
-		return scale; 
+		return scales; 
 	}
 
 	Vector3f& Entity::GetScaleRef()
 	{ 
 		queueUpdateMatrix = true; 
-		return scale; 
+		return scales; 
 	}
 
 	int Entity::GetSize()

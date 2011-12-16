@@ -16,6 +16,12 @@ namespace cgl
 
 	Model3D::Model3D(const char *filename)
 	{
+		data = NULL;
+		filesize = 0;
+		meshes = NULL;
+		numMeshes = 0;
+		numVertices = 0;
+		totalFaces = 0;
 		this->Load(filename);
 	}
 

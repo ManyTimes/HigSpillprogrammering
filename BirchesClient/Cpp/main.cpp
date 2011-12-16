@@ -1,4 +1,5 @@
 #include "../Header/main.h"
+#include "../Header/include.h"
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") //Disable CMD-window
 
 int x = 800;
@@ -259,6 +260,11 @@ public:
 	}*/
 };
 
+void UpdateMouse();
+cgl::Vector3f SpawnPoint(-0,50,-150);			// Where camera spawns
+cgl::Vector3f LookAt(0,0,0);					// Where camera points at
+cgl::Vector3f Up(0,1,0);						// Cameras up direction.
+cgl::Camera *tp_camera;
 
 int main(int argc, char *argv[])
 {
@@ -280,8 +286,15 @@ int main(int argc, char *argv[])
 	mouse->ShowWindowsCursor(false);
 	CamTest* ct = new CamTest(mouse);
 	Projectile* pp = new Projectile(10000);	//10.k frames
-	glFrontFace(GL_CCW);			// Winding of elements
+	glFrontFace(GL_CW);			// Winding of elements
 
+	cgl::Unit player;			// Unit to follow. [TP_CAMERA]
+
+	player.Load("Data/TestModel3.3ds");		// Model to use [TP_CAMERA]
+	player.SetScale(1,0,0);				// and scale it down. Scale only supports uniform scale using the first component atm. [TP_CAMERA]
+
+	tp_camera = new cgl::Camera(SpawnPoint, LookAt, h, w, 0.1f, 4000.0f);				// Setup the camera normally [TP_CAMERA]
+	tp_camera->SetupThirdPersonCamera( &player, 150, cgl::Vector3f(0, 75, 0), true);	// Settings: Target to follow, distance from target (is scaled with model), offset (to align with head, is also scaled), force the model to face same direction as camera [TP_CAMERA]
 
 	bool b = true;
 	bool mousein = false;
@@ -310,8 +323,11 @@ int main(int argc, char *argv[])
 		glLoadIdentity();
 		opengl->StartDraw();
 		opengl->CreateViewport(true, 800,600,0,100,0.001f, 1000.0f);
-		ct->Control(0.2, 0.2, mousein);
-		ct->UpdateCamera();
+		//ct->Control(0.2, 0.2, mousein);
+		//ct->UpdateCamera();
+		UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
+		tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
+		player.Draw();							// Draw the player [TP_CAMERA]
 
 		//OLD CAM, OR NEW, WHATEVER
 		/*int midx = 400;	//Half of screen sizes
@@ -515,4 +531,42 @@ void InitializeLighting()
     GLfloat lightPos3[] = {1, 5.0f, 1., 1.0f};			//Positioned light
     glLightfv(GL_LIGHT3, GL_DIFFUSE, lightColor3);
     glLightfv(GL_LIGHT3, GL_POSITION, lightPos3);
+}
+
+void UpdateMouse()		// Function to control mouse [TP_CAMERA]
+{
+	static bool first = true;							// First time mouse enters screen.
+	static int old_x = 0, old_y = 0;
+	int pos_x, pos_y;
+	int x = mouse->GetCursorPositionX();
+	int y = mouse->GetCursorPositionY();
+
+	glfwGetWindowSize( &pos_x, &pos_y);
+	pos_x /= 2;
+	pos_y /= 2;
+
+	if(first)											// First time, center the mouse.
+	{
+		mouse->SetCursorPosition(pos_x,pos_y);
+		old_x = pos_x;
+		old_y = pos_y;
+		first = false;
+		return;
+	}
+
+	if((x-old_x) != 0)
+		tp_camera->ThirdPersonRotateYaw((old_x-x)/15.0f);
+		
+	if((y-old_y) != 0)
+			tp_camera->ThirdPersonRotatePitch((old_y-y)/15.0f);
+
+	if(x != old_x || y != old_y)
+	{
+		mouse->SetCursorPosition(pos_x,pos_y);
+        x = old_x=pos_x;
+        y = old_y=pos_y;
+	}
+
+	old_x = x;
+	old_y = y;
 }

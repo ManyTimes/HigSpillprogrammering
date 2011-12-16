@@ -16,7 +16,7 @@ namespace cgl
 	private:
 		int size;				//The collision size, number of smallest gridbox of space it takes (bounding box of this size, entity is positioned in the middle
 		Vector3f angles;		// Euler angles
-		Vector3f scale;			// Scale
+		Vector3f scales;		// Scale
 		Matrix matrix;		// Matrix used to combine all above values
 		bool queueUpdateMatrix;	// Used to update the matrix when values are potentially changed by being referenced.
 	protected:

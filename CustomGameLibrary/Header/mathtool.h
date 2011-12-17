@@ -1520,17 +1520,13 @@ struct Vector3f
 			return *this;
 		}
 		x = value.x;
-		y =  value.y;
+		y = value.y;
 		z = value.z;
 		return *this;
 	}
 
 	Vector3f& operator+=(const Vector3f &value)
 	{
-		if(this == &value)
-		{
-			return *this;
-		}
 		x += value.x;
 		y += value.y;
 		z += value.z;
@@ -1548,10 +1544,6 @@ struct Vector3f
 
 	Vector3f& operator-=(const Vector3f &value)
 	{
-		if(this == &value)
-		{
-			return *this;
-		}
 		x -= value.x;
 		y -= value.y;
 		z -= value.z;
@@ -1569,10 +1561,6 @@ struct Vector3f
 
 	Vector3f& operator*=(const Vector3f &value)
 	{
-		if(this == &value)
-		{
-			return *this;
-		}
 		x *= value.x;
 		y *= value.y;
 		z *= value.z;
@@ -1590,10 +1578,6 @@ struct Vector3f
 		
 	Vector3f& operator/=(const Vector3f &value)
 	{
-		if(this == &value)
-		{
-			return *this;
-		}
 		x /= value.x;
 		y /= value.y;
 		z /= value.z;
@@ -1610,46 +1594,66 @@ struct Vector3f
 
 	Vector3f& operator+(const Vector3f &value)
 	{
-		return Vector3f(*this) += value;
+		x += value.x;
+		y += value.y;
+		z += value.z;
+		return *this;
 	}
 
 	Vector3f& operator+(const float value)
 	{
-		Vector3f temp(value, value, value);
-		return Vector3f(*this) += temp;
+		x += value;
+		y += value;
+		z += value;
+		return *this;
 	}
 
 	Vector3f& operator-(const Vector3f &value)
 	{
-		return Vector3f(*this) -= value;
+		x -= value.x;
+		y -= value.y;
+		z -= value.z;
+		return *this;
 	}
 
 	Vector3f& operator-(const float value)
 	{
-		Vector3f temp(value, value, value);
-		return Vector3f(*this) -= temp;
+		x -= value;
+		y -= value;
+		z -= value;
+		return *this;
 	}
 	
 	Vector3f& operator/(const Vector3f &value)
 	{
-		return Vector3f(*this) /= value;
+		x /= value.x;
+		y /= value.y;
+		z /= value.z;
+		return *this;
 	}
 
 	Vector3f& operator/(const float value)
 	{
-		Vector3f temp(value, value, value);
-		return Vector3f(*this) /= temp;
+		x /= value;
+		y /= value;
+		z /= value;
+		return *this;
 	}
 
 	Vector3f& operator*(const Vector3f &value)
 	{
-		return Vector3f(*this) *= value;
+		x *= value.x;
+		y *= value.y;
+		z *= value.z;
+		return *this;
 	}
 
 	Vector3f& operator*(const float value)
 	{
-		Vector3f temp(value, value, value);
-		return Vector3f(*this) *= temp;
+		x *= value;
+		y *= value;
+		z *= value;
+		return *this;
 	}
 
 	float operator[](int index) const
@@ -1722,12 +1726,106 @@ struct Vector3f
 		return res;
 	}
 
+	friend Vector3f Vector3f::operator+(const float scale, const Vector3f& v)
+	{
+		Vector3f res(v.x, v.y, v.z);
+		res.x += scale;
+		res.y += scale;
+		res.z += scale;
+		return res;
+	}
+
+	friend Vector3f Vector3f::operator-(const float scale, const Vector3f& v)
+	{
+		Vector3f res(v.x, v.y, v.z);
+		res.x -= scale;
+		res.y -= scale;
+		res.z -= scale;
+		return res;
+	}
+
 
 	float& Vector3f::operator[](int i) 
 	{
 		float *p = &x; 
 		return p[i]; 
 	}
+
+
+	//NEW ONES
+	Vector3f Vector3f::operator + (const Vector3f &value) const
+	{
+		return Vector3f(x + value.x, y + value.y, z + value.z);
+	}
+
+	Vector3f Vector3f::operator*(float factor) const 
+	{
+		return Vector3f(z * factor, y * factor, z * factor);
+	}
+
+	Vector3f operator=(const Vector3f & v) const
+	{
+		Vector3f res;
+		res.x = v.x;
+		res.y = v.y;
+		res.z = v.z;
+		return res;
+	}
+	/*const Vector3f &Vector3f::operator*=(float scale) 
+	{
+		x = x * scale;
+		y = y * scale;
+		z = z * scale;
+		return *this;
+	}*/
+
+
+		
+
+/*
+	Vector3f operator=(const Vector3f & v) const
+	{
+		Vector3f res;
+		res.x = v.x;
+		res.y = v.y;
+		res.z = v.z;
+		return res;
+	}
+	Vector3f operator+(const Vector3f & v) const
+	{
+		Vector3f res;
+		res.x = x + v.x;
+		res.y = y + v.y;
+		res.z = z + v.z;
+		return res;
+	}
+
+	friend Vector3f Vector3f::operator*(const float c, const Vector3f & v)
+	{
+		Vector3f res;
+		res.x = c * v.x;
+		res.y = c * v.y;
+		res.z = c * v.z;
+		return res;
+	}
+
+	Vector3f Vector3f::operator*(const float c) const
+	{
+		Vector3f res;
+		res.x = c * x;
+		res.y = c * y;
+		res.z = c * z;
+		return res;
+	}
+
+
+	const Vector3f &Vector3f::operator*=(float scale) 
+	{
+		x *= scale;
+		y *= scale;
+		z *= scale;
+		return *this;
+	}*/
 };
 
 
@@ -1805,6 +1903,7 @@ struct Vector3f
 			res.z = z + v.z;
 			return res;
 		}
+
 
 
 		Vector3f operator-(const Vector3f & v) const
@@ -1911,6 +2010,8 @@ struct Vector3f
 			return Vector3f(v[0] * scale, v[1] * scale, v[2] * scale);
 		}
 
+
+
 		Vector3f Vector3f::operator/(float scale) const 
 		{
 			return Vector3f(x / scale, y / scale, z / scale);
@@ -1920,6 +2021,7 @@ struct Vector3f
 		{
 			return Vector3f(v[0] + other.v[0], v[1] + other.v[1], v[2] + other.v[2]);
 		}
+
 
 		Vector3f Vector3f::operator-(const Vector3f &other) const 
 		{

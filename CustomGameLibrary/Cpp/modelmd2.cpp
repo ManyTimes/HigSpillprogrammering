@@ -435,25 +435,42 @@ namespace cgl
 		MD2Frame* frame1 = frames + frameIndex1;
 		MD2Frame* frame2 = frames + frameIndex2;
 		float frac =(this->time - (float)(frameIndex1 - this->firstFrame) /(float)(this->lastFrame - this->firstFrame + 1)) * (this->lastFrame - this->firstFrame + 1);
-
+		MD2Vertex* v1;
+		MD2Vertex* v2;
+		MD2TexCoord* texCoord;
+		MD2Triangle* triangle;
+		cgl::Vector3f pos(0,0,0);
+		cgl::Vector3f normal(0,0,0);
 		glBegin(GL_TRIANGLES);
 		if(this->useNormals == true)
 		{
 			for(int i = 0; i < this->numberOfTriangles; i++) 
 			{
-				MD2Triangle* triangle = this->triangles + i;
+				triangle = this->triangles + i;
 				for(int j = 0; j < 3; j++) 
 				{
-					MD2Vertex* v1 = frame1->vertices + triangle->vertices[j];
-					MD2Vertex* v2 = frame2->vertices + triangle->vertices[j];
-					cgl::Vector3f pos = v1->pos * (1 - frac) + v2->pos * frac;
-					cgl::Vector3f normal = v1->normal * (1 - frac) + v2->normal * frac;
+					v1 = frame1->vertices + triangle->vertices[j];
+					v2 = frame2->vertices + triangle->vertices[j];
+					if(i == 0 && j  == 0)
+					{
+						std::cout << "BEFORE " << i << ", " << j << std::endl;
+						normal.Cout();
+						pos.Cout();
+					}
+					pos = v1->pos * (1 - frac) + v2->pos * frac;
+					normal = v1->normal * (1 - frac) + v2->normal * frac;
+					if(i == 0 && j  == 0)
+					{
+						std::cout << "AFTER IJ: " << i << ", " << j << std::endl;
+						normal.Cout();
+						pos.Cout();
+					}
 					if (normal[0] == 0 && normal[1] == 0 && normal[2] == 0) 
 					{
-						normal = cgl::Vector3f (0, 0, 1);
+						normal.z = 1;
 					}
 					glNormal3f(normal[0], normal[1], normal[2]);
-					MD2TexCoord* texCoord = textureCoordinates + triangle->texCoords[j];
+					texCoord = textureCoordinates + triangle->texCoords[j];
 					glTexCoord2f(texCoord->texCoordX, texCoord->texCoordY);
 					glVertex3f(pos[0], pos[1], pos[2]);
 				}
@@ -463,13 +480,13 @@ namespace cgl
 		{
 			for(int i = 0; i < this->numberOfTriangles; i++) 
 			{
-				MD2Triangle* triangle = this->triangles + i;
+				triangle = this->triangles + i;
 				for(int j = 0; j < 3; j++) 
 				{
-					MD2Vertex* v1 = frame1->vertices + triangle->vertices[j];
-					MD2Vertex* v2 = frame2->vertices + triangle->vertices[j];
-					cgl::Vector3f pos = v1->pos * (1 - frac) + v2->pos * frac;
-					MD2TexCoord* texCoord = textureCoordinates + triangle->texCoords[j];
+					v1 = frame1->vertices + triangle->vertices[j];
+					v2 = frame2->vertices + triangle->vertices[j];
+					pos = v1->pos * (1 - frac) + v2->pos * frac;
+					texCoord = textureCoordinates + triangle->texCoords[j];
 					glTexCoord2f(texCoord->texCoordX, texCoord->texCoordY);
 					glVertex3f(pos[0], pos[1], pos[2]);
 				}

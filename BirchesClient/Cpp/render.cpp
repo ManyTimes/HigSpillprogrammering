@@ -54,12 +54,12 @@ void RenderGame()
 	opengl->StartDraw();
 	opengl->CreateViewport(true, 800,500,0,100,0.0f, 500.0f);
 	if(thisPlayer > -1)
-	{
+	{							//FPS camera in-game
 		simpleCamera[thisPlayer].Update(DISABLEMOUSECONTROL);
 	}
 	
-	//terrain->Draw(0.0);
-	DrawGround(imgbtnStart->ID);
+	terrain->Draw(0.0);
+	//DrawGround(imgbtnStart->ID);
 	float velocity[3];
 	velocity[0] = velocity[2] = cgl::GetRandomFloat(-0.1, 0.1);
 	velocity[1] = cgl::GetRandomFloat(-.015, -0.03);
@@ -72,13 +72,16 @@ void RenderGame()
 
 	for(int i = 0; i < MAXIMUMPLAYERS; i++)
 	{
-		if(player[i].ID != -1)
-		{
-			//if(thisPlayer != i)				//Not drawing ourselves [FPS mode]
-		//	{
+			if(thisPlayer > -1)				//Not drawing ourselves [FPS mode]
+			{
+				glDisable(GL_DEPTH_TEST);
+				unit[i].position = (i*1.5);
+				if(i == 0)
+				{
+					unit[i].position.Cout();	
+				}
 				unit[i].Draw();
-		//	}
-		}
+			}
 	}
 	weather->Draw();
 
@@ -110,16 +113,12 @@ void RenderGame()
 void DrawGround(GLuint textureID)
 {
 	glEnable(GL_TEXTURE_2D);
-	glColor3f(0.1f, 0.5f, 0.9f);
+	glColor3f(0.4f, 0.4f, 0.4f);
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	int w = SCREENWIDTH;
 	int h = SCREENHEIGHT;
 	int y = -1.0f;
-	for(int i = 1; i <= 2; i++)
+	for(int i = 1; i <= 1; i++)
 	{
 		glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2i(0, 0);

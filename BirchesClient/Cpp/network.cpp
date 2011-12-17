@@ -214,7 +214,7 @@ void ReadServerData()
 		for(i = 0; i < MAXIMUMPLAYERS; i++)	//Setting all to default values
 		{
 			simpleCamera[i].Initialize(keyboard, mouse, SCREENWIDTH, SCREENHEIGHT);
-			simpleCamera->Initialize(0.1, 0.1);
+			simpleCamera->Initialize(0.5, 0.5);
 			simpleCamera->AllowMovement = false;
 			unit[i].armor = 0;
 			unit[i].shield = 10;
@@ -222,10 +222,10 @@ void ReadServerData()
 			unit[i].damage = 10;
 			unit[i].action = 0;
 			unit[i].hitpoints = 100;			//Loading the model 10 times... care ATM
-			unit[i].scalingValue = 0.15;
-			unit[i].flyheight = 0.0f;
+			unit[i].scalingValue = 2.;
+			unit[i].flyheight = 0.55f;
 			//unit[i].Load("Data/snake.md2", unitTexture->ID, 0.005f);
-			unit[i].Load("Data/snake.md2", unitTexture->ID, 0.009f, MD2Normals);
+			unit[i].Load("Data/tallguy.md2", unitTexture->ID, 0.009f, MD2Normals);
 		}
 		delete unitTexture;
 	}

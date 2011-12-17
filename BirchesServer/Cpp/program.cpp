@@ -112,7 +112,7 @@ void Network()
 		player[index].ID = index;
 		player[index].score = 0;
 		simpleCamera[index].position = unit[index].position;
-		simpleCamera[index].position.Cout();
+	//	simpleCamera[index].position.Cout();
 
 
 		serverData = cgl::i2s(MAXIMUMPLAYERS) + "|" + SERVERNAME + "|";								//Send data of all players to joining player; 

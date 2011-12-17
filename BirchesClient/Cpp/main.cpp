@@ -269,17 +269,24 @@ public:
 };
 
 void UpdateMouse();
+void MovementHandle();
 cgl::Vector3f SpawnPoint(-0,5,-5);			// Where camera spawns
 cgl::Vector3f LookAt(5,0,5);					// Where camera points at
 cgl::Vector3f Up(0,1,0);						// Cameras up direction.
 cgl::Camera *tp_camera;
+<<<<<<< HEAD
 
+=======
+cgl::Unit tp_player;							// Unit to follow. [TP_CAMERA]
+#define MOVEMENT_SPEED 20.0f					// Camera movement speed.
+>>>>>>> 63b9d531941e619f2b66a9382cfdbcdb69928f59
 int main(int argc, char *argv[])
 {
 	cgl::CGLInitialize();	//Library Initialize
 	initGL();
 	InitializeLighting();
 	Initialize();			//Initialize game objects
+<<<<<<< HEAD
 	cam->Initialize(keyboard, mouse, 800, 600);
 	cam->Initialize(0.4, 0.4);
 	cam->MoveForward( -1.0);
@@ -288,6 +295,10 @@ int main(int argc, char *argv[])
 //	x1 = x2 = y1 = y2 = 0.0;
 //	x1 = mouse->cursorx;
 //	y1 = mouse->cursory;
+=======
+//	cam->Move(cgl::Vector3f(0,0,0));
+//	cam->MoveForward( -1.0);
+>>>>>>> 63b9d531941e619f2b66a9382cfdbcdb69928f59
 
 	cgl::Image2D* uu = new cgl::Image2D();
 	uu->LoadBMP("Data/snake.bmp");
@@ -295,10 +306,34 @@ int main(int argc, char *argv[])
 	mod->EnableNormals(true);
 	delete uu;
 	mouse->enableMouseFrame = true;
+<<<<<<< HEAD
 	//mouse->EnableMouseFrame(true);
 	mouse->ShowWindowsCursor(false);
 	CamTest* ct = new CamTest(mouse);
 	Projectile* pp = new Projectile(10000);	//10.k frames
+=======
+	mouse->ShowWindowsCursor(true);
+	bool b = true;
+	bool shooting = false;
+	bool mousein = false;
+	cgl::SimpleCamera* cam = new cgl::SimpleCamera(keyboard, mouse, 800, 600);//Our camera, either FREE VIEW; FPS OR THIRD PERSON
+	cam->Initialize(0.3,0.3);
+	cam->MoveForward( -1.0);
+	player.SetScale(5.0, 0.0, 0.0);
+	//glFrontFace(GL_CW);			// Winding of elements
+
+	cgl::ProjectileBullet* bullet = new cgl::ProjectileBullet();
+	bullet->size = 0.005f;
+	bullet->speed = 5.0f;
+	bullet->SetModel(mod);
+
+	tp_player.Load("Data/TestModel3.3ds");		// Model to use [TP_CAMERA]
+	tp_player.SetScale(0.01,0,0);				// and scale it down. Scale only supports uniform scale using the first component atm. [TP_CAMERA]
+
+	tp_camera = new cgl::Camera(SpawnPoint, LookAt, h, w, 0.1f, 4000.0f);				// Setup the camera normally [TP_CAMERA]
+	tp_camera->SetupThirdPersonCamera( &tp_player, 150, cgl::Vector3f(0, 75, 0), true);	// Settings: Target to follow, distance from target (is scaled with model), offset (to align with head, is also scaled), force the model to face same direction as camera [TP_CAMERA]
+
+>>>>>>> 63b9d531941e619f2b66a9382cfdbcdb69928f59
 
 	cgl::ProjectileBullet* tempb = new cgl::ProjectileBullet();
 	tempb->SetModel(mod);
@@ -332,9 +367,46 @@ int main(int argc, char *argv[])
 		glLoadIdentity();
 		opengl->StartDraw();
 		opengl->CreateViewport(true, 800,600,0,100,0.001f, 1000.0f);
+<<<<<<< HEAD
 		cam->Update(mousein);
+=======
+		if(midx-tmpx > 2 || midx-tmpx < -1)*/
+		//player.position = cam->position;
+		//player.position += 0.4;
+
+		UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
+		MovementHandle();						// Handle keyboard input [TP_CAMERA]
+		tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
+		tp_player.Draw();							// Draw the tp_player [TP_CAMERA]
+
+		if(shooting )
+		{
+			cam->position.Cout();
+			cam->Update();
+		}
+		else
+		{
+			player.position.Cout();
+			UpdateMouse();							// Input to rotate the camera with the mouse [TP_CAMERA]
+			tp_camera->ThirdPersonCameraUpdate();	// Update camera each frame [TP_CAMERA]
+		}
+		player.Draw();
+		//cam->Update(mousein);	//Update, Place? View? ...Function name shall we use? Render? Draw()? Action()? 
+>>>>>>> 63b9d531941e619f2b66a9382cfdbcdb69928f59
 		terrain->Draw(0.0);
 
+<<<<<<< HEAD
+=======
+		if(keyboard->isKeyPressed("K") == true)
+		{
+			cam->MoveStrafeRight(1.0);
+		}
+				
+		if(keyboard->isKeyPressed("J") == true)
+		{
+			cam->MoveStrafeLeft(1.0);
+		}
+>>>>>>> 63b9d531941e619f2b66a9382cfdbcdb69928f59
 
 		if(keyboard->isKeyPressed("SPACE") == true)
 		{
@@ -548,4 +620,28 @@ void UpdateMouse()		// Function to control mouse [TP_CAMERA]
 
 	old_x = x;
 	old_y = y;
+}
+
+void MovementHandle()	// Handles movement [TP_CAMERA]
+{
+	if(keyboard->isKeyPressed("W") == true)
+	{
+		//camera.slide(0,0,-MOVEMENT_SPEED/FPS, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetForwardVector())*-MOVEMENT_SPEED);
+	}
+	if(keyboard->isKeyPressed("S") == true)
+	{
+		//camera.slide(0,0,MOVEMENT_SPEED/FPS, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetForwardVector())*MOVEMENT_SPEED);
+	}
+	if(keyboard->isKeyPressed("A") == true)
+	{
+		//camera.slide(-MOVEMENT_SPEED/FPS,0,0, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetRightVector())*-MOVEMENT_SPEED);
+	}
+	if(keyboard->isKeyPressed("D") == true)
+	{
+		//camera.slide(MOVEMENT_SPEED/FPS,0,0, 1);
+		tp_player.AddPosition((tp_player.GetMatrix()->GetRightVector())*MOVEMENT_SPEED);
+	}
 }

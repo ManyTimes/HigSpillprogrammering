@@ -20,58 +20,47 @@ namespace cgl
 	}
 
 	/*********FUNCTIONS******************/
-	void Entity::UpdateMatrix(bool pos, bool angle, bool scale)
+	void Entity::UpdateMatrix()
 	{
 		// Convert to radians for cos and sin functions
-		if(angle)
-		{
-			Vector3f r_angles;
-			r_angles.x = DEG2RAD(angles.x);
-			r_angles.y = DEG2RAD(angles.y);
-			r_angles.z = DEG2RAD(angles.z);
+		Vector3f r_angles;
+		r_angles.x = DEG2RAD(angles.x);
+		r_angles.y = DEG2RAD(angles.y);
+		r_angles.z = DEG2RAD(angles.z);
 
-			float sa = sin(r_angles.z);
-			float ca = cos(r_angles.z);
-			float sb = sin(r_angles.x);
-			float cb = cos(r_angles.x);
-			float sh = sin(r_angles.y);
-			float ch = cos(r_angles.y);
+		float sa = sin(r_angles.z);
+		float ca = cos(r_angles.z);
+		float sb = sin(r_angles.x);
+		float cb = cos(r_angles.x);
+		float sh = sin(r_angles.y);
+		float ch = cos(r_angles.y);
 
-			matrix[0] = ch*ca;
-			matrix[1] = sa;
-			matrix[2] = -sh*ca;
+		matrix[0] = ch*ca;
+		matrix[1] = sa;
+		matrix[2] = -sh*ca;
 
-			matrix[4] = -ch*sa*cb + sh*sb;
-			matrix[5] = ca*cb;
-			matrix[6] = sh*sa*cb + ch*sb;
+		matrix[4] = -ch*sa*cb + sh*sb;
+		matrix[5] = ca*cb;
+		matrix[6] = sh*sa*cb + ch*sb;
 
-			matrix[8] = ch*sa*sb + sh*cb;
-			matrix[9] = -ca*sb;
-			matrix[10] = -sh*sa*sb + ch*cb;
+		matrix[8] = ch*sa*sb + sh*cb;
+		matrix[9] = -ca*sb;
+		matrix[10] = -sh*sa*sb + ch*cb;
 
-			matrix[3] = 0;
-			matrix[7] = 0;
-			matrix[11] = 0;
-		}
+		matrix[3] = 0;
+		matrix[7] = 0;
+		matrix[11] = 0;
 
-		if(pos)
-		{
-			matrix[12] = position.x;//-Pos->dot(*Right);
-			matrix[13] = position.y;//-Pos->dot(*Up);
-			matrix[14] = position.z;//-Pos->dot(*Look);
-		}
+		// Scale
+		Matrix m_scale;
+		m_scale[0] = m_scale[5] = m_scale[10] = scales.x;
+		this->SetMatrix((m_scale * *this->GetMatrix()));
 
-		if(angle || scale)
-		{
-			Matrix m_scale;
-			m_scale[0] = m_scale[5] = m_scale[10] = scales.x;
-			this->SetMatrix((m_scale * *this->GetMatrix()));
-		}
-		
-	//	matrix[3] = 0;//Pos->x; 
-	//	matrix[7] = 0;//Pos->y;
-	//	matrix[11] = 0;//Pos->z;
-	//	matrix[15] = 1.0;
+		// Position
+		matrix[12] = position.x;// * 1/scales.x;//-Pos->dot(*Right);
+		matrix[13] = position.y;// * 1/scales.x;//-Pos->dot(*Up);
+		matrix[14] = position.z;// * 1/scales.x;//-Pos->dot(*Look);
+
 	}
 
 	void Entity::CheckUpdate()
@@ -123,7 +112,7 @@ namespace cgl
 		position.x = x;
 		position.y = y; 
 		position.z = z; 
-		UpdateMatrix(true,false,false); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetPosition(float p[3]) 
@@ -131,7 +120,7 @@ namespace cgl
 		position.x = p[0]; 
 		position.y = p[1]; 
 		position.z = p[2]; 
-		UpdateMatrix(true,false,false); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetPosition(Vector3f p) 
@@ -139,7 +128,13 @@ namespace cgl
 		position.x = p.x; 
 		position.y = p.y; 
 		position.z = p.z; 
-		UpdateMatrix(true,false,false); 
+		UpdateMatrix(); 
+	}
+
+	void Entity::AddPosition(Vector3f v)
+	{
+		position += v;
+		UpdateMatrix();
 	}
 
 	void Entity::SetAngles(float roll, float yaw, float pitch) 
@@ -147,7 +142,7 @@ namespace cgl
 		angles.x = roll; 
 		angles.y = yaw; 
 		angles.z = pitch;
-		UpdateMatrix(false,true,false); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetAngles(float p[3]) 
@@ -155,7 +150,7 @@ namespace cgl
 		angles.x = p[0]; 
 		angles.y = p[1]; 
 		angles.z = p[2]; 
-		UpdateMatrix(false,true,false); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetAngles(Vector3f p) 
@@ -163,14 +158,14 @@ namespace cgl
 		angles.x = p.x; 
 		angles.y = p.y; 
 		angles.z = p.z; 
-		UpdateMatrix(false,true,false); 
+		UpdateMatrix(); 
 	}
 	void Entity::SetScale(float x, float y, float z) 
 	{ 
 		scales.x = x; 
 		scales.y = y; 
 		scales.z = z; 
-		UpdateMatrix(false,false,true); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetScale(float p[3]) 
@@ -178,7 +173,7 @@ namespace cgl
 		scales.x = p[0]; 
 		scales.y = p[1];
 		scales.z = p[2];
-		UpdateMatrix(false,false,true); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetScale(Vector3f p) 
@@ -186,7 +181,7 @@ namespace cgl
 		scales.x = p.x; 
 		scales.y = p.y; 
 		scales.z = p.z; 
-		UpdateMatrix(false,false,true); 
+		UpdateMatrix(); 
 	}
 
 	void Entity::SetMatrix(float m[16]) 

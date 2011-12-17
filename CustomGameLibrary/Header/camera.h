@@ -81,6 +81,7 @@ namespace cgl
 		void Camera::ThirdPersonRotatePitch(float angle);			// Rotate the pitch.
 		void Camera::ThirdPersonRotateYaw(float angle);				// Rotate the yaw.
 		void Camera::ThirdPersonRotateRoll(float angle);
+		Matrix* Camera::GetTPMatrix();
 	};
 
 }	//End namespace

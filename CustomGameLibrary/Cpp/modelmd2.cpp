@@ -451,20 +451,8 @@ namespace cgl
 				{
 					v1 = frame1->vertices + triangle->vertices[j];
 					v2 = frame2->vertices + triangle->vertices[j];
-					if(i == 0 && j  == 0)
-					{
-						std::cout << "BEFORE " << i << ", " << j << std::endl;
-						normal.Cout();
-						pos.Cout();
-					}
 					pos = v1->pos * (1 - frac) + v2->pos * frac;
 					normal = v1->normal * (1 - frac) + v2->normal * frac;
-					if(i == 0 && j  == 0)
-					{
-						std::cout << "AFTER IJ: " << i << ", " << j << std::endl;
-						normal.Cout();
-						pos.Cout();
-					}
 					if (normal[0] == 0 && normal[1] == 0 && normal[2] == 0) 
 					{
 						normal.z = 1;

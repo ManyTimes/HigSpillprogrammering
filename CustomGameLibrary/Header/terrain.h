@@ -17,8 +17,10 @@ namespace cgl
 		int length;						//Length of terrain
 		Vector3f** normals;				//X-Z of normals in a 2D which contains a XYZ value for 3D
 		float** heights;				//Heights
+		GLuint textureID;
 	public:
 		Terrain::Terrain(char* heightMapTexture, float maximumTerrainHeight);
+		Terrain::Terrain(char* heightMapTexture, float maximumTerrainHeight, GLuint textureID);
 		Terrain::~Terrain();
 		void Terrain::Load(char* filename, float height);
 		int Terrain::GetWidth();

@@ -149,6 +149,8 @@ namespace cgl
 	//Call this when closing your application. This also sends a "exit" to the server, if connection to server is still up, freeing the slot at server.
 	void NetworkClient::Exit()
 	{
+		this->SendData("exit");
+		cgl::Delay(5);							//Small built in time to send data
 		if(this->sockets != NULL)
 		{
 			SDLNet_FreeSocketSet(this->sockets);

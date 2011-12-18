@@ -10,6 +10,8 @@ std::string readData = "";				//Data from a Client
 std::string temp = "";
 int playernumber = 0;					//Current player to work on
 int ii = 0;								//Loop of data read [ii]
+float yaw = 0;
+float x,y,z;
 
 void CoutVec(cgl::Vector3f vec)
 {
@@ -26,6 +28,7 @@ void CoutVec(cgl::Vector3f vec, std::string msg)
 //Main loop of the program
 void Program()
 {
+	x = y = z  =0;
 	server->CallbackOnClientClosed(ClientClosed);
 	int programtime = 1;				//Example of a game loop
 	int render = 1;
@@ -51,7 +54,7 @@ void Program()
 		{
 			programtime = 1;
 		}
-		cgl::Sleep(10);					//Switch runs each 0.01 seconds, each case runs therefore each 0.04 seconds, which is 25 "fps"
+		cgl::Sleep(5);					//Switch runs each 0.01 seconds, each case runs therefore each 0.04 seconds, which is 25 "fps"
 		//cgl::Thread netThread = new cgl::Thread(functionNetworkLoop);, network would run on a diff thread, creating a mutex...
 		//netThread.Start();
 		//netThread.Exit();
@@ -101,7 +104,8 @@ void Network()
 	{
 		server->CreateClient();					//Create new client; Init new unit
 		int index = server->clientcount-1;		//Resetting the new player, to new position, etc.
-		unit[index].SetPosition(cgl::GetRandomFloat(0.0, 60.0), 3.0, cgl::GetRandomFloat(0.0, 60.0));
+		unit[index].SetPosition(cgl::GetRandomFloat(1.0, 63.0), 0, cgl::GetRandomFloat(1.0, 63.0));
+		unit[index].position.y = terrain->GetHeight(unit[index].position.x, unit[index].position.z);
 		unit[index].hitpoints = 100;
 		unit[index].ID = index;
 		unit[index].armor = 0;
@@ -112,8 +116,6 @@ void Network()
 		player[index].ID = index;
 		player[index].score = 0;
 		simpleCamera[index].position = unit[index].position;
-	//	simpleCamera[index].position.Cout();
-
 
 		serverData = cgl::i2s(MAXIMUMPLAYERS) + "|" + SERVERNAME + "|";								//Send data of all players to joining player; 
 		for(int i = 0; i < server->clientcount-1; i++)								//format: count|playername?kills?deaths?posx?posy?posz?|playername?kills?...
@@ -160,8 +162,51 @@ void Network()
 				server->SendDataToConnectedClients(serverData);
 				break;
 			case '1':
-				//A player has moved, send it to all connected players
+				ii = 1;
+				playernumber = GetIntValue('|');
+				ii++;
+				x = GetFloatValue('|');
+				ii++;
+				z = GetFloatValue('|');
+				simpleCamera[playernumber].position.x = x;
+				simpleCamera[playernumber].position.z = z;
+				unit[playernumber].position = simpleCamera[playernumber].position;
+				//Missing Y value, does not need that for calculating collision detection (as of v.1)
+
 				server->SendDataToConnectedClients(server->buffer);
+				//A player has moved, send it to all connected players
+				//temp = "";
+				//ii = 2;
+				//playernumber = GetIntValue('|');	//Player that moved
+				//ii++;		//Skip '|' char
+				//yaw = GetFloatValue('|');
+				//simpleCamera[playernumber].SetYaw(yaw);
+				//if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
+				//{
+				//	switch(readData[1])
+				//	{
+				//	case 'W':
+				//		simpleCamera[playernumber].MoveForward(0.25);
+				//		break;
+				//	case 'S':
+				//		simpleCamera[playernumber].MoveBackwards(0.25);
+				//		break;
+				//	case 'A':
+				//		simpleCamera[playernumber].MoveStrafeLeft(0.25);
+				//		break;
+				//	case 'D':
+				//		simpleCamera[playernumber].MoveStrafeRight(0.25);
+				//		break;
+				//	default:
+				//		break;
+				//	}
+				//	unit[playernumber].position = simpleCamera[playernumber].position;
+				//	serverData = "1" + cgl::i2s(playernumber) + "|"
+				//		+ cgl::f2s(simpleCamera[playernumber].position.x) + "|"
+				//		+ cgl::f2s(simpleCamera[playernumber].position.z);
+				//	server->SendDataToConnectedClients(serverData);
+				//}
+				//Y is gotten from heightmap, no need to send it.
 				/*ii = 2;
 				playernumber = GetIntValue('|');
 				if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
@@ -193,15 +238,25 @@ void Network()
 					server->SendDataToConnectedClients(serverData);
 					CoutVec(unit[playernumber].position, " Unit Pos: ");*/
 				break;
-			case '2':
+			case '2':			//Echoing everything out to all connected players, a player has fired a bullet
+				//This is the bullet position and view direction.
+				//This needs to be stored at server to use collision detection at server
+				server->SendDataToConnectedClients(server->buffer);
 				break;
 			case '3':
 				break;
 			case '4':
 				break;
 			case '5':	//Client has left the game
-				player[i].playername = "<Empty Slot>";
-				server->CloseClient(i);
+				//Why is this 5!?!?!?? Client sends "exit".
+			/*	player[i].playername = "<Empty Slot>";
+				player[i].ID = -1;
+				player[i].score = 0;
+				player[i].kills = 0;
+				player[i].deaths = 0;
+				server->SendDataToConnectedClients("5" + cgl::i2s(i) + "|");
+				std::cout << "Player nr has left: " << i << std::endl;//Inform all players about laeving player
+				server->CloseClient(i);*/
 				break;
 			default:
 				break;
@@ -232,7 +287,8 @@ void ClientClosed(int clientNumber)
 	player[clientNumber].kills = 0;
 	player[clientNumber].playername = "<Empty Slot>";
 	player[clientNumber].ID = -1;
-	serverData = "5|" + cgl::i2s(clientNumber);
+	std::cout << "Player nr has left: " << clientNumber << std::endl;//Inform all players about laeving player
+	serverData = "5" + cgl::i2s(clientNumber);
 	server->SendDataToConnectedClients(serverData);
 }
 

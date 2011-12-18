@@ -15,17 +15,22 @@ void CoutVec(cgl::Vector3f vec, std::string msg)
 
 std::string data = "";
 cgl::Vector3f tempvec;
+cgl::Vector3f tempvec2;
 std::string temp = "";
 int playernumber = 0;
 int i = 0;
 int ii = 0;
+int cc = 0;
 float x,y,z;
-bool hasSent[5];
+bool hasSent[6];
+float yaw;
 
 //Called each game-loop sequence
 void Network()
 {
-	for(i = 0 ; i < 5; i++)
+	tempvec = 0.0f;
+	tempvec2  = 0.01f;
+	for(i = 0 ; i < 6; i++)
 	{
 		hasSent[i] = false;
 	}
@@ -50,9 +55,12 @@ void SendDataForward()
 	{
 		return;
 	}
+	simpleCamera[playernumber].MoveForward(0.25);
 	if(hasSent[0] == false)				//Even if events, click action fires multiple times, we send only once per game-loop-sequence
 	{
-		client->SendData("1W" + cgl::i2s(thisPlayer));		//Moving Z positive Player
+		//Send pos XZ to server
+		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		//client->SendData("1W" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[0] = true;
 	}
 }
@@ -63,9 +71,11 @@ void SendDataBackward()
 	{
 		return;
 	}
+	simpleCamera[playernumber].MoveBackwards(0.25);
 	if(hasSent[1] == false)
 	{	
-		client->SendData("1S" + cgl::i2s(thisPlayer));		//Moving Z negative Player
+		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		//client->SendData("1S" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[1] = true;
 	}
 }
@@ -76,9 +86,11 @@ void SendDataLeft()
 	{
 		return;
 	}
+	simpleCamera[playernumber].MoveStrafeLeft(0.25);
 	if(hasSent[2] == false)	
 	{
-		client->SendData("1A" + cgl::i2s(thisPlayer));		//Moving X negative Player
+		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		//client->SendData("1A" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));		//Moving X negative Player
 		hasSent[2] = true;
 	}
 }
@@ -89,9 +101,11 @@ void SendDataRight()
 	{
 		return;
 	}
+	simpleCamera[playernumber].MoveStrafeRight(0.25);
 	if(hasSent[3] == false)	
 	{
-		client->SendData("1D" + cgl::i2s(thisPlayer));		//Moving X positive Player
+		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		//client->SendData("1D" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[3] = true;
 	}
 }
@@ -104,11 +118,34 @@ void SendDataShoot()
 	}
 	if(hasSent[4] == false)	
 	{
-		//Current player shooting, calc projectile at server, send back 
-		//position and draw projectile at position.
-		//Server checks collision while calculating new projectile thing
-		//client->SendData("2" + cgl::i2s(thisPlayer));
+		//projectileBanana[playernumber].Shoot(simpleCamera[playernumber].position, simpleCamera[playernumber].GetViewDirection(), 500);
+		temp = "";
+		tempvec = simpleCamera[playernumber].GetViewDirection();
+		temp = "2b" + cgl::i2s(thisPlayer) + "|" +
+			cgl::f2s(simpleCamera[playernumber].position.x) + "|" +
+			cgl::f2s(simpleCamera[playernumber].position.y) + "|" +
+			cgl::f2s(simpleCamera[playernumber].position.z) + "|" +
+			cgl::f2s(tempvec.x) + "|" +
+			cgl::f2s(tempvec.y) + "|" +
+			cgl::f2s(tempvec.z);
+		client->SendData(temp);
+		//client->SendData("2b" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[4] = true;
+		temp = "";
+	}
+}
+
+void SendHasLeftTheGame()
+{
+	if(ISCONNECTED == false)
+	{
+		return;
+	}
+	if(hasSent[5] == false)
+	{
+		ISCONNECTED = false;
+		client->Exit();			//Sends exit message to server
+		hasSent[5] = true;
 	}
 }
 
@@ -140,6 +177,7 @@ void ReadServerData()
 		unit = new cgl::Unit[MAXIMUMPLAYERS];
 		player = new cgl::Player[MAXIMUMPLAYERS];
 		simpleCamera = new cgl::SimpleCamera[MAXIMUMPLAYERS];
+		projectileBanana = new cgl::ProjectileBullet[MAXIMUMPLAYERS];
 		opengl->SetWindowTitle(GAMENAME + ", Playing at: " + SERVERNAME);
 		for(int a = 0; a < MAXIMUMPLAYERS; a++)
 		{
@@ -151,9 +189,10 @@ void ReadServerData()
 		else
 		{
 			temp = "";
-			i++;										//Skip "|" character
+			i++;										//Skip "|" character after servername
 			int value = 0;
 			int playernumber = 0;
+			std::cout << " DATA GOTTEN: " << data << std::endl << std::endl;
 			for(; i < data.length(); i++)
 			{
 				if(data[i] == '|')
@@ -169,7 +208,7 @@ void ReadServerData()
 					{
 						temp += data[i];
 					}
-					else				//New value to be read
+					else				//Char read is '?', value read fully, store and reset
 					{
 						switch(value)
 						{
@@ -188,6 +227,7 @@ void ReadServerData()
 							break;
 						case 3:
 							x = cgl::c2f((char*)temp.c_str());
+							temp = "";
 							break;
 						case 4:
 							y = cgl::c2f((char*)temp.c_str());
@@ -195,15 +235,15 @@ void ReadServerData()
 							break;
 						case 5:
 							z = cgl::c2f((char*)temp.c_str());
-							unit[playernumber].SetPosition(x,terrain->GetHeight(x,z),z);
+							unit[playernumber].SetPosition(x,y,z);
 							simpleCamera->position = unit[playernumber].position;
-							simpleCamera->position.Cout();
+							//simpleCamera->position.Cout();
 							temp = "";
 							break;
 						default: 
 							break;
 						}
-						value ++;
+						value ++;			//each value, increase by '?'
 					}
 				}
 			}
@@ -213,9 +253,12 @@ void ReadServerData()
 		unitTexture->LoadBMP("Data/snake.bmp");
 		for(i = 0; i < MAXIMUMPLAYERS; i++)	//Setting all to default values
 		{
+			projectileBanana[i].size = 0.005f;
+			projectileBanana[i].speed = 5.0f;
+			projectileBanana[i].SetModel(bananaModel);
 			simpleCamera[i].Initialize(keyboard, mouse, SCREENWIDTH, SCREENHEIGHT);
 			simpleCamera->Initialize(0.5, 0.5);
-			simpleCamera->AllowMovement = false;
+			simpleCamera->AllowMovement = false;	//Disable built in "WASD" movement
 			unit[i].armor = 0;
 			unit[i].shield = 10;
 			unit[i].mana = 10;
@@ -225,7 +268,8 @@ void ReadServerData()
 			unit[i].scalingValue = 2.;
 			unit[i].flyheight = 0.55f;
 			//unit[i].Load("Data/snake.md2", unitTexture->ID, 0.005f);
-			unit[i].Load("Data/tallguy.md2", unitTexture->ID, 0.009f, MD2Normals);
+			unit[i].Load("Data/snake.md2", unitTexture->ID, 0.009f, MD2Normals);
+			unit[i].scalingValue = 0.25f;
 		}
 		delete unitTexture;
 	}
@@ -302,11 +346,11 @@ void ReadData()
 					break;
 				case 1:
 					y = cgl::s2f(temp);
-					std::cout << " Y : " << y << std::endl;
 					break;
 				case 2:
 					z = cgl::s2f(temp);
 					unit[playernumber].SetPosition(x,y,z);
+					simpleCamera[playernumber].position = unit[playernumber].position;
 					break;
 				default:
 					break;
@@ -314,49 +358,122 @@ void ReadData()
 			}
 			break;
 		case '1':								//A player has moved, we have recieved his positionvector
-			i = 2;
+
+			i = 1;
 			playernumber = GetIntValue('|');
-			if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
+			i++;
+			x = GetFloatValue('|');
+			i++;
+			z = GetFloatValue('|');
+			if(thisPlayer != playernumber)
 			{
-				switch(data[1])
-				{
-				case 'W':
-					simpleCamera[playernumber].MoveForward(0.25);
-					break;
-				case 'S':
-					simpleCamera[playernumber].MoveBackwards(0.25);
-					break;
-				case 'A':
-					simpleCamera[playernumber].MoveStrafeLeft(0.25);
-					break;
-				case 'D':
-					simpleCamera[playernumber].MoveStrafeRight(0.25);
-					break;
-				default:
-					break;
-				}
-				unit[playernumber].position = simpleCamera[playernumber].position;
+				simpleCamera[playernumber].position.x = x;
+				simpleCamera[playernumber].position.z = z;	
 			}
+			unit[playernumber].position = simpleCamera[playernumber].position;
+
+
+
+			//i = 1;
+			//std::cout << "DATA GOTTEN FROM SERVER: " << data << std::endl << std::endl;
+			//playernumber = GetIntValue('|');
+			//i++;								//Skip '|' character
+			//x = GetFloatValue('|');				//Reading X position
+			//i++;								//Skip '|'
+			//z = GetFloatValue('|');				//Reading Z pos
+			//unit[playernumber].position.x = x;
+			//unit[playernumber].position.z = z;	
+
+			//Y is read upon drawing, to add 2
+			//unit[playernumber].position.y = terrain->GetHeight(unit[playernumber].position.x, unit[playernumber].position.z);
+			//simpleCamera[playernumber].position = unit[playernumber].position;
+			//i = 2;								//Playernumber starts from 2
+			//playernumber = GetIntValue('|');
+			//i++;								//Skip char '|'
+			//yaw = GetFloatValue('|');			//Yaw of the player
+			//if(playernumber == thisPlayer)
+			//{
+			//	simpleCamera[playernumber].SetYaw(yaw);
+			//}
+			//if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
+			//{
+			//	switch(data[1])
+			//	{
+			//	case 'W':
+			//		simpleCamera[playernumber].MoveForward(0.25);
+			//		break;
+			//	case 'S':
+			//		simpleCamera[playernumber].MoveBackwards(0.25);
+			//		break;
+			//	case 'A':
+			//		simpleCamera[playernumber].MoveStrafeLeft(0.25);
+			//		break;
+			//	case 'D':
+			//		simpleCamera[playernumber].MoveStrafeRight(0.25);
+			//		break;
+			//	default:
+			//		break;
+			//	}
+			//	unit[playernumber].position = simpleCamera[playernumber].position;
+			//	unit[playernumber].position.y = 5 + terrain->GetHeight(unit[playernumber].position.x, unit[playernumber].position.z);
+			//	std::cout << std::endl << " POSITION FRO PLAYER: " << playernumber << " is : ";
+			//	unit[playernumber].position.Cout();
+			//	//std::cout << " UnitNETW: ";
+			//	//unit[playernumber].position.Cout();
+			//	//std::cout << " CAmitNETW: ";
+			//	//simpleCamera[playernumber].position.Cout();
+			//}
 			break;
 		case '2':
+			//A player has done some action (shooting/ability...)
+			switch(data[1])
+			{
+			case 'b':					//Shooting Banana
+				i = 2;
+				playernumber = GetIntValue('|');
+				i++;
+				if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
+				{
+					tempvec.x = GetFloatValue('|');
+					i++;
+					tempvec.y = GetFloatValue('|');
+					i++;
+					tempvec.z =	GetFloatValue('|');
+					i++;
+					//View Direction
+					tempvec2.x = GetFloatValue('|');
+					i++;
+					tempvec2.y = GetFloatValue('|');
+					i++;
+					tempvec2.z = GetFloatValue('|');
+					projectileBanana[playernumber].Shoot(tempvec, tempvec2, 500);
+					//projectileBanana[playernumber].position =tempvec;
+				}
+	/*			i = 2;
+				playernumber = GetIntValue('|');
+				if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
+				{
+					projectileBanana[playernumber].Shoot(simpleCamera[playernumber].position, simpleCamera[playernumber].GetViewDirection(), 500);
+					std::cout << "Player shooting: " << playernumber;
+					projectileBanana[playernumber].position.Cout();
+				}*/
+				break;
+			default:
+				break;
+			}
 			break;
 		case '3':
 			break;
 		case '4':
 			break;
 		case '5':
-			i += 2;
-			temp ="";
-			do
-			{
-				temp += data[i];
-				i++;
-			}while(i < data.length());
-			i = cgl::s2i(temp);
-			player[i].ID = -1;
-			player[i].playername = "<Empty Slot>";
-			player[i].kills = 0;
-			player[i].deaths = 0;
+			i = 1;
+			playernumber = GetIntValue('|');
+			player[playernumber].ID = -1;
+			player[playernumber].playername = "<Empty Slot>";
+			player[playernumber].kills = 0;
+			player[playernumber].deaths = 0;
+			std::cout << "Player nr has left: " << playernumber << std::endl;
 			break;
 		default:
 			break;
@@ -385,10 +502,12 @@ void ConnectToServer()
 	}
 }
 
+//OLD way of disconnecting, now, there's a callback in the server class for leaving players
+//Simply send client->Exit();
 void DisconnectFromServer()
 {
-	client->SendData("5");			//Exit
-	SDL_Delay(25);					//Give socket time to send "exit" to server
+	//client->SendData("5");			//Exit
+	//SDL_Delay(25);					//Give socket time to send "exit" to server
 }
 
 int GetIntValue(char end)
@@ -402,7 +521,7 @@ int GetIntValue(char end)
 	return cgl::s2i(temp);
 }
 
-int GetFloatValue(char end)
+float GetFloatValue(char end)
 {
 	temp = "";
 	do

@@ -35,10 +35,11 @@ void KeyboardClicked()
 		{
 			if(keyboard->isKeyPressed("Q") == true)
 			{
-				for(int a = 0; a < 4; a++)
+				for(int a = 0; a < 2; a++)
 				{
-					std::cout << "Player: " << a << " ID, " << player[a].ID << " X Y Z :" << unit[a].position.x << ", " << unit[a].position.y << ", " << unit[a].position.z << std::endl;
-					std::cout << "Your ID: " << thisPlayer << std::endl;
+					std::cout << "Player: " << a << " X Y Z :";
+					unit[a].position.Cout();
+					std::cout << "Player name " << player[a].playername << " kills: " << player[a].kills << std::endl;
 				}
 			}
 			if(keyboard->isKeyPressed("F10") == true)
@@ -88,11 +89,11 @@ void KeyboardClicked()
 				if(keyboard->isKeyPressed("Q") == true)
 				{
 					DISABLEMOUSECONTROL = false;
-					ISCONNECTED = false;
-					DisconnectFromServer();	
+					SendHasLeftTheGame();		//NEW QUIT STYLE
+					//DisconnectFromServer();	//OLD QUIT STYLE
 					opengl->SetWindowTitle(GAMENAME);
 					thisPlayer = -1;
-					client->Exit();
+					//SendHasLeftTheGame();
 					gamestate = 0;
 					SERVERRESPONSE = false;	
 
@@ -123,10 +124,9 @@ void MouseClicked()
 		{
 			if(btnQuitGame->isPressed() == true)
 			{	
-				DisconnectFromServer();	//Say goodbye to the server
+				SendHasLeftTheGame();
+				//DisconnectFromServer();	//[OLD]Say goodbye to the server
 				opengl->SetWindowTitle(GAMENAME);
-				ISCONNECTED = false;
-				client->Exit();			//Exit server
 				gamestate = 0;			//Back to main menu
 				thisPlayer = -1;
 				DISABLEMOUSECONTROL = false;

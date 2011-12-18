@@ -1480,21 +1480,14 @@ struct Vector3i
 	}
 };
 
-
-struct Vector3f
+struct Vector3f 
 {
-	float x,y,z;
-
-	//CONSTRUCTORS
-	Vector3f(float x1,float y1, float z1)
+	float x, y, z;
+	Vector3f::Vector3f(float dx = 0, float dy = 0, float dz = 0)
 	{
-		x = x1;
-		y = y1;
-		z = z1;
-	}
-	Vector3f()
-	{
-		x = y = z = 0.0;
+		this->x = dx;
+		this->y = dy; 
+		this->z= dz;
 	}
 
 	//DISPLAY LINE
@@ -1502,8 +1495,6 @@ struct Vector3f
 	{
 		std::cout << "Value XYZ: " << x << ", " << y << ", " << z << std::endl;
 	}
-
-
 	//OPERATORS
 	Vector3f Vector3f::operator=(float value)
 	{
@@ -1511,6 +1502,15 @@ struct Vector3f
 		y = value;
 		z = value;
 		return *this;
+	}
+
+	Vector3f operator=(const Vector3f & v) const
+	{
+		Vector3f res;
+		res.x = v.x;
+		res.y = v.y;
+		res.z = v.z;
+		return res;
 	}
 
 	Vector3f& operator=(const Vector3f &value)
@@ -1523,281 +1523,6 @@ struct Vector3f
 		y = value.y;
 		z = value.z;
 		return *this;
-	}
-
-	Vector3f& operator+=(const Vector3f &value)
-	{
-		x += value.x;
-		y += value.y;
-		z += value.z;
-		return *this;
-	}
-
-	Vector3f& operator+=(const float value)
-	{
-		x += value;
-		y += value;
-		z += value;
-		return *this;
-	}
-
-
-	Vector3f& operator-=(const Vector3f &value)
-	{
-		x -= value.x;
-		y -= value.y;
-		z -= value.z;
-		return *this;
-	}
-
-	
-	Vector3f& operator-=(const float value)
-	{
-		x -= value;
-		y -= value;
-		z -= value;
-		return *this;
-	}
-
-	Vector3f& operator*=(const Vector3f &value)
-	{
-		x *= value.x;
-		y *= value.y;
-		z *= value.z;
-		return *this;
-	}
-
-	
-	Vector3f& operator*=(const float value)
-	{
-		x *= value;
-		y *= value;
-		z *= value;
-		return *this;
-	}
-		
-	Vector3f& operator/=(const Vector3f &value)
-	{
-		x /= value.x;
-		y /= value.y;
-		z /= value.z;
-		return *this;
-	}
-
-	Vector3f& operator/=(const float value)
-	{
-		x /= value;
-		y /= value;
-		z /= value;
-		return *this;
-	}
-
-	Vector3f& operator+(const Vector3f &value)
-	{
-		x += value.x;
-		y += value.y;
-		z += value.z;
-		return *this;
-	}
-
-	Vector3f& operator+(const float value)
-	{
-		x += value;
-		y += value;
-		z += value;
-		return *this;
-	}
-
-	Vector3f& operator-(const Vector3f &value)
-	{
-		x -= value.x;
-		y -= value.y;
-		z -= value.z;
-		return *this;
-	}
-
-	Vector3f& operator-(const float value)
-	{
-		x -= value;
-		y -= value;
-		z -= value;
-		return *this;
-	}
-	
-	Vector3f& operator/(const Vector3f &value)
-	{
-		x /= value.x;
-		y /= value.y;
-		z /= value.z;
-		return *this;
-	}
-
-	Vector3f& operator/(const float value)
-	{
-		x /= value;
-		y /= value;
-		z /= value;
-		return *this;
-	}
-
-	Vector3f& operator*(const Vector3f &value)
-	{
-		x *= value.x;
-		y *= value.y;
-		z *= value.z;
-		return *this;
-	}
-
-	Vector3f& operator*(const float value)
-	{
-		x *= value;
-		y *= value;
-		z *= value;
-		return *this;
-	}
-
-	float operator[](int index) const
-	{
-		if(index == 0)
-		{
-			return x;
-		}
-		if(index == 1)
-		{
-			return y;
-		}
-		return z;
-	}
-
-	//BOOL OPERATORS
-	bool Vector3f::operator==(const Vector3f &value) const
-	{
-		if(this->x == value.x && this->y == value.y && this->z == value.z)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	bool Vector3f::operator!=(const Vector3f &value) const
-	{
-		return !(*this == value);
-	}
-
-	Vector3f operator-() const
-	{
-		return Vector3f(-x, -y, -z);
-	}
-
-	//FUNCTIONS
-	float Vector3f::Magnitude()
-	{
-		return sqrt(x * x + z * z + y * y);
-	}
-
-	float Vector3f::Dot(const Vector3f &value)
-	{
-		return x * value.x + y * value.y + z * value.z;
-	}
-
-	Vector3f Vector3f::Normalize()
-	{
-		float length = this->Magnitude();
-		return Vector3f(x/length, y/length, z/length);
-	}
-
-
-	Vector3f Vector3f::Cross(const Vector3f &value) const 
-	{	
-		Vector3f res;
-		res.x = y * value.z - z * value.y;
-		res.y = -x * value.z + z * value.x;
-		res.z = x * value.y - y * value.x;
-		return res;
-	}
-
-	//Friend operators
-	friend Vector3f Vector3f::operator*(const float factor, const Vector3f& value)
-	{
-		Vector3f res;
-		res.x = factor * value.x;
-		res.y = factor * value.y;
-		res.z = factor * value.z;
-		return res;
-	}
-
-	friend Vector3f Vector3f::operator+(const float scale, const Vector3f& v)
-	{
-		Vector3f res(v.x, v.y, v.z);
-		res.x += scale;
-		res.y += scale;
-		res.z += scale;
-		return res;
-	}
-
-	friend Vector3f Vector3f::operator-(const float scale, const Vector3f& v)
-	{
-		Vector3f res(v.x, v.y, v.z);
-		res.x -= scale;
-		res.y -= scale;
-		res.z -= scale;
-		return res;
-	}
-
-
-	float& Vector3f::operator[](int i) 
-	{
-		float *p = &x; 
-		return p[i]; 
-	}
-
-
-	//NEW ONES
-	Vector3f Vector3f::operator + (const Vector3f &value) const
-	{
-		return Vector3f(x + value.x, y + value.y, z + value.z);
-	}
-
-	Vector3f Vector3f::operator*(float factor) const 
-	{
-		return Vector3f(z * factor, y * factor, z * factor);
-	}
-
-	Vector3f operator=(const Vector3f & v) const
-	{
-		Vector3f res;
-		res.x = v.x;
-		res.y = v.y;
-		res.z = v.z;
-		return res;
-	}
-	/*const Vector3f &Vector3f::operator*=(float scale) 
-	{
-		x = x * scale;
-		y = y * scale;
-		z = z * scale;
-		return *this;
-	}*/
-
-
-		
-
-/*
-	Vector3f operator=(const Vector3f & v) const
-	{
-		Vector3f res;
-		res.x = v.x;
-		res.y = v.y;
-		res.z = v.z;
-		return res;
-	}
-	Vector3f operator+(const Vector3f & v) const
-	{
-		Vector3f res;
-		res.x = x + v.x;
-		res.y = y + v.y;
-		res.z = z + v.z;
-		return res;
 	}
 
 	friend Vector3f Vector3f::operator*(const float c, const Vector3f & v)
@@ -1825,265 +1550,120 @@ struct Vector3f
 		y *= scale;
 		z *= scale;
 		return *this;
-	}*/
+	}
+	Vector3f& Vector3f::operator/=(float scale) 
+	{
+		x /= scale;
+		y /= scale;
+		z /= scale;
+		return *this;
+	}
+	Vector3f& Vector3f::operator+=(const Vector3f &other)
+	{
+		x += other.x;
+		y += other.y;
+		z += other.z;
+		return *this;
+	}
+	const Vector3f &Vector3f::operator-=(const Vector3f &other) 
+	{
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+		return *this;
+	}
+	Vector3f operator+(const Vector3f & v) const
+	{
+		Vector3f res;
+		res.x = x + v.x;
+		res.y = y + v.y;
+		res.z = z + v.z;
+		return res;
+	}
+
+	Vector3f operator-(const Vector3f & v) const
+	{
+		Vector3f res;
+		res.x = x - v.x;
+		res.y = y - v.y;
+		res.z = z - v.z;
+		return res;
+	}
+
+
+	//METHODS
+	void Vector3f::Set(float dx, float dy, float dz)
+	{
+		x = dx; y = dy; z = dz;
+	}
+	void Vector3f::Set(Vector3f& v)
+	{
+		x = v.x; y = v.y; z = v.z;
+	}
+	void Vector3f::Set(const Vector3f & v)
+	{
+		x = v.x; y = v.y; z = v.z;
+	}
+	
+		//FUNCTIONS
+	float Vector3f::Magnitude()
+	{
+		return sqrt(x * x + z * z + y * y);
+	}
+
+	float Vector3f::Dot(const Vector3f &value)
+	{
+		return x * value.x + y * value.y + z * value.z;
+	}
+
+	Vector3f Vector3f::Normalize()
+	{
+		float length = this->Magnitude();
+		return Vector3f(x/length, y/length, z/length);
+	}
+
+
+	Vector3f Vector3f::Cross(const Vector3f &value) const 
+	{	
+		Vector3f res;
+		res.x = y * value.z - z * value.y;
+		res.y = -x * value.z + z * value.x;
+		res.z = x * value.y - y * value.x;
+		return res;
+	}
+
+	//EXTRA
+
+	float Vector3f::operator[](int index) const 
+	{
+		if(index == 0)
+		{
+			return x;
+		}
+		if(index == 1)
+		{
+			return y;
+		}
+		return z;
+	}
+
+	float& Vector3f::operator[](int i) 
+	{
+		float *p = &x; 
+		return p[i]; 
+	}
+
+	Vector3f Vector3f::operator/(float scale) const 
+	{
+		return Vector3f(x / scale, y / scale, z / scale);
+	}
+
+	Vector3f Vector3f::operator-() const
+	{
+		return Vector3f(-x, -y, -z);
+	}
+
 };
 
-
-	//OLD VECTOR; NOT IN USE; Some non working operators and so on, messed up!
-	/*struct Vector3f 
-	{
-		float x, y, z;
-		Vector3f::Vector3f(float dx = 0, float dy = 0, float dz = 0)
-		{
-			this->x = dx;
-			this->y = dy; 
-			this->z= dz;
-		}
-
-		//OPERATORS
-		void Vector3f::operator=(Vector3f vec)
-		{
-			x = vec.x;
-			y = vec.y;
-			z = vec.z;
-		}
-
-		friend Vector3f Vector3f::operator*(const float c, const Vector3f & v)
-		{
-			Vector3f res;
-			res.x = c * v.x;
-			res.y = c * v.y;
-			res.z = c * v.z;
-			return res;
-		}
-
-		Vector3f Vector3f::operator*(const float c) const
-		{
-			Vector3f res;
-			res.x = c * x;
-			res.y = c * y;
-			res.z = c * z;
-			return res;
-		}
-
-
-		const Vector3f &Vector3f::operator*=(float scale) 
-		{
-			x *= scale;
-			y *= scale;
-			z *= scale;
-			return *this;
-		}
-		const Vector3f &Vector3f::operator/=(float scale) 
-		{
-			x /= scale;
-			y /= scale;
-			z /= scale;
-			return *this;
-		}
-		const Vector3f &Vector3f::operator+=(const Vector3f &other)
-		{
-			x += other.x;
-			y += other.y;
-			z += other.z;
-			return *this;
-		}
-		const Vector3f &Vector3f::operator-=(const Vector3f &other) 
-		{
-			x -= other.x;
-			y -= other.y;
-			z -= other.z;
-			return *this;
-		}
-		Vector3f operator+(const Vector3f & v) const
-		{
-			Vector3f res;
-			res.x = x + v.x;
-			res.y = y + v.y;
-			res.z = z + v.z;
-			return res;
-		}
-
-
-
-		Vector3f operator-(const Vector3f & v) const
-		{
-			Vector3f res;
-			res.x = x - v.x;
-			res.y = y - v.y;
-			res.z = z - v.z;
-			return res;
-		}
-
-		Vector3f operator=(const Vector3f & v) const
-		{
-			Vector3f res;
-			res.x = v.x;
-			res.y = v.y;
-			res.z = v.z;
-			return res;
-		}
-		//METHODS
-		void Vector3f::Cout()
-		{
-			std::cout << "X Y Z: " << x << ", " << y << ", " << z << std::endl;
-		}
-		void Vector3f::Set(float dx, float dy, float dz)
-		{
-			x = dx; y = dy; z = dz;
-		}
-		void Vector3f::Set(Vector3f& v)
-		{
-			x = v.x; y = v.y; z = v.z;
-		}
-		void Vector3f::Set(const Vector3f & v)
-		{
-			x = v.x; y = v.y; z = v.z;
-		}
-		void Vector3f::Normalize() 
-		{
-			float nInv = 1.0f / sqrt(x * x + y * y + z * z); 
-			x *= nInv; 
-			y *= nInv; 
-			z *= nInv;
-		}
-		
-		Vector3f Vector3f::NormalizeNew() const 
-		{
-			float length = sqrt(x * x + y * y + z * z);
-			return Vector3f(x / length, y / length, z / length);
-		}
-
-		Vector3f Vector3f::Normalize(int zero) const 
-		{
-			float length = sqrt(x * x + y * y + z * z);
-			return Vector3f(x / length, y /length, z / length);
-		}
-		Vector3f Vector3f::Cross(const Vector3f & v) const 
-		{	
-			Vector3f res;
-			res.x = y * v.z - z * v.y;
-			res.y = -x * v.z + z * v.x;
-			res.z = x * v.y - y * v.x;
-			return res;
-		}
-		Vector3f Vector3f::ColorCode() const
-		{
-			Vector3f temp(*this);
-			temp.Normalize();
-			temp = temp * 0.5 + Vector3f(0.5, 0.5, 0.5);
-			return temp;
-		}
-		float Vector3f::Dot(const Vector3f & v) const
-		{
-			return x * v.x + y * v.y + z * v.z;
-		}
-
-		float& Vector3f::operator[](int i) 
-		{
-			float *p = &x; 
-			return p[i]; 
-		}
-
-		float Vector3f::magnitude() const 
-		{
-			return sqrt(x * x + z * z + y * y);
-		}
-
-		//EXTRA
-
-		float Vector3f::operator[](int index) const 
-		{
-			if(index == 0)
-			{
-				return x;
-			}
-			if(index == 1)
-			{
-				return y;
-			}
-			return z;
-		}
-
-		Vector3f Vector3f::operator*(float scale) const 
-		{
-			return Vector3f(v[0] * scale, v[1] * scale, v[2] * scale);
-		}
-
-
-
-		Vector3f Vector3f::operator/(float scale) const 
-		{
-			return Vector3f(x / scale, y / scale, z / scale);
-		}
-
-		Vector3f Vector3f::operator+(const Vector3f &other) const 
-		{
-			return Vector3f(v[0] + other.v[0], v[1] + other.v[1], v[2] + other.v[2]);
-		}
-
-
-		Vector3f Vector3f::operator-(const Vector3f &other) const 
-		{
-			return Vector3f(x - other.x, y - other.y, z - other.z);
-		}
-
-		Vector3f Vector3f::operator-() const
-		{
-			return Vector3f(-x, -y, -z);
-		}
-
-
-			const Vector3f &Vector3f::operator*=(float scale) 
-		{
-			x *= scale;
-			y *= scale;
-			z *= scale;
-			return *this;
-		}
-
-		const Vector3f &Vector3f::operator/=(float scale) 
-		{
-			x /= scale;
-			y /= scale;
-			z /= scale;
-			return *this;
-		}
-
-		const Vector3f &Vector3f::operator+=(const Vector3f &other)
-		{
-			x += other.x;
-			y += other.y;
-			z += other.z;
-			return *this;
-		}
-	};*/
-
-/*	struct F3Vector  //Float 3d-vect, normally used
-	{
-		float x,y,z;
-		
-		F3Vector operator+ (F3Vector v, F3Vector u)
-		{
-			F3Vector res;
-			res.x = v.x+u.x;
-			res.y = v.y+u.y;
-			res.z = v.z+u.z;
-			return res;
-		}
-	};
-<<<<<<< HEAD
-*/
-
-	/*std::ostream &operator << (std::ostream& out, const  cgl::Vector3f& c)
-	{
-		out << "(" << ")";
-		return out;
-	}*/
-
-
-
-////=======
-////>>>>>>> c118ce887b5464c1d915179e4bb74f1e15e24d61
 }
 #endif

@@ -3,8 +3,8 @@
 void Initialize()
 {
 	ReadConfigurationFile();		//Reads data from textfile "config.txt"
-	InitializeGame();				//Creates the window, etc.
 	InitializeRender();
+	InitializeGame();				//Creates the window, etc.
 }
 
 void ReadConfigurationFile()
@@ -115,6 +115,10 @@ void InitializeRender()
 	text->RGB[1] = 0.5f;
 	text->RGB[2] = 0.9f;		//Blue-ish color on text drawn
 
+	terrainTile = new cgl::Image2D();
+	terrainTile->LoadBMP("Data/snake.bmp");
+
+
 	gamestate = 0 ;				//Drawing main menu first
 
 	//Init 3D stuff like weather, models for a player... Game relevant objects
@@ -123,6 +127,7 @@ void InitializeRender()
 	weather = new cgl::Weather(RGB, 150, 5);
 	weatherTexture = new cgl::Image2D();
 	weatherTexture->LoadBMP("Data/Snow.bmp");
+	weather->type = cgl::WeatherType::SNOW;
 	weather->SetTextures(weatherTexture->ID, weatherTexture->ID);
 
 	//INIT 3D terrain
@@ -136,15 +141,14 @@ void InitializeRender()
 
 void InitializeGame()
 {
-	//Loading of an MD2 model file, works, at least no errors, but I cannot get it to be drawn... Reading fails, every vertice/position seems to be "0".
-	//test = MD2Model::load("Data/rock.md2");
-
-	//cgl::Image2D* img = new cgl::Image2D();
-	//img->LoadBMP("Data/rock.bmp");
-	//rock = new cgl::ModelMD2("Data/rock.md2", img->ID, MD2Normals, 10);
-	//rock->SetAnimation("run");
-	//Server only holds terrain and grid, to do some calculations for collision, etc...
-	terrain = new cgl::Terrain("Data/heightmap.bmp", 10); //Would have been nice to download the image, heightmap.bmp from the server actually!
+	//Init a projectile with texture [BANANA]
+	cgl::Image2D* bananaTexture = new cgl::Image2D();
+	bananaTexture->LoadBMP("Data/banana.bmp");
+	bananaModel = new cgl::Model("Data/banana.md2", bananaTexture->ID, 0.002, MD2Normals);
+	delete bananaTexture;
+	//ProjectileBullet[] gets inited when we have read max players
+	
+	terrain = new cgl::Terrain("Data/heightmap.bmp", 7, terrainTile->ID); //Would have been nice to download the image, heightmap.bmp from the server actually!
 																					//It is actually kind of easy, just sending over "img->dataBMP"... bit by bit... :)
 	grid = new cgl::Grid(terrain, cgl::GridSize::SEVERAL);						//FEW SEVERAL LOTS
 	music = new cgl::Sound("birchtheme.wav", true, true);
@@ -153,11 +157,6 @@ void InitializeGame()
 	client = new cgl::NetworkClient(JOINADDRESS, cgl::s2i(JOINPORTNUMBER));
 	SERVERNAME = client->host;
 
-	//cgl::Image2D* unitTexture = new cgl::Image2D();
-	//unitTexture->LoadBMP("Data/snake.bmp");
-	//delete unitTexture
-
-//	modd2 = new cgl::ModelMD2("Data/snake.md2", unitTexture->ID, 0.125f);
 	float rgb[3]  = { 0.7f, 0.0f, 0.0f };
 	projectilepl1 = new cgl::Projectile(rgb, 15.0, 15, 10, 1.0, 2.0);
 

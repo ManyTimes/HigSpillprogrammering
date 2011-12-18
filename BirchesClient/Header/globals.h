@@ -55,6 +55,9 @@ extern cgl::Sound* soundAttack;				//Sound played when you attack (throw)
 extern cgl::Sound* soundHit;				//Sound played when you are hit
 extern cgl::Image2D* imgMenu;	
 extern cgl::Image2D* imgBackground;
+extern cgl::Image2D* terrainTile;		
+extern cgl::ProjectileBullet* projectileBanana;
+extern cgl::Model* bananaModel;
 extern cgl::Weather* weather;
 extern cgl::Image2D* weatherTexture;		//Loads a texture from the harddrive
 extern cgl::Projectile* projectilepl1;

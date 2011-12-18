@@ -30,6 +30,8 @@ namespace cgl
 			void SimpleCamera::MoveCameraUp(float distance, float direction);
 			void SimpleCamera::Move();
 		public:
+			float SimpleCamera::GetYaw();
+			void SimpleCamera::SetYaw(float yaw);
 			cgl::Vector3f position;
 			bool AllowMovement;
 			bool lockViewAngleTopBottom;

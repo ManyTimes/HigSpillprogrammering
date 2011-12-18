@@ -14,10 +14,11 @@ void SendDataBackward();
 void SendDataLeft();
 void SendDataRight();
 void SendDataShoot();
+void SendHasLeftTheGame();
 
 //Helper functions
 int GetIntValue(char end);
-int GetFloatValue(char end);
+float GetFloatValue(char end);
 std::string GetStringValue(char end);
 void GetVector3fValue(char end);
 #endif

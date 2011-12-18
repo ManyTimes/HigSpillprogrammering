@@ -55,33 +55,37 @@ void RenderGame()
 	opengl->CreateViewport(true, 800,500,0,100,0.0f, 500.0f);
 	if(thisPlayer > -1)
 	{							//FPS camera in-game
+		simpleCamera[thisPlayer].position.y = 2 + terrain->GetHeight(unit[thisPlayer].position.x, unit[thisPlayer].position.z);
 		simpleCamera[thisPlayer].Update(DISABLEMOUSECONTROL);
 	}
 	
 	terrain->Draw(0.0);
 	//DrawGround(imgbtnStart->ID);
 	float velocity[3];
-	velocity[0] = velocity[2] = cgl::GetRandomFloat(-0.1, 0.1);
-	velocity[1] = cgl::GetRandomFloat(-.015, -0.03);
+	velocity[0] = velocity[2] = cgl::GetRandomFloat(0.001, 0.1);
+	velocity[1] = cgl::GetRandomFloat(-.020, -0.035);
 	float position[3];
-	position[0] = cgl::GetRandomFloat(10.0, 50.0);
-	position[2] = cgl::GetRandomFloat(10.0, 50.0);
+	position[0] = cgl::GetRandomFloat(4.0, 60.0);
+	position[2] = cgl::GetRandomFloat(4.0, 60.0);
 	position[1] = 10;
 	weather->StartOneParticle(velocity, position);
 
 
+
 	for(int i = 0; i < MAXIMUMPLAYERS; i++)
 	{
-			if(thisPlayer > -1)				//Not drawing ourselves [FPS mode]
+		if(player[i].ID > -1)		//ID must be set
+		{
+			unit[i].position.y = terrain->GetHeight(unit[i].position.x, unit[i].position.z) + 2;
+			if(thisPlayer > -1)		//This player must be also set		
 			{
-				glDisable(GL_DEPTH_TEST);
-				unit[i].position = (i*1.5);
-				if(i == 0)
+				if(i != thisPlayer)	//Not drawing ourselves [FPS mode]
 				{
-					unit[i].position.Cout();	
+					unit[i].Draw();
 				}
-				unit[i].Draw();
 			}
+			projectileBanana[i].Draw();
+		}
 	}
 	weather->Draw();
 

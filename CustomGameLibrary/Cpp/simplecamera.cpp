@@ -51,6 +51,16 @@ namespace cgl
 		cgl::Cout("SimpleCamera, use a pointer and initialize it with its constructor");
 	}
 
+	float SimpleCamera::GetYaw()
+	{
+		return this->camYaw;
+	}
+
+	void SimpleCamera::SetYaw(float yaw)
+	{
+		this->camYaw = yaw;
+	}
+
 	//INITALIZE CAMERA SETTINGS
 	void SimpleCamera::Initialize(float movespeed, float mousevelocity)
 	{

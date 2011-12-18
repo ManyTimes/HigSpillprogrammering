@@ -36,8 +36,9 @@ cgl::Image2D* imgbtnStart;			//Texture for the btnStart
 cgl::Image2D* imgbtnStartClicked;	//Texture for the btnStart
 cgl::Image2D* imgMenu;				//Image that is displayed top right/left, "Menu (F10)" while playing
 cgl::Image2D* imgBackground;		//Background image for our game
-cgl::Image2D* imgbtnQuitGame;			//Image 
-cgl::Image2D* imgbtnQuitGameClicked;	//Image
+cgl::Image2D* imgbtnQuitGame;		//Image 
+cgl::Image2D* terrainTile;			//Terrain textrure
+cgl::Image2D* imgbtnQuitGameClicked;//Image
 cgl::Button* btnStart;				//Joins server and starts drawing game
 cgl::Button* btnExit;				//An Exit program button
 cgl::Button* btnCancel;				//An Exit program button
@@ -57,6 +58,8 @@ cgl::Image2D* weatherTexture;
 cgl::Projectile* projectilepl1;
 //cgl::ModelMD2* modd2;
 cgl::Model3D mod3d;
+cgl::ProjectileBullet* projectileBanana;
+cgl::Model* bananaModel;
 //GAME/SERVER DATA
  int gamestate;						//0 = mainmenu, 1 = game, 2 = game + menu drawn above it (cancel/exit)
 

@@ -8,6 +8,7 @@ namespace cgl
 		this->model3d = NULL;
 		this->modelmd2 = NULL;
 		this->scalingValue = 1.0f;
+		this->angleIsOffset = false;
 	}
 	
 	void Model::DrawNull()
@@ -200,6 +201,7 @@ namespace cgl
 		this->modelmd2 = new ModelMD2(modelFilenameMD2, textureID, animationSpeed);
 		this->modeltype = 1;
 		this->scalingValue = 1.0f;
+		this->angleIsOffset = false;
 	}
 
 	Model::Model(char* modelFilenameMD2, GLuint textureID, float animationSpeed, float normals[])
@@ -207,6 +209,7 @@ namespace cgl
 		this->modelmd2 = new ModelMD2(modelFilenameMD2, textureID, animationSpeed);
 		this->modeltype = 1;
 		this->scalingValue = 1.0f;
+		this->angleIsOffset = false;
 	}
 	/////////////////////// MD2 MODEL END
 
@@ -216,6 +219,7 @@ namespace cgl
 		this->model3d = new Model3D(modelFilename3DS);
 		this->modeltype = 2;
 		this->scalingValue = 1.0f;
+		this->angleIsOffset = false;
 	}
 	
 	void Model::Load(char* modelFilename3DS)

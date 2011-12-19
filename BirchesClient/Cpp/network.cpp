@@ -176,7 +176,7 @@ void SendDataShoot(int type)
 				position = unit[thisPlayer].GetPosition();
 			else position = simpleCamera[thisPlayer].position;
 
-			tempvec *= 0.01;
+			tempvec *= 4;
 
 			temp = "2c" + cgl::i2s(thisPlayer) + "|" +
 				cgl::f2s(position.x) + "|" +
@@ -546,6 +546,7 @@ void ReadData()
 					projectileArc[playernumber].Initialize(tempvec, tempvec2, (cgl::projectileType)GetIntValue('|'));
 					//projectileBanana[playernumber].position =tempvec;
 				}
+				break;
 			default:
 				break;
 			}

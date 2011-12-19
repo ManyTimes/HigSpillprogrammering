@@ -7,7 +7,7 @@ void Update()
 	{
 		if(player[i].ID > -1)		//ID must be set
 		{
-			projectileArc[i].Move(-0.01);
+			projectileArc[i].Move(0.075);
 		}
 	}
 	if(projectileArc)

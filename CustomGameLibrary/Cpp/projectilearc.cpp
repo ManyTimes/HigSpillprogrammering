@@ -5,6 +5,7 @@ namespace cgl
 	ProjectileArc::ProjectileArc(Vector3f start, Vector3f speed, projectileType type)
 	{
 		SetPosition(start);
+		model->SetPosition(start);
 		this->velocity = speed;
 		this->moveType = type;
 		this->model = NULL;
@@ -20,6 +21,7 @@ namespace cgl
 	void ProjectileArc::Initialize(Vector3f start, Vector3f speed, projectileType type)
 	{
 		SetPosition(start);
+		model->SetPosition(start);
 		this->velocity = speed;
 		this->moveType = type;
 	}
@@ -35,6 +37,7 @@ namespace cgl
 		{
 		case ARC:
 				AddPosition(velocity);
+				model->AddPosition(velocity);
 				velocity.y -= gravity;
 				break;
 		default: 

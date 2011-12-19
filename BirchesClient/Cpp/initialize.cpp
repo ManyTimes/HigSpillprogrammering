@@ -148,6 +148,7 @@ void InitializeGame()
 	bananaTexture->LoadBMP("Data/banana.bmp");
 	bananaModel = new cgl::Model("Data/banana.md2", bananaTexture->ID, 0.002, MD2Normals);
 	headModel = new cgl::Model("Data/TestModel.3ds");
+	headModel->SetScale(0.1,0.1,0.1);
 	delete bananaTexture;
 	//ProjectileBullet[] gets inited when we have read max players
 	

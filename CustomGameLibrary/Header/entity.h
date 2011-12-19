@@ -41,7 +41,7 @@ namespace cgl
 		void Entity::SetPosition(float p[3]);
 		void Entity::SetPosition(Vector3f p);
 		void Entity::AddPosition(Vector3f v);
-		void Entity::SetAngles(float roll, float yaw, float pitch);
+		void Entity::SetAngles(float pitch, float yaw, float roll);
 		void Entity::SetAngles(float p[3]);
 		void Entity::SetAngles(Vector3f p);
 		void Entity::SetScale(float x, float y, float z);

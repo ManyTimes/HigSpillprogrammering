@@ -21,6 +21,7 @@ extern std::string messageFeedback;
 extern bool DISABLEMOUSECONTROL;
 extern bool SERVERRESPONSE;
 extern bool ISCONNECTED;
+extern bool THIRDPERSONCAMERA;
 
 
 
@@ -57,7 +58,9 @@ extern cgl::Image2D* imgMenu;
 extern cgl::Image2D* imgBackground;
 extern cgl::Image2D* terrainTile;		
 extern cgl::ProjectileBullet* projectileBanana;
+extern cgl::ProjectileArc* projectileArc;
 extern cgl::Model* bananaModel;
+extern cgl::Model* headModel;
 extern cgl::Weather* weather;
 extern cgl::Image2D* weatherTexture;		//Loads a texture from the harddrive
 extern cgl::Projectile* projectilepl1;

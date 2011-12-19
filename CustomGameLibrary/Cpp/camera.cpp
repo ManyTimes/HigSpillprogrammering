@@ -2,13 +2,14 @@
 
 namespace cgl
 {
-	Camera::Camera(Vector3f startLocationXYZ, Vector3f horizontalLookAtXYZ, int resolutionHeight, int resolutionWidth, float nearDistance, float farDistance)
+	Camera::Camera(Vector3f startLocationXYZ, Vector3f horizontalLookAtXYZ, int resolutionHeight, int resolutionWidth, float nearDistance, float farDistance, cgl::Mouse *mouse)
 	{
 		Vector3f verticalLook(0,1,0);
 		this->screenHeight = resolutionHeight;
 		this->screenWidth = resolutionWidth;
 		this->SetShape(50.0f, this->screenWidth/this->screenHeight,nearDistance, farDistance);
 		this->Set(startLocationXYZ, horizontalLookAtXYZ, verticalLook);
+		this->mousept = mouse;
 	}
 
 	void Camera::SetModelViewMatrix()
@@ -182,13 +183,22 @@ namespace cgl
 
 	void Camera::ThirdPersonCameraUpdate()
 	{
+		// Update the mouse movements
+		Move();
+
+		// Perform thirdperson calculations.
+		if(!thirdPerson.target)
+		{
+			cgl::Cout("ThirdPerson camera used without a target. Set one with camera->SetThirdPersonTarget(unit);");
+			return;
+		}
 		Vector3f result;
 		Vector3f position = thirdPerson.target->GetPosition();
 		Vector3f offset = thirdPerson.offset;
 
 		result.z = thirdPerson.distance * thirdPerson.target->GetScale().x;
 
-		result = thirdPerson.matrix * result;//uniform * result; //
+		result = thirdPerson.matrix * result;
 		offset = *thirdPerson.target->GetMatrix() * offset;
 
 		position += offset;
@@ -271,6 +281,45 @@ namespace cgl
 			thirdPerson.angles[ROLL] += 360.0f;
 
 		UpdateThirdPersonMatrix();
+	}
+
+	void Camera::Move()
+	{
+		static bool first = true;							// First time mouse enters screen.
+		static int old_x = 0, old_y = 0;
+		int pos_x, pos_y;
+		int x = mousept->GetCursorPositionX();
+		int y = mousept->GetCursorPositionY();
+
+		glfwGetWindowSize( &pos_x, &pos_y);
+		pos_x /= 2;
+		pos_y /= 2;
+
+		if(first)											// First time, center the mouse.
+		{
+			mousept->SetCursorPosition(pos_x,pos_y);
+			old_x = pos_x;
+			old_y = pos_y;
+			first = false;
+			return;
+		}
+
+		// We're using simplecamera for first person, so I'll just worry about the thirdperson here.
+		if((x-old_x) != 0)
+			ThirdPersonRotateYaw((old_x-x)/2.0f);
+			
+		if((y-old_y) != 0)
+			ThirdPersonRotatePitch((old_y-y)/2.0f);
+
+		if(x != old_x || y != old_y)
+		{
+			mousept->SetCursorPosition(pos_x,pos_y);
+			x = old_x=pos_x;
+			y = old_y=pos_y;
+		}
+
+		old_x = x;
+		old_y = y;
 	}
 
 	Matrix* Camera::GetTPMatrix()

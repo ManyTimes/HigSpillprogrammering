@@ -55,8 +55,15 @@ void RenderGame()
 	opengl->CreateViewport(true, 800,500,0,100,0.0f, 500.0f);
 	if(thisPlayer > -1)
 	{							//FPS camera in-game
-		simpleCamera[thisPlayer].position.y = 2 + terrain->GetHeight(unit[thisPlayer].position.x, unit[thisPlayer].position.z);
-		simpleCamera[thisPlayer].Update(DISABLEMOUSECONTROL);
+		if(!THIRDPERSONCAMERA)
+		{
+			simpleCamera[thisPlayer].position.y = 2 + terrain->GetHeight(unit[thisPlayer].position.x, unit[thisPlayer].position.z);
+			simpleCamera[thisPlayer].Update(DISABLEMOUSECONTROL);
+		}
+		else
+		{
+			camera->ThirdPersonCameraUpdate();
+		}
 	}
 	
 	terrain->Draw(0.0);
@@ -76,15 +83,19 @@ void RenderGame()
 	{
 		if(player[i].ID > -1)		//ID must be set
 		{
-			unit[i].position.y = terrain->GetHeight(unit[i].position.x, unit[i].position.z) + 2;
+			//unit[i].position.y = terrain->GetHeight(unit[i].position.x, unit[i].position.z) + 2;
+			cgl::Vector3f position = unit[i].GetPosition();
+			position.y = terrain->GetHeight(unit[i].position.x, unit[i].position.z) + 2;
+			unit[i].SetPosition(position);
 			if(thisPlayer > -1)		//This player must be also set		
 			{
-				if(i != thisPlayer)	//Not drawing ourselves [FPS mode]
+				if(i != thisPlayer || THIRDPERSONCAMERA)	//Not drawing ourselves [FPS mode] - Unless in thirdperson
 				{
 					unit[i].Draw();
 				}
 			}
 			projectileBanana[i].Draw();
+			projectileArc[i].Draw();
 		}
 	}
 	weather->Draw();

@@ -57,7 +57,9 @@ void InitializeRender()
 	mouse = cgl::Mouse::GetInstance(SCREENWIDTH, SCREENHEIGHT);
 	keyboard = cgl::Keyboard::GetInstance();
 
-	camera = new cgl::Camera(cgl::Vector3f(0.0, 1.0, -100.0), cgl::Vector3f(0.0, 0.0, 0.0), 500,800, 0.01, 100.0);
+	camera = new cgl::Camera(cgl::Vector3f(0.0, 1.0, -100.0), cgl::Vector3f(0.0, 0.0, 0.0), 500,800, 0.01, 100.0, mouse);
+	// Setup thirdperson camera settings, for now:
+	camera->SetupThirdPersonCamera(NULL, 10.0f, cgl::Vector3f(0.0f, 2.0f, 0.0f), true);
 
 	
 	//Load Images for the buttons
@@ -145,6 +147,7 @@ void InitializeGame()
 	cgl::Image2D* bananaTexture = new cgl::Image2D();
 	bananaTexture->LoadBMP("Data/banana.bmp");
 	bananaModel = new cgl::Model("Data/banana.md2", bananaTexture->ID, 0.002, MD2Normals);
+	headModel = new cgl::Model("Data/TestModel.3ds");
 	delete bananaTexture;
 	//ProjectileBullet[] gets inited when we have read max players
 	

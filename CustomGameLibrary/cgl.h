@@ -75,11 +75,13 @@
 #ifdef _CGLPROGRAM
 #include "../../CustomGameLibrary/Header/projectile.h"
 #include "../../CustomGameLibrary/Header/projectilebullet.h"
+#include "../../CustomGameLibrary/Header/projectilearc.h"
 #include "../../CustomGameLibrary/Header/unit.h"
 #include "../../CustomGameLibrary/Header/entity.h"
 #else
 #include "Header/projectile.h"
 #include "Header/projectilebullet.h"
+#include "Header/projectilearc.h"
 #include "Header/unit.h"
 #include "Header/entity.h"
 #endif

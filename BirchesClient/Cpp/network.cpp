@@ -55,11 +55,20 @@ void SendDataForward()
 	{
 		return;
 	}
-	simpleCamera[playernumber].MoveForward(0.25);
+	if(!THIRDPERSONCAMERA)
+		simpleCamera[thisPlayer].MoveForward(0.25);
+	else
+	{
+		unit[thisPlayer].AddPosition((unit[thisPlayer].GetMatrix()->GetForwardVector())*-1);//*-MOVEMENT_SPEED);
+		simpleCamera[thisPlayer].position = unit[thisPlayer].GetPosition();
+	}
 	if(hasSent[0] == false)				//Even if events, click action fires multiple times, we send only once per game-loop-sequence
 	{
 		//Send pos XZ to server
-		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		if(!THIRDPERSONCAMERA)
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		else 
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(unit[thisPlayer].position.x) + "|" + cgl::f2s(unit[thisPlayer].position.z));
 		//client->SendData("1W" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[0] = true;
 	}
@@ -71,11 +80,20 @@ void SendDataBackward()
 	{
 		return;
 	}
-	simpleCamera[playernumber].MoveBackwards(0.25);
+	if(!THIRDPERSONCAMERA)
+		simpleCamera[thisPlayer].MoveBackwards(0.25);
+	else
+	{
+		unit[thisPlayer].AddPosition((unit[thisPlayer].GetMatrix()->GetForwardVector()));//*-MOVEMENT_SPEED);
+		simpleCamera[thisPlayer].position = unit[thisPlayer].GetPosition();
+	}
 	if(hasSent[1] == false)
 	{	
-		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
-		//client->SendData("1S" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
+		if(!THIRDPERSONCAMERA)
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		else 
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(unit[thisPlayer].position.x) + "|" + cgl::f2s(unit[thisPlayer].position.z));
+	//client->SendData("1S" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[1] = true;
 	}
 }
@@ -86,10 +104,19 @@ void SendDataLeft()
 	{
 		return;
 	}
-	simpleCamera[playernumber].MoveStrafeLeft(0.25);
+	if(!THIRDPERSONCAMERA)
+		simpleCamera[thisPlayer].MoveStrafeLeft(0.25);
+	else 
+	{
+		unit[thisPlayer].AddPosition((unit[thisPlayer].GetMatrix()->GetRightVector())*-1);//*-MOVEMENT_SPEED);
+		simpleCamera[thisPlayer].position = unit[thisPlayer].GetPosition();
+	}
 	if(hasSent[2] == false)	
 	{
-		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		if(!THIRDPERSONCAMERA)
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		else 
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(unit[thisPlayer].position.x) + "|" + cgl::f2s(unit[thisPlayer].position.z));
 		//client->SendData("1A" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));		//Moving X negative Player
 		hasSent[2] = true;
 	}
@@ -101,16 +128,25 @@ void SendDataRight()
 	{
 		return;
 	}
-	simpleCamera[playernumber].MoveStrafeRight(0.25);
+	if(!THIRDPERSONCAMERA)
+		simpleCamera[thisPlayer].MoveStrafeRight(0.25);
+	else 
+	{
+		unit[thisPlayer].AddPosition((unit[thisPlayer].GetMatrix()->GetRightVector()));//*-MOVEMENT_SPEED);
+		simpleCamera[thisPlayer].position = unit[thisPlayer].GetPosition();
+	}
 	if(hasSent[3] == false)	
 	{
-		client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		if(!THIRDPERSONCAMERA)
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" + cgl::f2s(simpleCamera[thisPlayer].position.z));
+		else 
+			client->SendData("1" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(unit[thisPlayer].position.x) + "|" + cgl::f2s(unit[thisPlayer].position.z));
 		//client->SendData("1D" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[3] = true;
 	}
 }
 
-void SendDataShoot()
+void SendDataShoot(int type)
 {
 	if(ISCONNECTED == false)
 	{
@@ -120,15 +156,38 @@ void SendDataShoot()
 	{
 		//projectileBanana[playernumber].Shoot(simpleCamera[playernumber].position, simpleCamera[playernumber].GetViewDirection(), 500);
 		temp = "";
-		tempvec = simpleCamera[playernumber].GetViewDirection();
-		temp = "2b" + cgl::i2s(thisPlayer) + "|" +
-			cgl::f2s(simpleCamera[playernumber].position.x) + "|" +
-			cgl::f2s(simpleCamera[playernumber].position.y) + "|" +
-			cgl::f2s(simpleCamera[playernumber].position.z) + "|" +
-			cgl::f2s(tempvec.x) + "|" +
-			cgl::f2s(tempvec.y) + "|" +
-			cgl::f2s(tempvec.z);
-		client->SendData(temp);
+		if(!THIRDPERSONCAMERA)
+			tempvec = simpleCamera[thisPlayer].GetViewDirection();
+		else tempvec = camera->GetTPMatrix()->GetForwardVector()*-1;
+		if(type == 0)
+		{
+			temp = "2b" + cgl::i2s(thisPlayer) + "|" +
+				cgl::f2s(simpleCamera[thisPlayer].position.x) + "|" +
+				cgl::f2s(simpleCamera[thisPlayer].position.y) + "|" +
+				cgl::f2s(simpleCamera[thisPlayer].position.z) + "|" +
+				cgl::f2s(tempvec.x) + "|" +
+				cgl::f2s(tempvec.y) + "|" +
+				cgl::f2s(tempvec.z);
+			client->SendData(temp);
+		}else if (type == 1)
+		{
+			cgl::Vector3f position;
+			if(THIRDPERSONCAMERA)
+				position = unit[thisPlayer].GetPosition();
+			else position = simpleCamera[thisPlayer].position;
+
+			tempvec *= 0.01;
+
+			temp = "2c" + cgl::i2s(thisPlayer) + "|" +
+				cgl::f2s(position.x) + "|" +
+				cgl::f2s(position.y) + "|" +
+				cgl::f2s(position.z) + "|" +
+				cgl::f2s(tempvec.x) + "|" +
+				cgl::f2s(tempvec.y) + "|" +
+				cgl::f2s(tempvec.z) + "|" + 
+				cgl::i2s(0); // arc
+			client->SendData(temp);
+		}
 		//client->SendData("2b" + cgl::i2s(thisPlayer) + "|" + cgl::f2s(simpleCamera[thisPlayer].GetYaw()));
 		hasSent[4] = true;
 		temp = "";
@@ -178,6 +237,7 @@ void ReadServerData()
 		player = new cgl::Player[MAXIMUMPLAYERS];
 		simpleCamera = new cgl::SimpleCamera[MAXIMUMPLAYERS];
 		projectileBanana = new cgl::ProjectileBullet[MAXIMUMPLAYERS];
+		projectileArc = new cgl::ProjectileArc[MAXIMUMPLAYERS];
 		opengl->SetWindowTitle(GAMENAME + ", Playing at: " + SERVERNAME);
 		for(int a = 0; a < MAXIMUMPLAYERS; a++)
 		{
@@ -270,6 +330,9 @@ void ReadServerData()
 			//unit[i].Load("Data/snake.md2", unitTexture->ID, 0.005f);
 			unit[i].Load("Data/snake.md2", unitTexture->ID, 0.009f, MD2Normals);
 			unit[i].scalingValue = 0.25f;
+			unit[i].SetAngleOffsets(-90, 90, 0);	// The model isn't loaded with head facing forward. So fixing that with an angle offset
+
+			projectileArc[i].SetModel(headModel);
 		}
 		delete unitTexture;
 	}
@@ -301,6 +364,7 @@ void ReadData()
 			if(thisPlayer == -1)
 			{
 				thisPlayer = playernumber;								//It is you who joined!
+				camera->SetThirdPersonTarget(&unit[thisPlayer]);
 			}
 			//GET PLAYERNAME
 			i++;					//Skip '|'
@@ -370,7 +434,9 @@ void ReadData()
 				simpleCamera[playernumber].position.x = x;
 				simpleCamera[playernumber].position.z = z;	
 			}
-			unit[playernumber].position = simpleCamera[playernumber].position;
+			//unit[playernumber].position = simpleCamera[playernumber].position;
+			if(!THIRDPERSONCAMERA) // Is already updated if we have a thirdperson camera active.
+				unit[playernumber].SetPosition(simpleCamera[playernumber].position);
 
 
 
@@ -458,6 +524,28 @@ void ReadData()
 					projectileBanana[playernumber].position.Cout();
 				}*/
 				break;
+			case 'c':				// Shooting stormtrooper head
+				i = 2;
+				playernumber = GetIntValue('|');
+				i++;
+				if(playernumber > -1 && playernumber < MAXIMUMPLAYERS)
+				{
+					tempvec.x = GetFloatValue('|');
+					i++;
+					tempvec.y = GetFloatValue('|');
+					i++;
+					tempvec.z =	GetFloatValue('|');
+					i++;
+					//View Direction
+					tempvec2.x = GetFloatValue('|');
+					i++;
+					tempvec2.y = GetFloatValue('|');
+					i++;
+					tempvec2.z = GetFloatValue('|');
+					i++;
+					projectileArc[playernumber].Initialize(tempvec, tempvec2, (cgl::projectileType)GetIntValue('|'));
+					//projectileBanana[playernumber].position =tempvec;
+				}
 			default:
 				break;
 			}
@@ -483,7 +571,7 @@ void ReadData()
 
 void ConnectToServer()
 {
-	if(client->Connect(1000) == false)
+	if(client->Connect(5000) == false)
 	{
 		ISCONNECTED = false;
 		messageFeedback = "Could not connect to server. Server might be down, try again later";

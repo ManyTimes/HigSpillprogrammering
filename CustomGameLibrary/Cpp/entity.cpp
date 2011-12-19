@@ -137,11 +137,11 @@ namespace cgl
 		UpdateMatrix();
 	}
 
-	void Entity::SetAngles(float roll, float yaw, float pitch) 
+	void Entity::SetAngles(float pitch, float yaw, float roll) 
 	{ 
-		angles.x = roll; 
+		angles.x = pitch; 
 		angles.y = yaw; 
-		angles.z = pitch;
+		angles.z = roll;
 		UpdateMatrix(); 
 	}
 

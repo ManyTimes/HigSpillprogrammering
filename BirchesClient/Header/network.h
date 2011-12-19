@@ -13,7 +13,7 @@ void SendDataForward();
 void SendDataBackward();
 void SendDataLeft();
 void SendDataRight();
-void SendDataShoot();
+void SendDataShoot(int type);
 void SendHasLeftTheGame();
 
 //Helper functions

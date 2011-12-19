@@ -68,7 +68,7 @@ namespace cgl
 			void ModelMD2::Load(char* modelFileName, GLuint textureID, float animationSpeed);
 			void ModelMD2::SetAnimation(char* animationName);
 			//void ModelMD2::Draw();
-			void ModelMD2::Draw(cgl::Vector3f& position, float& scale);
+			void ModelMD2::Draw(cgl::Vector3f& position, float& scale, float *m = NULL);
 			void ModelMD2::EnableNormals(bool value);
 	};
 }

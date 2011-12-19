@@ -4,7 +4,8 @@
 #include "entity.h"
 #include "include.h"
 #include "mathtool.h"
-#include "includegl.h";
+#include "includegl.h"
+#include "mouse.h"
 
 
 namespace cgl
@@ -27,12 +28,13 @@ namespace cgl
 		Vector3f u, v, n;			//Up, normal, v...
 		double viewAngle, aspect, nearDist, farDist;
 		ThirdPerson thirdPerson;	// Third person settings.
+		cgl::Mouse* mousept;
 		
 		void SetModelViewMatrix();
 	public:
 		int screenWidth;
 		int screenHeight;
-		Camera::Camera(Vector3f startLocation, Vector3f horizontalLookAt, int screenHeight, int screenWidth, float nearDistance, float farDistance);
+		Camera::Camera(Vector3f startLocation, Vector3f horizontalLookAt, int screenHeight, int screenWidth, float nearDistance, float farDistance, Mouse *mouse);
 		void Camera::Set(Vector3f Eye, Vector3f Look, Vector3f Up);
 		void Camera::Get(Vector3f & Eye, Vector3f& Look, Vector3f& Up)
 		{
@@ -81,6 +83,7 @@ namespace cgl
 		void Camera::ThirdPersonRotatePitch(float angle);			// Rotate the pitch.
 		void Camera::ThirdPersonRotateYaw(float angle);				// Rotate the yaw.
 		void Camera::ThirdPersonRotateRoll(float angle);
+		void Camera::Move();										// Keeping consistency with simplecamera, will handle mouse movements.
 		Matrix* Camera::GetTPMatrix();
 	};
 

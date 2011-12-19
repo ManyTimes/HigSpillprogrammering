@@ -21,6 +21,8 @@ bool ISCONNECTED = false;
 bool DISABLEMOUSECONTROL = false;
 bool SERVERRESPONSE = false;		//When we join, we wait for a response from server
 									//before a player can play/move/draw/render/send network stuff
+
+bool THIRDPERSONCAMERA = false;
 //GLOBAL OBJECTS
 cgl::Camera* camera;
 cgl::SimpleCamera* simpleCamera;
@@ -59,7 +61,9 @@ cgl::Projectile* projectilepl1;
 //cgl::ModelMD2* modd2;
 cgl::Model3D mod3d;
 cgl::ProjectileBullet* projectileBanana;
+cgl::ProjectileArc* projectileArc;
 cgl::Model* bananaModel;
+cgl::Model* headModel;
 //GAME/SERVER DATA
  int gamestate;						//0 = mainmenu, 1 = game, 2 = game + menu drawn above it (cancel/exit)
 

@@ -170,7 +170,7 @@ void Network()
 				z = GetFloatValue('|');
 				simpleCamera[playernumber].position.x = x;
 				simpleCamera[playernumber].position.z = z;
-				unit[playernumber].position = simpleCamera[playernumber].position;
+				unit[playernumber].SetPosition(simpleCamera[playernumber].position);
 				//Missing Y value, does not need that for calculating collision detection (as of v.1)
 
 				server->SendDataToConnectedClients(server->buffer);

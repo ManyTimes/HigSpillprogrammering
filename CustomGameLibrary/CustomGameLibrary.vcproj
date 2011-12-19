@@ -287,6 +287,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Header\projectilearc.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Header\projectilebullet.h"
 					>
 				</File>
@@ -408,6 +412,10 @@
 				</File>
 				<File
 					RelativePath=".\Cpp\projectile.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Cpp\projectilearc.cpp"
 					>
 				</File>
 				<File

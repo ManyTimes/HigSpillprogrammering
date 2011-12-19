@@ -405,11 +405,13 @@ namespace cgl
 		this->useNormals = value;
 	}
 
-	void ModelMD2::Draw(cgl::Vector3f& position, float& scale)
+	void ModelMD2::Draw(cgl::Vector3f& position, float& scale, float *m)
 	{
 		this->Animate();
 		glPushMatrix();
-		glTranslatef(position.x, position.y, position.z);
+		//glTranslatef(position.x, position.y, position.z);
+		//if(m != NULL)
+			glMultMatrixf(m);
 		glScalef(scale, scale, scale);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, this->textureID);

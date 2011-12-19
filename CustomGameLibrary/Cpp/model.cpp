@@ -19,15 +19,109 @@ namespace cgl
 	{
 		if(this->modeltype == 1)
 		{
-			this->modelmd2->Draw(this->GetPositionRef(), this->scalingValue);
+			this->UpdateMatrix();
+			if(angleIsOffset)
+				this->modelmd2->Draw(this->GetPositionRef(), this->scalingValue, (*GetMatrix() * *GetAngleMatrix()).GetMatrixf());
+			else this->modelmd2->Draw(this->GetPositionRef(), this->scalingValue, GetMatrix()->GetMatrixf());
 		}
 		else
 		{
 			if(this->modeltype == 2)
 			{
-				this->model3d->Draw(GetMatrix()->GetMatrixf());
+				if(angleIsOffset)
+					this->model3d->Draw((*GetMatrix() * *GetAngleMatrix()).GetMatrixf());
+				else this->model3d->Draw(GetMatrix()->GetMatrixf());
 			}
 		}
+	}
+
+	/////////////////COMMON
+	void Model::SetAngleOffsets(float pitch, float yaw, float roll)
+	{
+		if(pitch == 0 && yaw == 0 && roll == 0)
+			angleIsOffset = false;
+		else angleIsOffset = true;
+
+		this->angleOffset.x = pitch;
+		this->angleOffset.y = yaw;
+		this->angleOffset.z = roll;
+		UpdateAngleMatrix();
+	}
+
+	void Model::SetAngleOffsets(float p[3])
+	{
+		if(p[0] == 0 && p[1] == 0 && p[2] == 0)
+			angleIsOffset = false;
+		else angleIsOffset = true;
+
+		this->angleOffset.x = p[0];
+		this->angleOffset.y = p[1];
+		this->angleOffset.z = p[2];
+		UpdateAngleMatrix();
+	}
+
+	void Model::SetAngleOffsets(Vector3f p)
+	{
+		if(p[0] == 0 && p[1] == 0 && p[2] == 0)
+			angleIsOffset = false;
+		else angleIsOffset = true;
+
+		this->angleOffset = p;
+		UpdateAngleMatrix();
+	}
+
+	Vector3f Model::GetAngleOffsets()
+	{
+		return this->angleOffset;
+	}
+
+	void Model::UpdateAngleMatrix()
+	{
+		// Convert to radians for cos and sin functions
+		Vector3f r_angles;
+		r_angles.x = DEG2RAD(angleOffset.x);
+		r_angles.y = DEG2RAD(angleOffset.y);
+		r_angles.z = DEG2RAD(angleOffset.z);
+
+		float sa = sin(r_angles.z);
+		float ca = cos(r_angles.z);
+		float sb = sin(r_angles.x);
+		float cb = cos(r_angles.x);
+		float sh = sin(r_angles.y);
+		float ch = cos(r_angles.y);
+
+		angleMatrix[0] = ch*ca;
+		angleMatrix[1] = sa;
+		angleMatrix[2] = -sh*ca;
+
+		angleMatrix[4] = -ch*sa*cb + sh*sb;
+		angleMatrix[5] = ca*cb;
+		angleMatrix[6] = sh*sa*cb + ch*sb;
+
+		angleMatrix[8] = ch*sa*sb + sh*cb;
+		angleMatrix[9] = -ca*sb;
+		angleMatrix[10] = -sh*sa*sb + ch*cb;
+
+		angleMatrix[3] = 0;
+		angleMatrix[7] = 0;
+		angleMatrix[11] = 0;
+	}
+
+	void Model::SetAngleMatrix(float m[16])
+	{
+		angleIsOffset = true;			// Not gonna bother checking this, it's not gonna be used by us.
+		angleMatrix.SetMatrixf(m);
+	}
+
+	void Model::SetAngleMatrix(Matrix m)
+	{ 
+		angleIsOffset = true;			// Same here.
+		angleMatrix.SetMatrixf(m.GetMatrixf());
+	}
+
+	Matrix* Model::GetAngleMatrix()
+	{
+		return &angleMatrix;
 	}
 
 	/////////////////MD2 LOADING

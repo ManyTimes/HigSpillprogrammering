@@ -74,8 +74,16 @@ void KeyboardClicked()
 			if(keyboard->isKeyPressed("SPACE") == true)
 			{
 				//cgl::Vector3f& pos = unit[0].GetPositionRef();
-				SendDataShoot();
+				SendDataShoot(0);
 				//projectilepl1->Shoot(pos.x, pos.z, 1.0, 1);
+			}
+			if(keyboard->isKeyPressed("F") == true)
+			{
+				SendDataShoot(1);
+			}
+			if(keyboard->isKeyPressed("P") == true)		// Toggle between firstperson and thirdperson camera
+			{
+				THIRDPERSONCAMERA ^= 1;
 			}
 		}
 		else
